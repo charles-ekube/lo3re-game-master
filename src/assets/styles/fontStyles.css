@@ -1,0 +1,177 @@
+/* Font family */
+.text {
+  font-family: "Nunito", sans-serif;
+}
+
+.lightText {
+  font-weight: 300;
+}
+
+.regularText {
+  font-weight: 400;
+}
+
+.mediumText {
+  font-weight: 500;
+}
+
+.semiBoldText {
+  font-weight: 600;
+}
+
+.boldText {
+  font-weight: 700;
+}
+
+/* Font size */
+.f10 {
+  font-size: 0.625rem;
+}
+
+.f11 {
+  font-size: 0.688rem;
+}
+
+.f12 {
+  font-size: 0.75rem;
+}
+
+.f14 {
+  font-size: 0.875rem;
+}
+
+.f16 {
+  font-size: 1rem;
+}
+
+.f18 {
+  font-size: 1.125rem;
+}
+
+.f20 {
+  font-size: 1.25rem;
+}
+
+.f22 {
+  font-size: 1.375rem;
+}
+
+.f24 {
+  font-size: 1.5rem;
+}
+
+.f26 {
+  font-size: 1.625rem;
+}
+
+.f28 {
+  font-size: 1.75rem;
+}
+
+.f30 {
+  font-size: 1.875rem;
+}
+
+.f32 {
+  font-size: 2rem;
+}
+
+.f34 {
+  font-size: 2.125rem;
+}
+
+.f36 {
+  font-size: 2.25rem;
+}
+
+.f38 {
+  font-size: 2.375rem;
+}
+
+.f40 {
+  font-size: 2.5rem;
+}
+
+.f42 {
+  font-size: 2.625rem;
+}
+
+.f44 {
+  font-size: 2.75rem;
+}
+
+.f46 {
+  font-size: 2.875rem;
+}
+
+.f48 {
+  font-size: 3rem;
+}
+
+.f50 {
+  font-size: 3.125rem;
+}
+
+.f52 {
+  font-size: 3.25rem;
+}
+
+.f54 {
+  font-size: 3.375rem;
+}
+
+.f55 {
+  font-size: 3.438rem;
+}
+
+.f56 {
+  font-size: 3.5rem;
+}
+
+.f58 {
+  font-size: 3.625rem;
+}
+
+.f60 {
+  font-size: 3.75rem;
+}
+
+.f62 {
+  font-size: 3.875rem;
+}
+
+.f64 {
+  font-size: 4rem;
+}
+
+/* Text alignment */
+.textCenter {
+  text-align: center;
+}
+
+.textLeft {
+  text-align: left;
+}
+
+.textRight {
+  text-align: right;
+}
+
+/* Text style */
+.capitalize {
+  text-transform: capitalize;
+}
+
+.upper {
+  text-transform: uppercase;
+}
+
+.underLine {
+  text-decoration: underline;
+}
+.greyText {
+  color: #b1b2b4;
+}
+.blackText {
+  color: #181819;
+}
