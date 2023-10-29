@@ -15,12 +15,15 @@ const SignUp = () => {
   const login = () => {
     navigate("/");
   };
+  const linkSignUp = () => {
+    navigate("/linkRequest");
+  };
   return (
     <main className={"authMainContainer"}>
       <section className={"authContainer"}>
         <header>
           <img src={Logo} alt="logo" />
-          <button className={"flexRow alignCenter justifyCenter googleAuthBtn"}>
+          <button className={"flexRow alignCenter justifyCenter googleAuthBtn"} onClick={linkSignUp}>
             <img src={GoogleLogo} alt="logo" />
             <Text>Sign up with Google</Text>
           </button>

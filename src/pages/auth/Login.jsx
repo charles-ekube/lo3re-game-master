@@ -15,6 +15,9 @@ const Login = () => {
   const singUp = () => {
     navigate("/signUp");
   };
+  const forgotPassword = () => {
+    navigate("/forgotPassword");
+  };
   return (
     <main className={"authMainContainer"}>
       <section className={"authContainer"}>
@@ -38,6 +41,9 @@ const Login = () => {
           <div>
             <CustomInput label={"Password"} type={"password"} />
           </div>
+          <button className={"forgotBtn"} onClick={forgotPassword}>
+            <Text>Forgot password?</Text>
+          </button>
           <div>
             <Button text={"Login"} className={"authBtn"} onClick={verify} />
           </div>
