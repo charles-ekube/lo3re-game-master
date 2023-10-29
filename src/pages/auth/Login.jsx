@@ -30,7 +30,7 @@ const Login = () => {
           </div>
           <button className={"flexRow alignCenter justifyCenter googleAuthBtn"}>
             <img src={GoogleLogo} alt="logo" />
-            <Text>Continue with Google</Text>
+            <Text className={"satoshi-medium-text"}>Continue with Google</Text>
           </button>
           <img src={Or} alt="or" style={{ width: "100%" }} />
         </header>

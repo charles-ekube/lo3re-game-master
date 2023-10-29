@@ -7,6 +7,7 @@ import './assets/styles/utilsStyles.css';
 import './assets/styles/authStyles.css';
 import './assets/styles/generalStyles.css';
 import './assets/styles/fontStyles.css';
+import './assets/fonts/fonts.css';
 import { BrowserRouter } from 'react-router-dom';
 
 

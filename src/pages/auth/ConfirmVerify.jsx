@@ -14,6 +14,10 @@ const ConfirmVerify = () => {
   const onChange = (value) => {
     setPin(value);
   };
+  const navigate = useNavigate();
+  const selectProfile = () => {
+    navigate("/selectProfile");
+  };
   return (
     <main className={"authMainContainer"}>
       <section className={"authContainer"}>
@@ -34,7 +38,7 @@ const ConfirmVerify = () => {
 
         <div className={"formContainer"}>
           <div>
-            <Button text={"Proceed"} className={"authBtn"} />
+            <Button text={"Proceed"} className={"authBtn"} onClick={selectProfile} />
           </div>
         </div>
       </section>

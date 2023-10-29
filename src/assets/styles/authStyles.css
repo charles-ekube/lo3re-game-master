@@ -2,6 +2,20 @@
   padding: 40px 20px;
   /* height: 100vh; */
 }
+.authMainContainer h1,
+.authMainContainer h2,
+.authMainContainer h3,
+.authMainContainer h4,
+.authMainContainer h5,
+.authMainContainer h6 {
+  font-family: "AR One Sans", sans-serif;
+}
+.authMainContainer p,
+.authMainContainer span,
+.authMainContainer button {
+  font-family: "Satoshi", sans-serif;
+}
+
 .authContainer {
   width: 100%;
 }
@@ -39,6 +53,35 @@
   border: none;
   align-self: flex-end;
   margin: 0 0 30px 0;
+}
+.authProfileTab {
+  border-radius: 16px;
+  border: 2px solid #f3f3f3;
+  background: #fff;
+  padding: 24px 16px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.authProfileInitials {
+  background: rgba(35, 42, 68, 1);
+  height: 80px;
+  width: 80px;
+  border-radius: 99px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+.authProfileTabStatus {
+  border-radius: 99px;
+  height: 24px;
+  width: 24px;
+  border: 2px solid rgba(243, 243, 243, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @media screen and (min-width: 768px) {

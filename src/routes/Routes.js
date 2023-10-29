@@ -9,6 +9,7 @@ import LinkSignUp from '../pages/auth/LinkSignUp'
 import ForgotPassword from '../pages/auth/ForgotPassword'
 import CreatePassword from '../pages/auth/CreateNewPassword'
 import ConfirmNewPassword from '../pages/auth/ConfirmNewPassword'
+import SelectProfile from '../pages/auth/SelectProfile'
 
 const RoutesContainer = () => {
 
@@ -24,6 +25,8 @@ const RoutesContainer = () => {
                 <Route path='/forgotPassword' element={<ForgotPassword />} />
                 <Route path='/createPassword' element={<CreatePassword />} />
                 <Route path='/resetDone' element={<ConfirmNewPassword />} />
+                <Route path='/selectProfile' element={<SelectProfile />} />
+
 
             </Routes>
         </>
