@@ -29,4 +29,25 @@ a {
   text-decoration: none;
 }
 
+.progress-step.completed .step-icon {
+  background-color: #000 !important;
+}
+.progress-step.completed .step-icon:hover {
+  background-color: #000 !important;
+}
+.progress-step.current .step-index {
+  background-color: #000 !important;
+}
+.progress-step.current .step-index:hover {
+  background-color: #000 !important;
+}
+
+.progress-step.has-error .step-icon {
+  color: white;
+  background-color: #fff;
+}
+.step-content {
+  padding: 0.2rem;
+}
+
 @import url("https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400;500;600;700&display=swap");

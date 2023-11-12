@@ -1,6 +1,10 @@
 .authMainContainer {
-  padding: 40px 20px;
-  /* height: 100vh; */
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .authMainContainer h1,
 .authMainContainer h2,
@@ -18,6 +22,11 @@
 
 .authContainer {
   width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .authContainer header {
   text-align: center;
@@ -85,9 +94,6 @@
 }
 
 @media screen and (min-width: 768px) {
-  .authMainContainer {
-    padding: 70px 0;
-  }
   .authContainer {
     max-width: 796px;
     margin: auto;

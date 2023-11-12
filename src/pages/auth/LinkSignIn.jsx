@@ -5,19 +5,9 @@ import Text from "../../utils/CustomText";
 import Or from "../../assets/images/or.svg";
 import CustomInput from "../../utils/CustomInput";
 import Button from "../../utils/CustomButton";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const LinkSignUp = () => {
-  const location = useLocation();
-  const data = location.state;
-  console.log(data?.data);
-
-  const recipientEmail = `mailto:${data?.data?.email}`;
-
-  const openEmailClient = () => {
-    window.location.href = recipientEmail;
-  };
-
+const LinkSignIn = () => {
   return (
     <main className={"authMainContainer"}>
       <section className={"authContainer"}>
@@ -28,26 +18,26 @@ const LinkSignUp = () => {
               Unlock Your Lucky Streak🍀✨
             </Text>
             <Text tag={"p"} style={{ lineHeight: "26px" }} className={"f16 regularText"}>
-              {data?.data?.message}
+              Check your inbox for our verification email, complete with your verification by clicking on the link within 24 hours.{" "}
             </Text>
           </div>
         </header>
         <div className={"formContainer"}>
           <div>
-            <Button text={"Go to mail"} className={"authBtn"} onClick={openEmailClient} />
+            <Button text={"Go to mail"} className={"authBtn"} />
           </div>
-          {/* <div className={""} style={{ gap: "5px", margin: "10px 0" }}>
+          <div className={""} style={{ gap: "5px", margin: "10px 0" }}>
             <Text className={"f14 textCenter"} tag={"p"} style={{ color: "#8A8A8A", margin: "5px 0" }}>
               Don't see the email? Check your spam folder or
             </Text>
             <Text className={"f14 mediumText textCenter"} tag={"p"} style={{ color: "#101010" }}>
               Resend verification email
             </Text>
-          </div> */}
+          </div>
         </div>
       </section>
     </main>
   );
 };
 
-export default LinkSignUp;
+export default LinkSignIn;

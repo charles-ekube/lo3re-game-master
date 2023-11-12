@@ -2,7 +2,7 @@ export const RE_DIGIT = new RegExp(/^\d+$/);
 
 export const setToken = async (data) => {
     try {
-        const accessToken = data.accessToken;
+        const accessToken = data;
         console.log(accessToken, 'token')
         localStorage.setItem("accessToken", accessToken);
     } catch (error) {

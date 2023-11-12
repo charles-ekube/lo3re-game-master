@@ -56,19 +56,21 @@
 /* Loader  */
 
 .loader {
-  height: 30px;
   width: 30px;
-  border: 1px solid #ffffff;
+  height: 30px;
+  border: 3px solid #fff;
+  border-bottom-color: transparent;
   border-radius: 50%;
-  border-top: #000000;
-  animation: circular-loader 2s linear infinite;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
 }
 
-@keyframes circular-loader {
-  from {
+@keyframes rotation {
+  0% {
     transform: rotate(0deg);
   }
-  to {
+  100% {
     transform: rotate(360deg);
   }
 }
@@ -96,4 +98,31 @@
 }
 .otp-input:focus {
   border: 1px solid #000;
+}
+
+.wClass {
+  height: 120px;
+  padding: 0;
+}
+
+.lClass {
+  font-size: 12px;
+  font-family: "Satoshi", sans-serif;
+  width: 100px;
+}
+.prClass {
+  /* border: 1px solid red; */
+  display: none;
+}
+.sbtClass {
+  /* border: 1px solid red; */
+  display: none;
+}
+.nbClass {
+  border: 1px solid red;
+  display: none;
+}
+.sbClass {
+  border: 1px solid red;
+  display: none;
 }

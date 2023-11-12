@@ -19,9 +19,9 @@ const RoutesContainer = () => {
                 <Route path='/' element={<Login />} />
                 <Route path='/signUp' element={<SignUp />} />
                 <Route path='/verification' element={<VerifyOtp />} />
-                <Route path='/confirmVerification' element={<ConfirmVerify />} />
+                <Route path='/verify-email' element={<ConfirmVerify />} />
                 <Route path='/loginVerification' element={<LoginOtp />} />
-                <Route path='/linkRequest' element={<LinkSignUp />} />
+                <Route path='/signup-link' element={<LinkSignUp />} />
                 <Route path='/forgotPassword' element={<ForgotPassword />} />
                 <Route path='/createPassword' element={<CreatePassword />} />
                 <Route path='/resetDone' element={<ConfirmNewPassword />} />
