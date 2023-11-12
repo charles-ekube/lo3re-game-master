@@ -8,7 +8,7 @@ import Button from "../../utils/CustomButton";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom/dist";
 
-const LinkSignIn = () => {
+const LinkReset = () => {
   const location = useLocation();
   const data = location.state;
   console.log(data?.data);
@@ -42,4 +42,4 @@ const LinkSignIn = () => {
   );
 };
 
-export default LinkSignIn;
+export default LinkReset;

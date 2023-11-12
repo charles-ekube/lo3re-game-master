@@ -112,7 +112,7 @@ const SignUp = () => {
   };
 
   const register = async () => {
-    if (email !== "" || password !== "" || confirmPassword !== "" || referralCode !== "" || displayName !== "" || confirmPassword === password) {
+    if (email !== "" || password !== "" || confirmPassword !== "" || displayName !== "" || confirmPassword === password) {
       setState({ ...state, loading: true });
 
       try {
@@ -146,8 +146,9 @@ const SignUp = () => {
         // Other logic...
       } catch (error) {
         handleFirebaseError(error);
+        setState({ ...state, loading: false });
       } finally {
-        // setState({ ...state, loading: false });
+        //
       }
     }
   };

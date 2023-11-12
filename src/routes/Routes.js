@@ -10,6 +10,8 @@ import ForgotPassword from '../pages/auth/ForgotPassword'
 import CreatePassword from '../pages/auth/CreateNewPassword'
 import ConfirmNewPassword from '../pages/auth/ConfirmNewPassword'
 import SelectProfile from '../pages/auth/SelectProfile'
+import LinkSignIn from '../pages/auth/LinkSignIn'
+import LinkReset from '../pages/auth/ResetLink'
 
 const RoutesContainer = () => {
 
@@ -22,6 +24,8 @@ const RoutesContainer = () => {
                 <Route path='/verify-email' element={<ConfirmVerify />} />
                 <Route path='/loginVerification' element={<LoginOtp />} />
                 <Route path='/signup-link' element={<LinkSignUp />} />
+                <Route path='/signin-link' element={<LinkSignIn />} />
+                <Route path='/reset-link' element={<LinkReset />} />
                 <Route path='/forgotPassword' element={<ForgotPassword />} />
                 <Route path='/createPassword' element={<CreatePassword />} />
                 <Route path='/resetDone' element={<ConfirmNewPassword />} />

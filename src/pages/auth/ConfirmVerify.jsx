@@ -25,6 +25,7 @@ const ConfirmVerify = () => {
   const apiKey = searchParams.get("apiKey");
 
   const [apiKeyContent, setApiKeyContent] = useState("");
+  const [userDetails, setUserDetails] = useState({});
 
   const getUser = () => {
     const auth = getAuth();
@@ -35,6 +36,7 @@ const ConfirmVerify = () => {
       const email = user.email;
       const photoURL = user.photoURL;
       const emailVerified = user.emailVerified;
+      setUserDetails(user);
 
       // The user's ID, unique to the Firebase project. Do NOT use
       // this value to authenticate with your backend server, if
@@ -52,16 +54,16 @@ const ConfirmVerify = () => {
               <img src={Speaker} alt="speaker" style={{ margin: "10px" }} />
             </div>
             <Text tag={"h2"} className={"f26 boldText textCenter"}>
-              Your email has been verified✨Login
+              {userDetails?.displayName}
             </Text>
             <Text tag={"p"} style={{ lineHeight: "26px" }} className={"f16 regularText textCenter"}>
-              You’ve successfully verified your email. Just one more step and you’re good to go!
+              You’ve successfully logged in. Just one more step and you’re good to go!
             </Text>
           </div>
 
           <div className={"formContainer"}>
             <div>
-              <Button text={"Proceed"} className={"authBtn"} onClick={selectProfile} />
+              <Button text={"Proceed to dashboard"} className={"authBtn"} onClick={selectProfile} />
             </div>
           </div>
         </div>

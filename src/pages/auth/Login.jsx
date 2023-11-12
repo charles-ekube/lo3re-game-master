@@ -69,6 +69,9 @@ const Login = () => {
       const res = await http.post(`auth/signin`, obj);
       console.log(res, "res login");
       setState({ ...state, loading: false });
+      navigate("/signin-link", {
+        state: { data: { message: res?.message, email: email } },
+      });
     } catch (error) {
       console.log(error);
       showError(error[1].message);
@@ -89,8 +92,8 @@ const Login = () => {
         // Other logic...
       } catch (error) {
         handleFirebaseError(error);
-      } finally {
         setState({ ...state, loading: false });
+      } finally {
       }
     }
   };
