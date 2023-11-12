@@ -157,7 +157,7 @@ const SignUp = () => {
       <section className={"authContainer"}>
         <header>
           <img src={Logo} alt="logo" />
-          <ProgressB />
+          {/* <ProgressB /> */}
           <button className={"flexRow alignCenter justifyCenter googleAuthBtn"} onClick={linkSignUp}>
             <img src={GoogleLogo} alt="logo" />
             <Text>Sign up with Google</Text>
