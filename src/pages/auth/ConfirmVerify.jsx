@@ -43,6 +43,7 @@ const ConfirmVerify = () => {
   const getUser = () => {
     const auth = getAuth();
     const user = auth.currentUser;
+    console.log(user);
     if (user !== null) {
       // The user object has basic properties such as display name, email, etc.
       const displayName = user.displayName;
@@ -50,6 +51,7 @@ const ConfirmVerify = () => {
       const photoURL = user.photoURL;
       const emailVerified = user.emailVerified;
       setUserDetails(user);
+      console.log(user);
 
       // The user's ID, unique to the Firebase project. Do NOT use
       // this value to authenticate with your backend server, if
@@ -66,8 +68,8 @@ const ConfirmVerify = () => {
             <div style={{ textAlign: "center" }}>
               <img src={Speaker} alt="speaker" style={{ margin: "10px" }} />
             </div>
-            <Text tag={"h2"} className={"f26 boldText textCenter"}>
-              {userDetails?.displayName}
+            <Text tag={"h2"} className={"f20 boldText textCenter capitalize"}>
+              Hello!, {userDetails?.displayName}
             </Text>
             <Text tag={"p"} style={{ lineHeight: "26px" }} className={"f16 regularText textCenter"}>
               You’ve successfully logged in. Just one more step and you’re good to go!
@@ -134,7 +136,7 @@ const ConfirmVerify = () => {
   };
 
   useEffect(() => {
-    if (apiKey) {
+    if (storeFlow === "login") {
       getUser();
     }
   }, [apiKey]);
