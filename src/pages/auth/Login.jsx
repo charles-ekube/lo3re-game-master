@@ -11,6 +11,7 @@ import { app } from "../../firebase";
 import { useDispatch } from "react-redux";
 import { showError } from "../../utils/Alert";
 import { GoogleAuthProvider, getAuth, getRedirectResult, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { setFlow } from "../../utils/Helpers";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -72,10 +73,12 @@ const Login = () => {
       navigate("/signin-link", {
         state: { data: { message: res?.message, email: email } },
       });
+      setFlow("login");
     } catch (error) {
       console.log(error);
       showError(error[1].message);
       setState({ ...state, loading: false });
+      setFlow("login");
     }
   };
 

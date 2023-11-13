@@ -12,6 +12,7 @@ import { app } from "../../firebase";
 import { showError } from "../../utils/Alert";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import http from "../../utils/utils";
+import { setFlow } from "../../utils/Helpers";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -60,6 +61,7 @@ const ForgotPassword = () => {
       console.log(res, "res login");
       setState({ ...state, loading: false });
       navigate("/reset-link", { state: { data: { message: res?.message, email: email } } });
+      setFlow("reset");
     } catch (error) {
       console.log(error);
       showError(error[1].message);

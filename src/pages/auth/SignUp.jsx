@@ -6,9 +6,9 @@ import Or from "../../assets/images/or.svg";
 import CustomInput from "../../utils/CustomInput";
 import Button from "../../utils/CustomButton";
 import { useNavigate } from "react-router-dom";
-import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { app } from "../../firebase";
-import { setToken } from "../../utils/Helpers";
+import { setFlow, setToken } from "../../utils/Helpers";
 import { useDispatch } from "react-redux";
 import http from "../../utils/utils";
 import { showError, showSuccess } from "../../utils/Alert";
@@ -106,6 +106,7 @@ const SignUp = () => {
         state: { data: { message: res?.message, email: email } },
       });
       console.log(res);
+      setFlow("signUp");
     } catch (error) {
       console.log(error);
     }
@@ -150,6 +151,38 @@ const SignUp = () => {
       } finally {
         //
       }
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+
+      // The signed-in user info.
+      const user = result.user;
+
+      // IdP data available using getAdditionalUserInfo(result)
+      // ...
+
+      console.log("Google Sign-In successful:", user);
+    } catch (error) {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+
+      // The email of the user's account used.
+      const email = error.customData?.email;
+
+      // The AuthCredential type that was used.
+      const credential = GoogleAuthProvider.credentialFromError(error);
+
+      console.error("Google Sign-In error:", errorCode, errorMessage, email, credential);
+      handleFirebaseError(error);
     }
   };
 

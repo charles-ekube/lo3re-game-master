@@ -9,6 +9,7 @@ import Button from "../../utils/CustomButton";
 import { useLocation, useNavigate } from "react-router-dom";
 import OtpInput from "../../utils/CustomOtp";
 import { getAuth } from "firebase/auth";
+import { retrieveFlow } from "../../utils/Helpers";
 
 const ConfirmVerify = () => {
   const [pin, setPin] = useState("");
@@ -16,8 +17,11 @@ const ConfirmVerify = () => {
     setPin(value);
   };
   const navigate = useNavigate();
-  const selectProfile = () => {
-    navigate("/selectProfile");
+  const toDashboard = () => {
+    navigate("/dashboard");
+  };
+  const toLogin = () => {
+    navigate("/");
   };
 
   const location = useLocation();
@@ -26,6 +30,15 @@ const ConfirmVerify = () => {
 
   const [apiKeyContent, setApiKeyContent] = useState("");
   const [userDetails, setUserDetails] = useState({});
+  const [storeFlow, setFlow] = useState(null);
+  const getFlow = () => {
+    const userFlow = retrieveFlow();
+    setFlow(userFlow);
+  };
+
+  useEffect(() => {
+    getFlow();
+  }, []);
 
   const getUser = () => {
     const auth = getAuth();
@@ -46,7 +59,7 @@ const ConfirmVerify = () => {
   };
 
   const renderTemplate = () => {
-    if (apiKey) {
+    if (apiKey || storeFlow === "login") {
       return (
         <div>
           <div className={"verifyHeaderText"}>
@@ -63,12 +76,14 @@ const ConfirmVerify = () => {
 
           <div className={"formContainer"}>
             <div>
-              <Button text={"Proceed to dashboard"} className={"authBtn"} onClick={selectProfile} />
+              <Button text={"Proceed to dashboard"} className={"authBtn"} onClick={toDashboard} />
             </div>
           </div>
         </div>
       );
-    } else {
+    }
+
+    if (storeFlow === "signUp") {
       return (
         <div>
           <div className={"verifyHeaderText"}>
@@ -85,11 +100,36 @@ const ConfirmVerify = () => {
 
           <div className={"formContainer"}>
             <div>
-              <Button text={"Proceed"} className={"authBtn"} onClick={selectProfile} />
+              <Button text={"Proceed to login"} className={"authBtn"} onClick={toLogin} />
             </div>
           </div>
         </div>
       );
+    }
+    if (storeFlow === "reset") {
+      return (
+        <div>
+          <div className={"verifyHeaderText"}>
+            <div style={{ textAlign: "center" }}>
+              <img src={Speaker} alt="speaker" style={{ margin: "10px" }} />
+            </div>
+            <Text tag={"h2"} className={"f26 boldText textCenter"}>
+              Your password reset successful✨
+            </Text>
+            <Text tag={"p"} style={{ lineHeight: "26px" }} className={"f16 regularText textCenter"}>
+              You’ve successfully reset your password. Just one more step and you’re good to go!
+            </Text>
+          </div>
+
+          <div className={"formContainer"}>
+            <div>
+              <Button text={"Proceed to login"} className={"authBtn"} onClick={toLogin} />
+            </div>
+          </div>
+        </div>
+      );
+    } else {
+      return null;
     }
   };
 
@@ -97,16 +137,6 @@ const ConfirmVerify = () => {
     if (apiKey) {
       getUser();
     }
-    //  if (apiKey) {
-    //    // Display "Login Successful" logic
-    //    console.log("Login Successful");
-    //  } else {
-    //    // Display "Email Verified" logic
-    //    console.log("Email Verified");
-    //  }
-
-    //  // Store the apiKey content in state for future use
-    //  setApiKeyContent(apiKey || "");
   }, [apiKey]);
 
   return (

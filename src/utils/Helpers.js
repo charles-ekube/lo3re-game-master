@@ -20,3 +20,24 @@ export const shortenXterLength = (string, number = 10) => {
     }
     return ''
 }
+
+
+export const setFlow = async (data) => {
+    try {
+        localStorage.setItem("flow", data);
+    } catch (error) {
+        console.log("Could not set flow", error.message);
+    }
+}
+
+export const retrieveFlow = () => {
+    try {
+        const data = localStorage.getItem("flow");
+        return data;
+    } catch (error) {
+        console.log("Could not retrieve flow ", error.message);
+        return null; // Handle the error as needed
+    }
+};
+
+
