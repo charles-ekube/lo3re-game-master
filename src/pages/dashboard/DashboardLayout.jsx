@@ -13,7 +13,6 @@ const DashboardLayout = () => {
       </section>
       <section className={"dashboardLayoutContentContainer"}>
         <TopNav />
-
         <Routes>
           <Route path="/*" element={<Overview />} />
           <Route path="*" element={<NotFound />} />

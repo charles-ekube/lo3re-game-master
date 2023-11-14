@@ -59,4 +59,12 @@ h6 {
   padding: 0.2rem;
 }
 
+.swiper-pagination {
+  position: relative !important;
+  margin-top: 30px !important;
+  /* bottom: 20px !important; */
+  z-index: 20 !important;
+}
+/* swiper-pagination-bullets-dynamic swiper-pagination-bullets swiper-pagination-horizontal */
+
 @import url("https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400;500;600;700&display=swap");

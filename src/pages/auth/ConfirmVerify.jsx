@@ -17,7 +17,9 @@ const ConfirmVerify = () => {
     setPin(value);
   };
   const navigate = useNavigate();
-
+  const toDashboard = () => {
+    navigate("/dashboard", {});
+  };
   const toLogin = () => {
     navigate("/");
   };
@@ -32,12 +34,6 @@ const ConfirmVerify = () => {
   const getFlow = () => {
     const userFlow = retrieveFlow();
     setFlow(userFlow);
-  };
-
-  const toDashboard = () => {
-    navigate("/dashboard", {
-      state: { data: userDetails },
-    });
   };
 
   useEffect(() => {
