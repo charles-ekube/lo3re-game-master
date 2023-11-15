@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { CiBellOn, CiSearch } from "react-icons/ci";
+import { CiBellOn, CiSearch, CiUser } from "react-icons/ci";
 import Text from "../../../utils/CustomText";
 import { getAuth } from "firebase/auth";
 
@@ -50,12 +50,12 @@ const TopNav = () => {
           <div className="flexRow alignCenter" style={{ gap: "5px" }}>
             <div className="nameTagContainer">
               <Text className={"satoshi-text f14 upper"} style={{ color: "rgba(16, 16, 16, 1)" }}>
-                {firstLetter}
-                {lastLetter}
+                {firstLetter ? firstLetter : <CiUser size={18} />}
+                {lastLetter ? lastLetter : ""}
               </Text>
             </div>
             <Text className={"satoshi-text f14 capitalize"} style={{ color: "rgba(16, 16, 16, 1)" }}>
-              {userDetails?.displayName}
+              {userDetails?.displayName ? userDetails?.displayName : "User"}
             </Text>
           </div>
           <CiBellOn size={22} />

@@ -13,3 +13,24 @@
 .sliderCardContainer > img {
   /* border-radius: 16px 16px 0 0 !important; */
 }
+
+.contactCard {
+  display: flex;
+  padding: 12px 24px 24px 24px;
+  align-items: center;
+  gap: 10px;
+  /* justify-content: space-between; */
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.06);
+  margin: 10px 0;
+}
+.contactCardIconContainer {
+  padding: 15px;
+  background: rgba(255, 214, 0, 1);
+  color: rgba(16, 16, 16, 1);
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

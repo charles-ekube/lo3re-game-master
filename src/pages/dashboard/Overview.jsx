@@ -3,6 +3,8 @@ import OverviewEmptyState from "../../components/dashboard/overview/EmptyState";
 import { getAuth } from "firebase/auth";
 import CardSlider from "../../components/dashboard/overview/CardSlider";
 import TopNav from "../../components/dashboard/widgets/TopNav";
+import Text from "../../utils/CustomText";
+import ContactCard from "../../components/dashboard/cards/ContactCard";
 
 const Overview = () => {
   const [lotteries, setLotteries] = useState([]);
@@ -32,11 +34,17 @@ const Overview = () => {
   }, [userDetails]);
   return (
     <>
-      <TopNav />
+      {/* <TopNav /> */}
       <section className={"overviewContainer"}>
         <div>{lotteries?.length === 0 && <OverviewEmptyState userDetails={userDetails} />}</div>
         <aside className={"asideViewContainer"}>
           <CardSlider />
+          <div className={"contactCornerContainer"}>
+            <Text tag={"p"} className={"f16 satoshi-bold-text"}>
+              Customer corner
+            </Text>
+            <ContactCard />
+          </div>
         </aside>
       </section>
     </>
