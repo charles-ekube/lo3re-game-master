@@ -118,7 +118,7 @@ const ForgotPassword = () => {
           </div>
           <div className={"flexRow alignCenter justifyCenter"} style={{ gap: "5px", margin: "20px 0" }} onClick={login}>
             <GoArrowLeft color="#8A8A8A" />
-            <Text className={"f14 mediumText"} style={{ color: "#8A8A8A" }}>
+            <Text className={"f14 mediumText"} style={{ color: "#8A8A8A" }} onClick={() => navigate('/')}>
               Back to Login
             </Text>
           </div>
