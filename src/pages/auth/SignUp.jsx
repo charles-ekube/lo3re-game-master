@@ -85,9 +85,11 @@ const SignUp = () => {
     try {
       const res = await http.post(`auth/affiliate/validate`, obj);
       console.log(res);
+      return { failed: false, result: res };
     } catch (error) {
       console.log(error);
       setState({ ...state, referralCodeError: error[1].message });
+      return { failed: true, error: error };
     }
   };
 
@@ -109,48 +111,68 @@ const SignUp = () => {
       setFlow("signUp");
     } catch (error) {
       console.log(error);
+      
     }
   };
 
   const register = async () => {
-    if (email !== "" || password !== "" || confirmPassword !== "" || displayName !== "" || confirmPassword === password) {
-      setState({ ...state, loading: true });
 
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        console.log(user, "user");
-        // Update user profile with display name
-        if (user) {
-          updateProfile(auth.currentUser, {
-            displayName: displayName,
-          })
-            .then((res) => {
-              // Profile updated!
-              // ...
-              // console.log(res, "res");
+    if (email != "" || password != "" || confirmPassword != "" || displayName != "") {
+      //implement strong password for account security reasons
+      if (password == confirmPassword) {
+        setState({ ...state, loading: true });
+        //implement promo code validation
+        if (referralCode != '') {
+          const validationResult = await validateCode();
+          if (validationResult.failed) {
+            setState({ ...state, loading: false });
+            showError(validationResult.error[1]?.message);
+            return;
+          }
+        }
+        try {
+          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+          const user = userCredential.user;
+          console.log(user, "user");
+          // Update user profile with display name
+          if (user) {
+            updateProfile(auth.currentUser, {
+              displayName: displayName,
             })
-            .catch((error) => {
-              // An error occurred
-              // ...
-              console.log(error, "error");
-            });
+              .then((res) => {
+                // Profile updated!
+                // ...
+                // console.log(res, "res");
+              })
+              .catch((error) => {
+                // An error occurred
+                // ...
+                console.log(error, "error");
+              });
+          }
+
+          console.log("User signed up successfully:", user);
+
+          setToken(user.accessToken);
+          if (user) {
+            getEmailLink();
+          }else{
+            //handle user error here
+          }
+
+          // Other logic...
+        } catch (error) {
+          handleFirebaseError(error);
+          setState({ ...state, loading: false });
+        } finally {
+          //
+          setState({ ...state, loading: false });
         }
-
-        console.log("User signed up successfully:", user);
-
-        setToken(user.accessToken);
-        if (user) {
-          getEmailLink();
-        }
-
-        // Other logic...
-      } catch (error) {
-        handleFirebaseError(error);
-        setState({ ...state, loading: false });
-      } finally {
-        //
+      } else {
+        showError('Passwords do not match');
       }
+    } else {
+      showError('Required fields are missing');
     }
   };
 
@@ -212,7 +234,7 @@ const SignUp = () => {
             <CustomInput label={"Confirm password"} type={"password"} onChange={onChangeConfirmPassword} value={state.confirmPassword} />
           </div>
           <div>
-            <CustomInput label={"Referral code"} onChange={onChangeReferralCode} value={state.referralCode} />
+            <CustomInput label={"Promo code"} onChange={onChangeReferralCode} value={state.referralCode} />
           </div>
           <div>
             <Text className={"f10 mediumText"} style={{ color: "#B00020", position: "relative", top: "-10px" }}>
@@ -224,7 +246,7 @@ const SignUp = () => {
           </div>
           <div className={"flexRow alignCenter justifyCenter"} style={{ gap: "5px", margin: "10px 0", cursor: "pointer" }}>
             <Text className={"f14"} style={{ color: "#8A8A8A" }}>
-              Don’t have an account?{" "}
+              Already have an account? {" "}
             </Text>
             <Text className={"f14 mediumText"} style={{ color: "#101010" }} onClick={login}>
               Login
