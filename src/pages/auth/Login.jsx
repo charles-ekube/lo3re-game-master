@@ -98,6 +98,8 @@ const Login = () => {
         setState({ ...state, loading: false });
       } finally {
       }
+    }else{
+      showError('Required fields are missing');
     }
   };
   const signInWithGoogle = async () => {
