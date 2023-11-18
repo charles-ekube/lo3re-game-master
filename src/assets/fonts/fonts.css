@@ -1,0 +1,64 @@
+/* Regular Satoshi Font */
+@font-face {
+  font-family: "Satoshi";
+  src: url("Satoshi-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Bold Satoshi Font */
+@font-face {
+  font-family: "Satoshi";
+  src: url("Satoshi-Bold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* Italic Satoshi Font */
+@font-face {
+  font-family: "Satoshi";
+  src: url("Satoshi-Italic.woff") format("woff");
+  font-weight: normal;
+  font-style: italic;
+}
+
+/* Bold Italic Satoshi Font */
+@font-face {
+  font-family: "Satoshi";
+  src: url("Satoshi-BoldItalic.woff") format("woff");
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("Satoshi-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
+/* Example usage of Satoshi font for a specific CSS class or element */
+.satoshi-text {
+  font-family: "Satoshi", sans-serif;
+  /* You can set font-weight and font-style as needed */
+}
+.satoshi-medium-text {
+  font-family: "Satoshi", sans-serif;
+  font-weight: 500;
+  /* You can set font-weight and font-style as needed */
+}
+.satoshi-bold-text {
+  font-family: "Satoshi", sans-serif;
+  font-weight: bold;
+}
+
+.satoshi-italic-text {
+  font-family: "Satoshi", sans-serif;
+  font-style: italic;
+}
+
+.satoshi-bold-italic-text {
+  font-family: "Satoshi", sans-serif;
+  font-weight: bold;
+  font-style: italic;
+}

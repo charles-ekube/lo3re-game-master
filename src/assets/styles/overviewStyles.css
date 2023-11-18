@@ -1,0 +1,34 @@
+.overviewContainer {
+  display: grid;
+  grid-template-columns: 75% 25%;
+  height: 100%;
+}
+.asideViewContainer {
+  background: #f3f3f3;
+  padding: 32px;
+  width: 100%;
+}
+.overviewEmptyContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 126px 100px;
+}
+.overviewEmptyContainer > p {
+  width: 512px;
+  margin: 5px 0 24px 0;
+}
+.overviewEmptyContainer > button {
+  display: flex;
+  width: 536px;
+  padding: 16px 20px;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  color: #fff;
+  border-radius: 8px;
+  background: #232a44;
+}
+.contactCornerContainer {
+  margin-top: 30px;
+}

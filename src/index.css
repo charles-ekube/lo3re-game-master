@@ -28,3 +28,43 @@ a {
   list-style: none;
   text-decoration: none;
 }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "AR One Sans", sans-serif;
+}
+
+.progress-step.completed .step-icon {
+  background-color: #000 !important;
+}
+.progress-step.completed .step-icon:hover {
+  background-color: #000 !important;
+}
+.progress-step.current .step-index {
+  background-color: #000 !important;
+}
+.progress-step.current .step-index:hover {
+  background-color: #000 !important;
+}
+
+.progress-step.has-error .step-icon {
+  color: white;
+  background-color: #fff;
+}
+.step-content {
+  padding: 0.2rem;
+}
+
+.swiper-pagination {
+  position: relative !important;
+  margin-top: 30px !important;
+  /* bottom: 20px !important; */
+  z-index: 20 !important;
+}
+/* swiper-pagination-bullets-dynamic swiper-pagination-bullets swiper-pagination-horizontal */
+
+@import url("https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400;500;600;700&display=swap");

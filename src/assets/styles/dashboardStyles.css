@@ -1,0 +1,100 @@
+/* side bar  */
+
+.sideBarContainer {
+  width: 100%;
+  background: rgba(35, 42, 68, 1);
+  padding: 24px 16px;
+  display: none;
+  height: 100vh;
+  /* position: fixed; */
+}
+
+.sideBarContainer ul {
+  margin-top: 40px;
+}
+
+.sideBarContainer ul li a {
+  padding: 10px 16px;
+  color: rgba(255, 255, 255, 1);
+}
+.sideBarActiveLink {
+  background: rgba(255, 214, 0, 1);
+  color: #000 !important;
+  border-radius: 8px;
+}
+
+/* top nav */
+
+.topNavContainer {
+  padding: 16px 32px;
+  background: rgba(255, 255, 255, 1);
+  position: sticky;
+  top: 0;
+
+  border-bottom: 1px solid rgba(232, 232, 232, 1);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+
+  /* border: 1px solid red; */
+}
+
+.topNavSearchContainer {
+  background: rgba(243, 243, 243, 1);
+  padding: 8px;
+  width: 375px;
+  display: flex;
+  align-items: center;
+  border-radius: 99px;
+}
+.topNavSearchContainer input {
+  background: inherit;
+  width: 100%;
+  border: none;
+  outline: none;
+}
+.topNavSearchContainer input::placeholder {
+  color: rgba(114, 114, 114, 1);
+  font-size: 14px;
+  font-family: "Satoshi", sans-serif;
+}
+
+.topNavUserContainer {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+.nameTagContainer {
+  height: 36px;
+  width: 36px;
+  border-radius: 99px;
+  background: rgba(255, 214, 0, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* dashboard styles */
+
+.dashboardLayoutContainer {
+  display: flex;
+}
+
+.dashboardLayoutContentContainer {
+  /* width: 100%; */
+  position: relative;
+}
+/* media queries  */
+
+@media screen and (min-width: 768px) {
+  .sideBarContainer {
+    width: 269px;
+    display: block;
+  }
+  .dashboardLayoutContentContainer {
+    width: 78%;
+    /* border: 1px solid red; */
+  }
+}

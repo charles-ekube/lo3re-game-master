@@ -13,7 +13,7 @@ const CustomInput = ({ label, type, name, value, onfocus, onChange, placeholder,
     <>
       <div className={`inputContainer ${customInputContainer}`} {...otherProps}>
         <label style={{ color: "#000" }}>
-          <Text tag={"p"} className={"f14 mediumText"}>
+          <Text tag={"p"} className={"f14 mediumText satoshi-medium-text"}>
             {label}
           </Text>
         </label>
@@ -22,7 +22,7 @@ const CustomInput = ({ label, type, name, value, onfocus, onChange, placeholder,
           {type === "password" && (
             <button type="button" onClick={handleTogglePassword}>
               <Text tag={"p"} className={"f10 mediumText"}>
-                {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                {showPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
               </Text>
             </button>
           )}
