@@ -1,12 +1,12 @@
 .overviewContainer {
   display: grid;
-  grid-template-columns: 75% 25%;
-  height: 100%;
+  grid-template-columns: 65% 35%;
 }
+
 .asideViewContainer {
   background: #f3f3f3;
   padding: 32px;
-  width: 100%;
+  /* width: 100%; */
 }
 .overviewEmptyContainer {
   display: flex;

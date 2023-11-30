@@ -2,6 +2,14 @@
   border-radius: 8px;
   height: 48px;
 }
+
+.swiper-btn {
+  border: none;
+  border-radius: 30px;
+  padding: 7px 20px !important;
+  font-weight: 500;
+}
+
 .accordion {
   /* border: 1px solid #ccc; */
   margin-bottom: 10px;
