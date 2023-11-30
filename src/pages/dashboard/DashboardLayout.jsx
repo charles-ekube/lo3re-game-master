@@ -4,6 +4,7 @@ import TopNav from "../../components/dashboard/widgets/TopNav";
 import { Outlet, Route, Routes, useNavigate } from "react-router-dom";
 import NotFound from "../../utils/NotFound";
 import Overview from "./Overview";
+import Wallet from "./Wallet";
 
 const DashboardLayout = () => {
   return (
@@ -15,6 +16,7 @@ const DashboardLayout = () => {
         <TopNav />
         <Routes>
           <Route path="/*" element={<Overview />} />
+          <Route path="/account" element={<Wallet />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Outlet />

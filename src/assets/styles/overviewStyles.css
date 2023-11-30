@@ -1,6 +1,7 @@
 .overviewContainer {
   display: grid;
   grid-template-columns: 65% 35%;
+  min-height: 100vh;
 }
 
 .asideViewContainer {

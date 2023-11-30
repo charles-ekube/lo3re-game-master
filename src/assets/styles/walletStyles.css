@@ -1,0 +1,102 @@
+.walletContainer {
+    display: grid;
+    grid-template-columns: 65% 35%;
+    min-height: 100vh;
+}
+
+.walletContent {
+    padding: 35px;
+}
+
+.cardContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.cardContainer .balanceCard {
+    width: calc(50% - 10px);
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+.walletButton {
+    background-color: #232A44;
+    color: #FFF;
+    border: none;
+    padding: 14px 16px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.walletButton:disabled {
+    background-color: #E8E8E8;
+    color: #868686;
+}
+
+.historyContainer {
+    margin-top: 32px;
+}
+
+.historyContent {
+    margin-top: 24px;
+}
+
+.historyRow {
+    padding: 16px 0;
+}
+
+.historyRow .icon {
+    width: 48px;
+    height: 48px;
+    padding: 14px 15px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.historyRow .title {
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.historyRow .date {
+    font-size: 14px;
+    font-weight: 500;
+    color: #727272;
+}
+
+.historyRow .amount {
+    font-size: 17px;
+}
+
+.historyRow .icon img {
+    width: 24px;
+    height: 24px;
+}
+
+.iconBg-success {
+    background-color: rgba(6, 193, 103, 0.3);
+}
+
+.iconBg-danger {
+    background-color: rgba(255, 225, 222, 0.3);
+}
+
+.cardLinkBtn {
+    padding: 14px 16px;
+    border: 2px solid #E8E8E8;
+    border-radius: 8px;
+    width: 100%;
+    margin-top: 15px;
+    font-weight: 500;
+}
+
+
+@media (max-width: 768px) {
+    .cardContainer .balanceCard {
+      width: 100%;
+    }
+}

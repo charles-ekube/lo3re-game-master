@@ -9,6 +9,7 @@ import './assets/styles/generalStyles.css';
 import './assets/styles/fontStyles.css';
 import './assets/styles/dashboardStyles.css';
 import './assets/styles/overviewStyles.css';
+import "./assets/styles/walletStyles.css";
 import './assets/styles/cardStyles.css';
 import './assets/styles/carouselStyles.css';
 

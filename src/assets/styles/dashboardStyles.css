@@ -30,9 +30,7 @@
   background: rgba(255, 255, 255, 1);
   position: sticky;
   top: 0;
-
   border-bottom: 1px solid rgba(232, 232, 232, 1);
-  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
