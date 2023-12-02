@@ -5,11 +5,24 @@ import { Outlet, Route, Routes, useNavigate } from "react-router-dom";
 import NotFound from "../../utils/NotFound";
 import Overview from "./Overview";
 import Wallet from "./Wallet";
+import { toggleSidebar } from "../../redux/features/generalSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const DashboardLayout = () => {
+  const dispatch = useDispatch();
+  const showSidebar = useSelector((state) => state.general.showSidebar);
+
   return (
     <main className={"dashboardLayoutContainer"}>
-      <section className={"dashboardLayoutSideBar"}>
+      {showSidebar && (
+        <div
+          className="overlay"
+          onClick={() => dispatch(toggleSidebar())}
+        ></div>
+      )}
+      <section
+        className={`dashboardLayoutSideBar ${showSidebar ? "show" : ""}`}
+      >
         <SideBar />
       </section>
       <section className={"dashboardLayoutContentContainer"}>

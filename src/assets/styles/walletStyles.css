@@ -1,8 +1,3 @@
-.walletContainer {
-    display: grid;
-    grid-template-columns: 65% 35%;
-    min-height: 100vh;
-}
 
 .walletContent {
     padding: 35px;
@@ -95,8 +90,12 @@
 }
 
 
-@media (max-width: 768px) {
+@media (max-width: 480px) {
     .cardContainer .balanceCard {
       width: 100%;
+    }
+
+    .walletContent {
+        padding: 35px 25px;
     }
 }

@@ -35,8 +35,12 @@ const Overview = () => {
   return (
     <>
       {/* <TopNav /> */}
-      <section className={"overviewContainer"}>
-        <div>{lotteries?.length === 0 && <OverviewEmptyState userDetails={userDetails} />}</div>
+      <section className={"mainContainer"}>
+        <div>
+          {lotteries?.length === 0 && (
+            <OverviewEmptyState userDetails={userDetails} />
+          )}
+        </div>
         <aside className={"asideViewContainer"}>
           <CardSlider />
           <div className={"contactCornerContainer"}>

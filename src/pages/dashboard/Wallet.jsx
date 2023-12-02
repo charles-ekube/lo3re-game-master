@@ -12,7 +12,7 @@ import BankCard from "../../components/dashboard/wallet/BankCard";
 const Wallet = () => {
   return (
     <>
-      <section className="walletContainer">
+      <section className="mainContainer walletContainer">
         <div className="walletContent">
           <div className="cardContainer">
             <BalanceCard
