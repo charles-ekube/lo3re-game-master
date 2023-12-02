@@ -44,7 +44,15 @@ const TopNav = () => {
 
   useEffect(() => {
     window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   });
+
+  useEffect(() => {
+    window.dispatchEvent(new Event("resize"));
+  }, []);
 
   // Check if displayName is a string and not empty
   // if (
@@ -62,7 +70,7 @@ const TopNav = () => {
   return (
     <>
       <nav className="topNavContainer">
-        <section className="flexRow gap-1 w-70">
+        <section className="flexRow gap-1 w-70 alignCenter">
           <div>
             {isScreenWidth1150 && (
               <button
