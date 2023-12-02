@@ -17,7 +17,7 @@ const DashboardLayout = () => {
       {showSidebar && (
         <div
           className="overlay"
-          onClick={() => dispatch(toggleSidebar())}
+          onClick={() => dispatch(toggleSidebar(!showSidebar))}
         ></div>
       )}
       <section

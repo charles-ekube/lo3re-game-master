@@ -6,8 +6,8 @@ export const general = createSlice({
     showSidebar: false,
   },
   reducers: {
-    toggleSidebar: (state) => {
-      state.showSidebar = !state.showSidebar;
+    toggleSidebar: (state, action) => {
+      state.showSidebar = action.payload;
     },
   },
 });

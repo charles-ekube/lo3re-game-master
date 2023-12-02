@@ -25,7 +25,7 @@ const SideBar = () => {
   const dispatch = useDispatch();
 
   const closeSidebar = () => {
-    dispatch(toggleSidebar());
+    dispatch(toggleSidebar(false));
   };
 
   if (getPath.length === 2) {

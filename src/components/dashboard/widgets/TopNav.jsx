@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { CiBellOn, CiSearch, CiUser } from "react-icons/ci";
 import Text from "../../../utils/CustomText";
 import { getAuth } from "firebase/auth";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleSidebar } from "../../../redux/features/generalSlice";
 import { FiMenu } from "react-icons/fi";
 
 const TopNav = () => {
   const [userDetails, setUserDetails] = useState({});
   const [isScreenWidth1150, setIsScreenWidth1150] = useState(false);
+  const showSidebar = useSelector((state) => state.general.showSidebar);
   const dispatch = useDispatch();
   const getUser = () => {
     const auth = getAuth();
@@ -74,7 +75,7 @@ const TopNav = () => {
           <div>
             {isScreenWidth1150 && (
               <button
-                onClick={() => dispatch(toggleSidebar())}
+                onClick={() => dispatch(toggleSidebar(!showSidebar))}
                 className={"btn btn-dark"}
               >
                 <FiMenu />
