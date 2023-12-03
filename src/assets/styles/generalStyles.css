@@ -1,3 +1,8 @@
+:root {
+  --success: #06C167;
+  --danger: #FC7F79;
+}
+
 
 *{
   padding: 0;
@@ -47,6 +52,9 @@ button {
 .alignCenter {
   align-items: center;
 }
+.alignEnd {
+  align-items: flex-end;
+}
 .alignSelfCenter {
   align-self: center;
 }
@@ -89,6 +97,19 @@ button {
   margin-bottom: 15px;
 }
 
+.p-1 {
+  padding: 10px;
+}
+
+.py16 {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.text-muted {
+  color: #868686;
+}
+
 .w-70 {
   width: 70%;
 }
@@ -107,17 +128,45 @@ button {
   color: #fff;
 }
 
+.btn-ghost {
+  background-color: transparent;
+}
+
+.text-success {
+  color: var(--success);
+}
+
+.text-danger {
+  color: var(--danger);
+}
+
+.text-start {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-end {
+  text-align: right;
+}
+
 .overlay {
   width: 100%;
   height: 100%;
   position: fixed;
   top: 0;
   right: 0;
-  background-color: rgba(0, 0, 0, 0.2);
+  /* background-color: rgba(0, 0, 0, 0.2); */
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 2;
   transition: .3s ease-out;
 }
 
+.z-500 {
+  z-index: 500;
+}
 
 /* media queries  */
 @media screen and (max-width: 768px) {
@@ -137,4 +186,16 @@ button {
     opacity: 1;
   }
 
+}
+
+@keyframes slideUp {
+  from {
+    transform: translate(50%, -40%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translate(50%, -50%);
+    opacity: 1;
+  }
 }

@@ -39,6 +39,11 @@
 
 .historyRow {
     padding: 16px 0;
+    cursor: pointer;
+}
+
+.historyRow:hover {
+    background-color: rgba(243, 243, 243, 0.3);
 }
 
 .historyRow .icon {

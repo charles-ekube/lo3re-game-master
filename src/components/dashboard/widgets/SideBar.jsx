@@ -114,9 +114,9 @@ const SideBar = () => {
             <li onClick={closeSidebar}>
               <NavLink
                 className={`flexRow alignCenter  satoshi-text ${
-                  ActivePath === "settings" && "sideBarActiveLink"
+                  ActivePath === "history" && "sideBarActiveLink"
                 }`}
-                to={"settings"}
+                to={"history"}
                 style={{ gap: "8px" }}
               >
                 <CiClock2 size={22} />
