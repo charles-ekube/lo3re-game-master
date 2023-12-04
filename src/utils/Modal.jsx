@@ -8,12 +8,12 @@ const Modal = ({ isOpen, onClose, children }) => {
         <>
           <div className="overlay z-500" onClick={onClose}></div>
           <div className="modal">
-            <div className="flexColumn alignEnd p-1">
+            <div className="flexColumn alignEnd">
               <button
                 className="btn btn-ghost text-danger f20"
                 onClick={onClose}
               >
-                <LiaTimesSolid />
+                <LiaTimesSolid size={24} />
               </button>
             </div>
             <div className="modal-content">{children}</div>

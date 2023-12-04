@@ -88,32 +88,32 @@ const History = () => {
           <p>Wallet Fund | Oct 20, 2023 11:06</p>
         </div>
         <div className="modal-body">
-          <div className="flexRow justifyBetween py16">
+          <div className="flexRow justifyBetween modalItemRow">
             <p className="text-muted">Transaction type</p>
-            <p className="f18">Bank transfer</p>
+            <p>Bank transfer</p>
           </div>
 
-          <div className="flexRow justifyBetween py16">
+          <div className="flexRow justifyBetween modalItemRow">
             <p className="text-muted">From</p>
-            <p className="f18">Lo3re</p>
+            <p>Lo3re</p>
           </div>
 
-          <div className="flexRow justifyBetween py16">
+          <div className="flexRow justifyBetween modalItemRow">
             <p className="text-muted">Account name</p>
-            <p className="f18">Lo3re</p>
+            <p>Lo3re</p>
           </div>
 
-          <div className="flexRow justifyBetween py16">
+          <div className="flexRow justifyBetween modalItemRow">
             <p className="text-muted">Bank details</p>
-            <div className="f18">
+            <div>
               <p className="mb-1">000 000 000</p>
               <p>Sterling Bank</p>
             </div>
           </div>
 
-          <div className="flexRow justifyBetween py16">
-            <p className="text-muted f18">Transaction ID</p>
-            <div className="f18 flexRow alignCenter gap-1">
+          <div className="flexRow justifyBetween modalItemRow">
+            <p className="text-muted">Transaction ID</p>
+            <div className="flexRow alignCenter gap-1">
               <p className="text-muted">000 000 000 000</p>
               <div style={{ cursor: "pointer" }}>
                 <LuCopy />

@@ -143,7 +143,6 @@
   background-color: #fff;
   border-radius: 16px;
   width: 480px;
-  min-height: 531px;
   z-index: 501;
   animation: slideUp .3s ease-in-out;
 }
@@ -152,4 +151,12 @@
   padding: 24px;
   padding-top: 0;
   text-align: center;
+}
+
+
+/* media queries  */
+@media screen and (max-width: 550px) {
+  .modal {
+    width: 90%;
+  }
 }
