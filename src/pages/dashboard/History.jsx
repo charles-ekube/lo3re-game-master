@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Text from "../../utils/CustomText";
 import ContactCard from "../../components/dashboard/cards/ContactCard";
 import BalanceCard from "../../components/dashboard/wallet/BalanceCard";
@@ -12,9 +12,12 @@ import Modal from "../../utils/Modal";
 import WalletAdd from "../../assets/images/icons/wallet-add.png";
 import "../../assets/styles/history.css";
 import { LuCopy } from "react-icons/lu";
+import { AiOutlineCheck } from "react-icons/ai";
+import useCopyToClipBoard from "../../hooks/useCopyToClipboard";
 
 const History = () => {
   const [showTxnModal, setShowTxnModal] = useState(false);
+  const { handleCopyClick, isCopied } = useCopyToClipBoard();
 
   return (
     <>
@@ -115,8 +118,11 @@ const History = () => {
             <p className="text-muted">Transaction ID</p>
             <div className="flexRow alignCenter gap-1">
               <p className="text-muted">000 000 000 000</p>
-              <div style={{ cursor: "pointer" }}>
-                <LuCopy />
+              <div
+                style={{ cursor: "pointer" }}
+                onClick={() => handleCopyClick("000 000 000 000")}
+              >
+                {isCopied ? <AiOutlineCheck color="green" /> : <LuCopy />}
               </div>
             </div>
           </div>
