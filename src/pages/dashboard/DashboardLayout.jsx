@@ -8,6 +8,9 @@ import Wallet from "./Wallet";
 import { toggleSidebar } from "../../redux/features/generalSlice";
 import { useDispatch, useSelector } from "react-redux";
 import History from "./History";
+import Settings from "./Settings";
+import EditProfile from "./EditProfile";
+import Kyc from "./Kyc";
 
 const DashboardLayout = () => {
   const dispatch = useDispatch();
@@ -32,6 +35,11 @@ const DashboardLayout = () => {
           <Route path="/*" element={<Overview />} />
           <Route path="/account" element={<Wallet />} />
           <Route path="/history" element={<History />} />
+          <Route path="/settings">
+            <Route path="" element={<Settings />} />
+            <Route path="edit-profile" element={<EditProfile />} />
+            <Route path="kyc" element={<Kyc />} />
+          </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Outlet />

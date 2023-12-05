@@ -1,19 +1,15 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import Text from "../../utils/CustomText";
 import ContactCard from "../../components/dashboard/cards/ContactCard";
-import BalanceCard from "../../components/dashboard/wallet/BalanceCard";
-import IconButton from "../../components/dashboard/buttons/IconButton";
-import { PiBank } from "react-icons/pi";
-import { FiPlusCircle } from "react-icons/fi";
 import { IoChevronForward } from "react-icons/io5";
 import TransactionHistory from "../../components/dashboard/wallet/TransactionHistory";
 import BankCard from "../../components/dashboard/wallet/BankCard";
 import Modal from "../../utils/Modal";
 import WalletAdd from "../../assets/images/icons/wallet-add.png";
-import "../../assets/styles/history.css";
 import { LuCopy } from "react-icons/lu";
 import { AiOutlineCheck } from "react-icons/ai";
 import useCopyToClipBoard from "../../hooks/useCopyToClipboard";
+import "../../assets/styles/history.css";
 
 const History = () => {
   const [showTxnModal, setShowTxnModal] = useState(false);

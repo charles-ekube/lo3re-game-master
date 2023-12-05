@@ -1,6 +1,11 @@
 :root {
+  --primary: #FFD600;
+  --secondary: #232A44;
   --success: #06C167;
   --danger: #FC7F79;
+  --lightGrey: #F3F3F3;
+  --lightGreyII: #E8E8E8;
+  --black: #101010;
 }
 
 
@@ -93,6 +98,10 @@ button {
   margin-top: 15px;
 }
 
+.mt35 {
+  margin-top: 35px;
+}
+
 .mb-2 {
   margin-bottom: 15px;
 }
@@ -118,9 +127,13 @@ button {
   padding: 10px 12px;
   border-radius: 8px;
   border: none;
-  display: flex;
+  /* display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
+}
+
+.btn-lg {
+  padding: 14px 45px;
 }
 
 .btn-dark {
@@ -166,6 +179,36 @@ button {
 
 .z-500 {
   z-index: 500;
+}
+
+
+.status-pill {
+  padding: 8px 16px;
+  border-radius: 100px;
+  cursor: pointer;
+}
+
+.pill-invalid {
+  background-color: var(--lightGrey);
+  color: var(--black);
+}
+
+.inputContainer label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.formInput {
+  width: 100%;
+  border: 1px solid var(--lightGreyII);
+  border-radius: 8px;
+  padding: 10px 8px;
+}
+
+.formInput:focus {
+  outline-color: #ccc;
 }
 
 /* media queries  */

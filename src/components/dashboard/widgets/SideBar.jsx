@@ -2,13 +2,15 @@ import React from "react";
 import Logo from "../../../assets/images/logo.svg";
 import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom/dist";
 import Text from "../../../utils/CustomText";
-import { RxDashboard } from "react-icons/rx";
-import { FaMoneyBills } from "react-icons/fa6";
-import { TbWallet } from "react-icons/tb";
-import { IoNotificationsOutline } from "react-icons/io5";
-import { AiOutlineClockCircle } from "react-icons/ai";
-import { CiBellOn, CiClock2, CiGrid41, CiLogout, CiMoneyBill, CiUser, CiWallet } from "react-icons/ci";
-import { IoIosLogOut } from "react-icons/io";
+import {
+  CiBellOn,
+  CiClock2,
+  CiGrid41,
+  CiLogout,
+  CiMoneyBill,
+  CiWallet,
+} from "react-icons/ci";
+import { PiGearSixLight } from "react-icons/pi";
 import { useDispatch } from "react-redux";
 import { toggleSidebar } from "../../../redux/features/generalSlice";
 
@@ -97,9 +99,9 @@ const SideBar = () => {
             <li style={{ marginTop: "20px" }}>
               <NavLink
                 className={`flexRow alignCenter  satoshi-text ${
-                  ActivePath === "settings" && "sideBarActiveLink"
+                  ActivePath === "notification" && "sideBarActiveLink"
                 }`}
-                to={"settings"}
+                to={"notification"}
                 style={{ gap: "8px" }}
               >
                 <CiBellOn size={22} />
@@ -136,9 +138,9 @@ const SideBar = () => {
                 to={"settings"}
                 style={{ gap: "8px" }}
               >
-                <CiUser size={22} />
+                <PiGearSixLight size={22} />
                 <Text tag={"p"} className={"satoshi-text f16"}>
-                  Profile
+                  Settings
                 </Text>
                 {ActivePath === "settings" && (
                   <div className={"activeIndicator"} />
