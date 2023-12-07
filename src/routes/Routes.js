@@ -14,30 +14,32 @@ import LinkSignIn from '../pages/auth/LinkSignIn'
 import LinkReset from '../pages/auth/ResetLink'
 import DashboardLayout from '../pages/dashboard/DashboardLayout'
 import HandleEmailActions from '../pages/auth/HandleEmailActions'
+import RoutesAuth from "./RoutesAuth";
 
 const RoutesContainer = () => {
-
-    return (
-        <>
-            <Routes>
-                <Route path='/' element={<Login />} />
-                <Route path='/signUp' element={<SignUp />} />
-                <Route path='/verification' element={<VerifyOtp />} />
-                <Route path='/verify-email' element={<ConfirmVerify />} />
-                <Route path='/loginVerification' element={<LoginOtp />} />
-                <Route path='/signup-link' element={<LinkSignUp />} />
-                <Route path='/signin-link' element={<LinkSignIn />} />
-                <Route path='/reset-link' element={<LinkReset />} />
-                <Route path='/forgotPassword' element={<ForgotPassword />} />
-                <Route path='/createPassword' element={<CreatePassword />} />
-                <Route path='/resetDone' element={<ConfirmNewPassword />} />
-                <Route path='/selectProfile' element={<SelectProfile />} />
-                <Route path='/verify' element={<HandleEmailActions />} />
-                <Route path='/dashboard/*' element={<DashboardLayout />} />
-
-            </Routes>
-        </>
-    )
-}
+  return (
+    <>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/signUp" element={<SignUp />} />
+        <Route path="/verification" element={<VerifyOtp />} />
+        <Route path="/verify-email" element={<ConfirmVerify />} />
+        <Route path="/loginVerification" element={<LoginOtp />} />
+        <Route path="/signup-link" element={<LinkSignUp />} />
+        <Route path="/signin-link" element={<LinkSignIn />} />
+        <Route path="/reset-link" element={<LinkReset />} />
+        <Route path="/forgotPassword" element={<ForgotPassword />} />
+        <Route path="/createPassword" element={<CreatePassword />} />
+        <Route path="/resetDone" element={<ConfirmNewPassword />} />
+        <Route path="/selectProfile" element={<SelectProfile />} />
+        <Route path="/verify" element={<HandleEmailActions />} />
+        <Route
+          path="/dashboard/*"
+          element={<RoutesAuth children={<DashboardLayout />} />}
+        />
+      </Routes>
+    </>
+  );
+};
 
 export default RoutesContainer

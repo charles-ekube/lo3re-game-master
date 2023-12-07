@@ -1,39 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { CiBellOn, CiSearch, CiUser } from "react-icons/ci";
 import Text from "../../../utils/CustomText";
-import { getAuth } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleSidebar } from "../../../redux/features/generalSlice";
+import {
+  toggleSidebar,
+  updateUserDetail,
+} from "../../../redux/features/generalSlice";
 import { FiMenu } from "react-icons/fi";
+import { auth } from "../../../firebase";
 
 const TopNav = () => {
-  const [userDetails, setUserDetails] = useState({});
   const [isScreenWidth1150, setIsScreenWidth1150] = useState(false);
   const showSidebar = useSelector((state) => state.general.showSidebar);
+  const userDetails = useSelector((state) => state.general.userDetail);
   const dispatch = useDispatch();
-  const getUser = () => {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    // console.log(user);
-    if (user !== null) {
-      // The user object has basic properties such as display name, email, etc.
-      const displayName = user.displayName;
-      const email = user.email;
-      const photoURL = user.photoURL;
-      const emailVerified = user.emailVerified;
-      setUserDetails(user);
-      // console.log(user);
 
-      // The user's ID, unique to the Firebase project. Do NOT use
-      // this value to authenticate with your backend server, if
-      // you have one. Use User.getToken() instead.
-      const uid = user.uid;
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      dispatch(updateUserDetail(user));
     }
-  };
-
-  useEffect(() => {
-    getUser();
-  }, [userDetails]);
+  });
 
   const handleResize = () => {
     if (window.innerWidth < 1150) {
@@ -56,17 +43,16 @@ const TopNav = () => {
   }, []);
 
   // Check if displayName is a string and not empty
-  // if (
-  //   typeof userDetails?.displayName !== "string" ||
-  //   userDetails?.displayName.length === 0
-  // ) {
-  //   return null;
-  // }
+  if (
+    typeof userDetails?.displayName !== "string" ||
+    userDetails?.displayName.length === 0
+  ) {
+    return null;
+  }
 
-  // const firstLetter = userDetails?.displayName[0];
-  // const lastLetter = userDetails?.displayName[userDetails?.displayName.length - 1];
-  const firstLetter = "u";
-  const lastLetter = "u";
+  const firstLetter = userDetails?.displayName[0];
+  const lastLetter =
+    userDetails?.displayName[userDetails?.displayName.length - 1];
 
   return (
     <>

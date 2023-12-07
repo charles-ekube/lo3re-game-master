@@ -8,17 +8,13 @@ import Button from "../../utils/CustomButton";
 import { useNavigate } from "react-router-dom";
 import { getAuth, createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { app } from "../../firebase";
-import { setFlow, setToken } from "../../utils/Helpers";
+import { setFlow } from "../../utils/Helpers";
 import { useDispatch } from "react-redux";
 import http from "../../utils/utils";
-import { showError, showSuccess } from "../../utils/Alert";
-import { ProgressB } from "../../utils/ProgressBar";
+import { showError } from "../../utils/Alert";
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const verify = () => {
-    navigate("/verification");
-  };
   const login = () => {
     navigate("/");
   };
@@ -55,9 +51,6 @@ const SignUp = () => {
 
   const auth = getAuth(app);
   const { email, password, confirmPassword, referralCode, displayName } = state;
-  const dispatch = useDispatch();
-
-  const [error, setError] = React.useState(null);
 
   const handleFirebaseError = (firebaseError) => {
     if (firebaseError.code && firebaseError.message) {
@@ -68,14 +61,12 @@ const SignUp = () => {
         // Extract the part after the prefix
         const startIndex = "Firebase: Error (".length;
         const endIndex = errorMessage.indexOf(")");
-        setError(errorMessage.substring(startIndex, endIndex));
         showError(errorMessage.substring(startIndex, endIndex));
       } else {
-        setError(errorMessage);
         showError(errorMessage);
       }
     } else {
-      setError("An unexpected error occurred.");
+      showError("An unexpected error occurred.");
     }
   };
 
@@ -99,7 +90,7 @@ const SignUp = () => {
     }
   }, []);
 
-  const getEmailLink = async () => {
+  const sendVerificationLink = async () => {
     const obj = { email: email };
     try {
       const res = await http.post(`auth/verify`, obj);
@@ -111,18 +102,22 @@ const SignUp = () => {
       setFlow("signUp");
     } catch (error) {
       console.log(error);
-      
+      showError("An error occurred");
     }
   };
 
   const register = async () => {
-
-    if (email != "" || password != "" || confirmPassword != "" || displayName != "") {
+    if (
+      email !== "" ||
+      password !== "" ||
+      confirmPassword !== "" ||
+      displayName !== ""
+    ) {
       //implement strong password for account security reasons
-      if (password == confirmPassword) {
+      if (password === confirmPassword) {
         setState({ ...state, loading: true });
         //implement promo code validation
-        if (referralCode != '') {
+        if (referralCode !== "") {
           const validationResult = await validateCode();
           if (validationResult.failed) {
             setState({ ...state, loading: false });
@@ -130,49 +125,38 @@ const SignUp = () => {
             return;
           }
         }
+
         try {
-          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+          const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
           const user = userCredential.user;
           console.log(user, "user");
           // Update user profile with display name
           if (user) {
             updateProfile(auth.currentUser, {
               displayName: displayName,
-            })
-              .then((res) => {
-                // Profile updated!
-                // ...
-                // console.log(res, "res");
-              })
-              .catch((error) => {
-                // An error occurred
-                // ...
-                console.log(error, "error");
-              });
+            }).catch((error) => {
+              console.log(error, "update user error");
+            });
           }
 
-          console.log("User signed up successfully:", user);
-
-          setToken(user.accessToken);
           if (user) {
-            getEmailLink();
-          }else{
-            //handle user error here
+            sendVerificationLink();
           }
-
-          // Other logic...
         } catch (error) {
           handleFirebaseError(error);
           setState({ ...state, loading: false });
         } finally {
-          //
           setState({ ...state, loading: false });
         }
       } else {
-        showError('Passwords do not match');
+        showError("Passwords do not match");
       }
     } else {
-      showError('Required fields are missing');
+      showError("Required fields are missing");
     }
   };
 
@@ -203,7 +187,13 @@ const SignUp = () => {
       // The AuthCredential type that was used.
       const credential = GoogleAuthProvider.credentialFromError(error);
 
-      console.error("Google Sign-In error:", errorCode, errorMessage, email, credential);
+      console.error(
+        "Google Sign-In error:",
+        errorCode,
+        errorMessage,
+        email,
+        credential
+      );
       handleFirebaseError(error);
     }
   };
@@ -214,7 +204,10 @@ const SignUp = () => {
         <header>
           <img src={Logo} alt="logo" />
           {/* <ProgressB /> */}
-          <button className={"flexRow alignCenter justifyCenter googleAuthBtn"} onClick={linkSignUp}>
+          <button
+            className={"flexRow alignCenter justifyCenter googleAuthBtn"}
+            onClick={linkSignUp}
+          >
             <img src={GoogleLogo} alt="logo" />
             <Text>Sign up with Google</Text>
           </button>
@@ -222,33 +215,70 @@ const SignUp = () => {
         </header>
         <div className={"formContainer"}>
           <div>
-            <CustomInput label={"Username"} onChange={onChangeUserName} value={state.displayName} />
+            <CustomInput
+              label={"Username"}
+              onChange={onChangeUserName}
+              value={state.displayName}
+            />
           </div>
           <div>
-            <CustomInput label={"Your email"} onChange={onChangeEmail} value={state.email} />
+            <CustomInput
+              label={"Your email"}
+              onChange={onChangeEmail}
+              value={state.email}
+            />
           </div>
           <div>
-            <CustomInput label={"Password"} type={"password"} onChange={onChangePassword} value={state.password} />
+            <CustomInput
+              label={"Password"}
+              type={"password"}
+              onChange={onChangePassword}
+              value={state.password}
+            />
           </div>
           <div>
-            <CustomInput label={"Confirm password"} type={"password"} onChange={onChangeConfirmPassword} value={state.confirmPassword} />
+            <CustomInput
+              label={"Confirm password"}
+              type={"password"}
+              onChange={onChangeConfirmPassword}
+              value={state.confirmPassword}
+            />
           </div>
           <div>
-            <CustomInput label={"Promo code"} onChange={onChangeReferralCode} value={state.referralCode} />
+            <CustomInput
+              label={"Promo code"}
+              onChange={onChangeReferralCode}
+              value={state.referralCode}
+            />
           </div>
           <div>
-            <Text className={"f10 mediumText"} style={{ color: "#B00020", position: "relative", top: "-10px" }}>
+            <Text
+              className={"f10 mediumText"}
+              style={{ color: "#B00020", position: "relative", top: "-10px" }}
+            >
               {state.referralCodeError}
             </Text>
           </div>
           <div>
-            <Button text={"Sign up"} className={"authBtn"} onClick={register} loading={state.loading} />
+            <Button
+              text={"Sign up"}
+              className={"authBtn"}
+              onClick={register}
+              loading={state.loading}
+            />
           </div>
-          <div className={"flexRow alignCenter justifyCenter"} style={{ gap: "5px", margin: "10px 0", cursor: "pointer" }}>
+          <div
+            className={"flexRow alignCenter justifyCenter"}
+            style={{ gap: "5px", margin: "10px 0", cursor: "pointer" }}
+          >
             <Text className={"f14"} style={{ color: "#8A8A8A" }}>
-              Already have an account? {" "}
+              Already have an account?{" "}
             </Text>
-            <Text className={"f14 mediumText"} style={{ color: "#101010" }} onClick={login}>
+            <Text
+              className={"f14 mediumText"}
+              style={{ color: "#101010" }}
+              onClick={login}
+            >
               Login
             </Text>
           </div>

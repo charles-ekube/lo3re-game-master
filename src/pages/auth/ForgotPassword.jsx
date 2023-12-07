@@ -16,7 +16,6 @@ import { setFlow } from "../../utils/Helpers";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
-  const reset = () => {};
 
   const [state, setState] = useState({
     email: "",

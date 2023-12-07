@@ -10,9 +10,14 @@ import {
   CiMoneyBill,
   CiWallet,
 } from "react-icons/ci";
+import { signOut } from "firebase/auth";
 import { PiGearSixLight } from "react-icons/pi";
 import { useDispatch } from "react-redux";
-import { toggleSidebar } from "../../../redux/features/generalSlice";
+import {
+  toggleSidebar,
+  updateUserDetail,
+} from "../../../redux/features/generalSlice";
+import { auth } from "../../../firebase";
 
 const SideBar = () => {
   const location = useLocation();
@@ -25,9 +30,21 @@ const SideBar = () => {
   const getID = getParamArr[0][1].split("/");
   const id = getID[1];
   const dispatch = useDispatch();
+  // const navigate("")
 
   const closeSidebar = () => {
     dispatch(toggleSidebar(false));
+  };
+
+  const logOut = async () => {
+    try {
+      await signOut(auth);
+      localStorage.removeItem("accessToken");
+      dispatch(updateUserDetail({}));
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   if (getPath.length === 2) {
@@ -150,6 +167,8 @@ const SideBar = () => {
             <li style={{ marginTop: "20px" }}>
               <NavLink
                 className={`flexRow alignCenter satoshi-text `}
+                to={"#"}
+                onClick={logOut}
                 style={{ gap: "8px" }}
               >
                 <CiLogout size={22} style={{ transform: "rotate(180deg)" }} />
