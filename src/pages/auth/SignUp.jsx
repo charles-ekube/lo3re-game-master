@@ -6,12 +6,18 @@ import Or from "../../assets/images/or.svg";
 import CustomInput from "../../utils/CustomInput";
 import Button from "../../utils/CustomButton";
 import { useNavigate } from "react-router-dom";
-import { getAuth, createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { app } from "../../firebase";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  sendEmailVerification,
+} from "firebase/auth";
 import { setFlow } from "../../utils/Helpers";
-import { useDispatch } from "react-redux";
 import http from "../../utils/utils";
 import { showError } from "../../utils/Alert";
+import { auth } from "../../firebase";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -49,7 +55,7 @@ const SignUp = () => {
     setState({ ...state, referralCode: e.target.value });
   };
 
-  const auth = getAuth(app);
+  // const auth = getAuth(app);
   const { email, password, confirmPassword, referralCode, displayName } = state;
 
   const handleFirebaseError = (firebaseError) => {
@@ -94,12 +100,18 @@ const SignUp = () => {
     const obj = { email: email };
     try {
       const res = await http.post(`auth/verify`, obj);
-      setState({ ...state, loading: false });
       navigate("/signup-link", {
-        state: { data: { message: res?.message, email: email } },
+        state: {
+          data: {
+            message:
+              "🟢 Verification link has been sent to email. Please check inbox or spam folder for this link",
+            email: email,
+          },
+        },
       });
       console.log(res);
       setFlow("signUp");
+      setState({ ...state, loading: false });
     } catch (error) {
       console.log(error);
       showError("An error occurred");
@@ -144,12 +156,29 @@ const SignUp = () => {
           }
 
           if (user) {
-            sendVerificationLink();
+            sendEmailVerification(auth.currentUser)
+              .then((resp) => {
+                console.log("vEmail", resp);
+                signOut(auth);
+                setState({ ...state, loading: false });
+                setFlow("signUp");
+                navigate("/signup-link", {
+                  state: {
+                    data: {
+                      message:
+                        "🟢 Verification link has been sent to email. Please check inbox or spam folder for this link",
+                      email: email,
+                    },
+                  },
+                });
+              })
+              .catch((error) => {
+                console.log(error);
+                handleFirebaseError(error);
+              });
           }
         } catch (error) {
           handleFirebaseError(error);
-          setState({ ...state, loading: false });
-        } finally {
           setState({ ...state, loading: false });
         }
       } else {

@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { showError } from "../../utils/Alert";
 import {
   verifyPasswordResetCode,
-  confirmPasswordReset,
   applyActionCode,
   isSignInWithEmailLink,
   signInWithEmailLink,
@@ -15,7 +14,7 @@ import Button from "../../utils/CustomButton";
 
 const HandleEmailActions = () => {
   const location = useLocation();
-  const [redirectUrl, setRedirectUrl] = useState("/");
+  const [redirectUrl, setRedirectUrl] = useState(null);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
@@ -102,10 +101,13 @@ const HandleEmailActions = () => {
       // The client SDK will parse the code from the link for you.
       signInWithEmailLink(auth, email, window.location.href)
         .then((result) => {
+          setMessage(
+            "🟢 Login successful, you will be redirected to your dashboard"
+          );
           window.localStorage.removeItem("emailForSignIn");
           // console.log(result)
           window.localStorage.setItem("accessToken", result.user.accessToken);
-          navigate(`/verify-email`);
+          navigate(`/dashboard`);
         })
         .catch((error) => {
           // Some error occurred, you can inspect the code: error.code
@@ -159,7 +161,7 @@ const HandleEmailActions = () => {
             </div>
           </header>
           <div className={"formContainer"}>
-            {message && (
+            {redirectUrl && (
               <div>
                 <Button
                   text={"Login"}
