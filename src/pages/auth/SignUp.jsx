@@ -96,28 +96,6 @@ const SignUp = () => {
     }
   }, []);
 
-  const sendVerificationLink = async () => {
-    const obj = { email: email };
-    try {
-      const res = await http.post(`auth/verify`, obj);
-      navigate("/signup-link", {
-        state: {
-          data: {
-            message:
-              "🟢 Verification link has been sent to email. Please check inbox or spam folder for this link",
-            email: email,
-          },
-        },
-      });
-      console.log(res);
-      setFlow("signUp");
-      setState({ ...state, loading: false });
-    } catch (error) {
-      console.log(error);
-      showError("An error occurred");
-    }
-  };
-
   const register = async () => {
     if (
       email !== "" ||

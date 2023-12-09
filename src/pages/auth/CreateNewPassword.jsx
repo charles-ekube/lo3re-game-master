@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Logo from "../../assets/images/logo.svg";
-import GoogleLogo from "../../assets/images/google.svg";
 import Text from "../../utils/CustomText";
 import CustomInput from "../../utils/CustomInput";
 import { showError } from "../../utils/Alert";
@@ -114,6 +113,7 @@ const CreatePassword = () => {
               text={"Confirm"}
               className={"authBtn"}
               onClick={resetPassword}
+              loading={formState.loading}
             />
           </div>
           <div
