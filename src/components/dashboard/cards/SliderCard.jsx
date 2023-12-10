@@ -1,6 +1,7 @@
 import React from "react";
 import Text from "../../../utils/CustomText";
 import Button from "../../../utils/CustomButton";
+import CustomButtonII from "../../../utils/CustomButtonII";
 
 const SliderCard = ({ src, title, subTitle, btnText }) => {
   return (
@@ -11,7 +12,11 @@ const SliderCard = ({ src, title, subTitle, btnText }) => {
         <Text className={"my-1 fs-14"} tag={"p"}>
           {subTitle}
         </Text>
-        <Button text={btnText} className="swiper-btn" />
+        <CustomButtonII
+          variant={"light"}
+          text={btnText}
+          className="btnSm radius99"
+        />
       </div>
     </div>
   );

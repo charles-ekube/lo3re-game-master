@@ -13,6 +13,8 @@ import "./assets/styles/walletStyles.css";
 import './assets/styles/cardStyles.css';
 import './assets/styles/carouselStyles.css';
 
+import "react-datepicker/dist/react-datepicker.css";
+
 import './assets/fonts/fonts.css';
 import { BrowserRouter } from 'react-router-dom';
 import { store } from "./redux/store";

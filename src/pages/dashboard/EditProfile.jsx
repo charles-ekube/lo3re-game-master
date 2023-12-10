@@ -56,7 +56,7 @@ const EditProfile = () => {
 
             <div className="text-end mt35">
               {/* <IconButton text={"Update"} className="walletButton" /> */}
-              <button className="btn btn-dark btn-lg">Update</button>
+              <button className="btn btn-dark btnLg">Update</button>
             </div>
           </form>
         </div>

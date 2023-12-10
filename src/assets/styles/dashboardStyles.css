@@ -104,6 +104,9 @@
   padding: 32px;
 }
 
+.mainContent {
+  padding: 35px;
+}
 
 
 /* media queries  */
@@ -140,5 +143,11 @@
 
   .topNavContainer {
     padding: 16px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mainContent {
+      padding: 35px 25px;
   }
 }

@@ -1,0 +1,200 @@
+
+.lotteryContainer {
+    margin-top: 24px;
+}
+
+/* .tabContainer {
+    
+} */
+
+.tab {
+    margin: 12px 0 24px 0;
+    overflow-x: auto;
+    /* border-bottom: 2px solid var(--lightGreyII); */
+}
+
+.tab button {
+    background-color: inherit;
+    color: #bbb;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    /* margin-bottom: -2px;
+    position: relative;
+    z-index: 300; */
+    border-bottom: 2px solid var(--lightGreyII);
+}
+
+.tab button > .badge {
+    background-color: #bbb;
+    color: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    margin-left: 7px;
+}
+
+/* .tab button:hover {
+    background-color: var(--lightGrey);
+} */
+
+.tab button.active {
+    color: var(--secondary);
+    border-bottom: 2px solid var(--secondary);
+}
+
+.tab button.active > .badge {
+    background-color: var(--secondary);
+}
+ 
+
+
+.jackpotBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: #9EBCCA;
+    padding: 24px;
+    width: 164px;
+    height: 164px;
+    border-radius: 16px;
+    color: var(--white);
+}
+
+.jackpotBox .title {
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.jackpotBox .subtitle {
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 5px;
+}
+
+
+
+/**********************************
+* Add lottery
+***********************************/
+.addLotteryHeader {
+    margin-top: 32px;
+    margin-bottom: 16px;
+}
+
+.addLotteryHeader h2 {
+    font-size: 21px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.addLottery .avatar {
+    background-color: var(--lightGreyII);
+    margin-right: 27px;
+    overflow: hidden;
+}
+
+.addLottery .avatar > .cameraImg {
+    width: 60px;
+    height: 60px;
+}
+
+.addLottery .avatar > .fileImg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.addLotteryHeader p {
+    font-size: 14px;
+}
+
+
+.lotteryForm {
+    margin-top: 30px;
+}
+
+.lotteryForm > .col3 .inputContainer {
+    width: 30%;
+}
+
+.lotteryForm > .col2 .inputContainer {
+    width: 48%;
+}
+
+.lotteryForm > .flexRow {
+    flex-wrap: wrap;
+    gap: 15px;
+    row-gap: 0;
+}
+
+
+.formDesc {
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--lightGreyII);
+    margin-bottom: 16px;
+}
+
+.modal .packageImg > img {
+    width: 160px;
+    height: 160px;
+}
+
+.modal .text > p {
+    margin-top: 8px;
+    margin-bottom: 40px;
+}
+
+.formButtonContainer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 35px;
+}
+
+.formButtonContainer.col3 {
+    justify-content: space-between;
+}
+
+.formButtonContainer.col3 .btnGroup:nth-child(2) {
+    display: flex;
+    gap: 10px;
+}
+
+@media screen and (max-width: 763px) {
+    .formButtonContainer {
+        justify-content: center;
+    }
+
+    .formButtonContainer.col3 {
+        align-items: center;
+        flex-direction: column-reverse;
+    }
+
+    .formButtonContainer.col3 .btnGroup {
+        width: 100%;
+    }
+
+    .formButtonContainer.col3 .btnGroup:nth-child(2) button {
+        width: 50%;
+    }
+
+    .formButtonContainer.col3 .backBtn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .formButtonContainer.col3 .backBtn > span.flexRow {
+        justify-content: center;
+    }
+}

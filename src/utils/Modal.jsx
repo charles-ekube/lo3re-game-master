@@ -1,7 +1,13 @@
 import React from "react";
 import { LiaTimesSolid } from "react-icons/lia";
 
-const Modal = ({ isOpen, onClose, title = null, children }) => {
+const Modal = ({
+  isOpen,
+  onClose,
+  hideCloseBtn = false,
+  title = null,
+  children,
+}) => {
   return (
     <>
       {isOpen ? (
@@ -11,7 +17,9 @@ const Modal = ({ isOpen, onClose, title = null, children }) => {
             <div className={`flexRow justifyBetween alignCenter posRelative`}>
               <h3 className="capitalize">{title}</h3>
               <button
-                className="btn btn-ghost text-danger f20 closeBtn"
+                className={`btn btn-ghost text-danger f20 closeBtn ${
+                  hideCloseBtn ? "dNone" : ""
+                }`}
                 onClick={onClose}
               >
                 <LiaTimesSolid size={24} />
