@@ -11,6 +11,7 @@ import History from "./History";
 import Settings from "./Settings";
 import EditProfile from "./EditProfile";
 import Kyc from "./Kyc";
+import Lotteries from "./Lotteries";
 
 const DashboardLayout = () => {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ const DashboardLayout = () => {
         <TopNav />
         <Routes>
           <Route path="/*" element={<Overview />} />
+          <Route path="/lotteries" element={<Lotteries />} />
           <Route path="/account" element={<Wallet />} />
           <Route path="/history" element={<History />} />
           <Route path="/settings">

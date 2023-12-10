@@ -84,16 +84,18 @@ const SideBar = () => {
             <li onClick={closeSidebar}>
               <NavLink
                 className={`flexRow alignCenter  satoshi-text ${
-                  ActivePath === "menu" && "sideBarActiveLink"
+                  ActivePath === "lotteries" && "sideBarActiveLink"
                 }`}
-                to={"menu"}
+                to={"lotteries"}
                 style={{ gap: "8px" }}
               >
                 <CiMoneyBill size={22} />
                 <Text tag={"p"} className={"satoshi-text f16"}>
                   Lotteries
                 </Text>
-                {ActivePath === "menu" && <div className={"activeIndicator"} />}
+                {ActivePath === "lotteries" && (
+                  <div className={"activeIndicator"} />
+                )}
               </NavLink>
             </li>
             <li onClick={closeSidebar}>
