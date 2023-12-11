@@ -267,11 +267,15 @@ button {
   display: block;
 }
 
-.formInput, .react-datepicker-wrapper {
+.formInput, .react-datepicker-wrapper, .dropdown-button, .currencyInputContainer {
   width: 100%;
   border: 1px solid var(--lightGreyII);
   border-radius: 8px;
   padding: 10px 8px;
+}
+
+.dropdown-button {
+  border: 1px solid var(--lightGreyII) !important;
 }
 
 .formInput:focus {

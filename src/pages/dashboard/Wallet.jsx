@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Text from "../../utils/CustomText";
 import ContactCard from "../../components/dashboard/cards/ContactCard";
 import BalanceCard from "../../components/dashboard/wallet/BalanceCard";
@@ -14,44 +14,19 @@ import CryptoIcon from "../../assets/images/icons/buy-crypto.png";
 import ThreeColumnRow from "../../utils/ThreeColumnRow";
 import CustomRadio from "../../utils/CustomRadio";
 import CustomButtonII from "../../utils/CustomButtonII";
+import CustomDropdown from "../../utils/CustomDropdown";
+import http from "../../utils/utils";
+import { Swiper, SwiperSlide } from "swiper/react";
+
+import "swiper/css";
+import CurrancyInput from "../../utils/CurrancyInput";
+import { showError } from "../../utils/Alert";
+import FundWalletModal from "../../components/dashboard/widgets/FundWalletModal";
+import WithdrawWalletModal from "../../components/dashboard/widgets/WithdrawWalletModal";
 
 const Wallet = () => {
   const [fundWalletModal, setFundWalletModal] = useState(false);
-  const [action, setAction] = useState("");
-  const [paymentMethods, setPaymentMethods] = useState([
-    {
-      name: "Bank Transfer",
-      subtitle: "Transfer to your wallet account number",
-      icon: BankIcon,
-      isActive: false,
-    },
-    {
-      name: "Debit/Credit Card",
-      subtitle: "Fund with Naira cards",
-      icon: CardIcon,
-      isActive: false,
-    },
-    {
-      name: "Crytocurrency",
-      subtitle: "Fund with crypto coins",
-      icon: CryptoIcon,
-      isActive: false,
-    },
-  ]);
-
-  const openModal = (action) => {
-    setAction(action);
-    setFundWalletModal(!fundWalletModal);
-  };
-
-  const toggleActive = (clickedMethod) => {
-    const updatedMethods = paymentMethods.map((method) => ({
-      ...method,
-      isActive: method === clickedMethod, // Set to true for the clicked profile, false for others
-    }));
-
-    setPaymentMethods(updatedMethods); // Update the state with the new array
-  };
+  const [withdrawWalletModal, setWithdrawWalletModal] = useState(false);
 
   return (
     <>
@@ -84,14 +59,14 @@ const Wallet = () => {
               text={"Withdraw"}
               variant={"light"}
               icon={<PiBank fontSize={"18px"} />}
-              onClick={() => openModal("withdraw")}
+              onClick={() => setWithdrawWalletModal(true)}
               disabled={false}
             />
             <CustomButtonII
               text={"Fund wallet"}
               variant={"primary"}
               icon={<FiPlusCircle fontSize={"18px"} />}
-              onClick={() => openModal("fund wallet")}
+              onClick={() => setFundWalletModal(true)}
             />
           </div>
           <div className="historyContainer">
@@ -132,39 +107,14 @@ const Wallet = () => {
         </aside>
       </section>
 
-      <Modal
-        title={action}
+      <FundWalletModal
         isOpen={fundWalletModal}
         onClose={() => setFundWalletModal(false)}
-      >
-        {paymentMethods.map((method) => {
-          if (
-            action.toLowerCase() === "withdraw" &&
-            method.name.toLowerCase() === "debit/credit card"
-          ) {
-            return null;
-          }
-          return (
-            <ThreeColumnRow
-              onClick={() => toggleActive(method)}
-              title={method.name}
-              subtitle={method.subtitle}
-              icon={method.icon}
-              col2Child={<CustomRadio isChecked={method.isActive} />}
-            />
-          );
-        })}
-        <div className="modalFooter">
-          <div className="flexRow justifyEnd gap-1">
-            <CustomButtonII
-              text={"Back"}
-              variant={"light"}
-              onClick={() => setFundWalletModal(false)}
-            />
-            <CustomButtonII text={"Accept"} variant={"primary"} />
-          </div>
-        </div>
-      </Modal>
+      />
+      <WithdrawWalletModal
+        isOpen={withdrawWalletModal}
+        onClose={() => setWithdrawWalletModal(false)}
+      />
     </>
   );
 };

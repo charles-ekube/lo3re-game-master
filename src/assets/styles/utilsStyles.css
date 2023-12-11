@@ -62,16 +62,20 @@
 }
 
 /* Loader  */
-
 .loader {
   width: 30px;
   height: 30px;
-  border: 3px solid #fff;
+  border: 3px solid var(--white);
   border-bottom-color: transparent;
   border-radius: 50%;
   display: inline-block;
   box-sizing: border-box;
   animation: rotation 1s linear infinite;
+}
+
+.loader-dark {
+  border: 3px solid var(--secondary);
+  border-bottom-color: transparent;
 }
 
 @keyframes rotation {
@@ -285,6 +289,73 @@
 .cr-wrapper input[type="radio"]:checked:focus ~ .cr-input {
 	background: var(--secondary);
 	border-color: #232A44;
+}
+
+
+
+/* CustomDropdown */
+.dropdown-container {
+  position: relative;
+}
+
+.dropdown-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dropdown-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  display: block;
+  background-color: var(--white);
+  width: 100%;
+  border-radius: 8px;
+  text-align: left;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dropdown-content li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.dropdown-content li:hover {
+  background-color: var(--lightGrey);
+}
+
+
+
+/* CustomDropdown */
+.currencyInputContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.currencyInputContainer input {
+  border: none;
+  width: calc(100% - 64px);
+}
+
+.currencyInputContainer input:focus {
+  outline: none;
+}
+
+.currencyInputContainer .amountInnerDropdown > button {
+  width: 64px;
+  padding: 0;
+  background-color: transparent;
+  border: none !important;
+  font-size: 16px;
 }
 
 

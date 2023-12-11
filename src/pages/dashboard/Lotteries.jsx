@@ -77,7 +77,7 @@ const Lotteries = () => {
               </div>
             </div>
             <div className="flexRow">
-              {/* TODO: add bg img, ellipse icon, verified badge and tab responsiveness */}
+              {/* TODO: add bg img, and tab responsiveness */}
               <div className="jackpotBox">
                 <div className="flexRow justifyEnd">
                   <button className="btn btn-ghost p0">

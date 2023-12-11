@@ -3,20 +3,16 @@
     margin-top: 24px;
 }
 
-/* .tabContainer {
-    
-} */
-
-.tab {
+/* 👇🏽👇🏽the correct way that shld show a scroll on smaller screens */
+/* .tab {
     margin: 12px 0 24px 0;
     overflow-x: auto;
-    /* border-bottom: 2px solid var(--lightGreyII); */
-}
+    display: flex;
+} */
 
-.tab button {
+/* .tab button {
     background-color: inherit;
     color: #bbb;
-    float: left;
     border: none;
     outline: none;
     cursor: pointer;
@@ -26,9 +22,27 @@
     font-weight: 500;
     display: flex;
     align-items: center;
-    /* margin-bottom: -2px;
-    position: relative;
-    z-index: 300; */
+    border-bottom: 2px solid var(--lightGreyII);
+} */
+
+.tab {
+    margin: 12px 0 24px 0;
+    overflow-x: auto;
+}
+
+.tab button {
+    background-color: inherit;
+    float: left;
+    color: #bbb;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
     border-bottom: 2px solid var(--lightGreyII);
 }
 
@@ -172,6 +186,15 @@
 }
 
 @media screen and (max-width: 763px) {
+
+    .tab > button {
+        padding: 12px 14px;
+        font-size: 12px;
+    }
+
+    /***************
+    * add lottery
+    ****************/
     .formButtonContainer {
         justify-content: center;
     }
@@ -196,5 +219,19 @@
 
     .formButtonContainer.col3 .backBtn > span.flexRow {
         justify-content: center;
+    }
+}
+
+
+@media screen and (max-width: 500px) {
+    .tab > button {
+        padding: 8px 5px;
+        font-size: 10px;
+    }
+
+    .tab > button > .badge {
+        font-size: 10px;
+        width: 20px;
+        height: 20px;
     }
 }
