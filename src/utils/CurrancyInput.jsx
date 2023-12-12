@@ -7,6 +7,8 @@ const CurrancyInput = ({
   currencyValue,
   onChangeCurrency,
   currencyItems,
+  currencyDisabled = false,
+  ...otherProps
 }) => {
   return (
     <>
@@ -16,12 +18,14 @@ const CurrancyInput = ({
           placeholder="0"
           value={amountValue}
           onChange={(e) => onChangeAmount(e.target.value)}
+          {...otherProps}
         />
         <CustomDropdown
           value={currencyValue || "-"}
           className={"amountInnerDropdown"}
           itemOnClick={onChangeCurrency}
           dropdownItems={currencyItems}
+          disabled={currencyDisabled}
         />
       </div>
     </>

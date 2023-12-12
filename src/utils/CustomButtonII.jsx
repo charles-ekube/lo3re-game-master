@@ -8,7 +8,8 @@ const CustomButtonII = ({
   className,
   loading,
   icon,
-  variant,
+  variant = "primary",
+  centerText = false,
   ...otherProps
 }) => {
   const combinedClassName =
@@ -20,7 +21,9 @@ const CustomButtonII = ({
         <span className={"loader"}></span>
       ) : (
         <Text
-          className={"regularText flexRow alignCenter"}
+          className={`regularText flexRow alignCenter ${
+            centerText ? "justifyCenter" : ""
+          }`}
           style={{ gap: "8px" }}
         >
           {text}

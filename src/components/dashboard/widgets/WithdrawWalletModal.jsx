@@ -9,17 +9,46 @@ import BankIcon from "../../../assets/images/icons/bank.png";
 import CardIcon from "../../../assets/images/icons/card.png";
 import CryptoIcon from "../../../assets/images/icons/buy-crypto.png";
 import { showError } from "../../../utils/Alert";
+import CustomDropdown from "../../../utils/CustomDropdown";
 
 const WithdrawWalletModal = ({ isOpen, onClose }) => {
   const [supportedCurrencies, setSupportedCurrencies] = useState([]);
-  const [reqWithdrawalLoading, setReqWithdrawalLoading] = useState(false);
-  const [requestWithdrawalStep, setRequestWithdrawalStep] = useState(1);
+  const [requestLoading, setRequestLoading] = useState(false);
+  const [rate, setRate] = useState({
+    rate: "1",
+    symbol: "$",
+  });
+  const [formStep, setFormStep] = useState(1);
   const [withdrawalFormStates, setWithdrawalFormStates] = useState({
     currency: "usd",
     amount: "",
+    amountToRecieve: 0,
   });
 
   const [paymentMethods, setPaymentMethods] = useState();
+  const [beneficiaries, setBeneficiaries] = useState([
+    {
+      name: "John Doe",
+      addressLabel: "Access Bank",
+      address: "2343453243",
+      icon: BankIcon,
+      isActive: false,
+    },
+    {
+      name: "Jane Doe",
+      addressLabel: "Access Bank",
+      address: "2343453243",
+      icon: BankIcon,
+      isActive: false,
+    },
+    {
+      name: "James Doe",
+      addressLabel: "Access Bank",
+      address: "2343453243",
+      icon: BankIcon,
+      isActive: false,
+    },
+  ]);
 
   const toggleActive = (clickedMethod) => {
     const updatedMethods = paymentMethods.map((method) => ({
@@ -30,12 +59,45 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
     setPaymentMethods(updatedMethods);
   };
 
+  const toggleBeneficiaryActive = (clickedItem) => {
+    const updatedItems = beneficiaries.map((item) => ({
+      ...item,
+      isActive: item === clickedItem,
+    }));
+
+    setBeneficiaries(updatedItems);
+  };
+
+  const handleAmountChange = (val) => {
+    setWithdrawalFormStates({
+      ...withdrawalFormStates,
+      amount: val,
+    });
+  };
+
+  const handleCurrencyChange = (val) => {
+    setWithdrawalFormStates({ ...withdrawalFormStates, currency: val });
+
+    let getRate = supportedCurrencies.filter((cur) => cur.code === val);
+    setRate({
+      rate: getRate.length ? getRate[0]?.rates[0]?.usd?.rate : 0,
+      symbol: getRate[0].symbol,
+    });
+  };
+
+  useEffect(() => {
+    let amountToRecieve = withdrawalFormStates.amount * rate.rate;
+    setWithdrawalFormStates((curState) => ({ ...curState, amountToRecieve }));
+  }, [rate.rate, withdrawalFormStates.amount]);
+
   const fetchCurrencies = async () => {
     try {
       const res = await http.get(`wallets/supported-currencies`);
-      const newArray = res.map(({ code }) => ({
-        value: code,
-        name: code.toUpperCase(),
+      const newArray = res.map((cur) => ({
+        ...cur,
+        title: cur.name,
+        value: cur.code,
+        name: cur.code.toUpperCase(),
       }));
 
       setSupportedCurrencies(newArray);
@@ -60,16 +122,16 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
   };
 
   const processFundWallet = async () => {
-    if (requestWithdrawalStep === 1) {
+    if (formStep === 1) {
       if (withdrawalFormStates.amount === "") {
         showError("Amount is required");
         return;
       }
 
-      setReqWithdrawalLoading(true);
+      setRequestLoading(true);
       try {
         const res = await http.get(`wallets/withdrawal-methods`);
-        setReqWithdrawalLoading(false);
+        setRequestLoading(false);
 
         const availableMethods = res
           .filter((method) =>
@@ -82,63 +144,106 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
           }));
 
         setPaymentMethods(availableMethods);
-        setRequestWithdrawalStep(2);
-        // console.log("withdrawal methods", selectedMethod);
-        console.log("withdrawal methods", res);
+        setFormStep(2);
+        // console.log("withdrawal methods", res);
       } catch (error) {
-        setReqWithdrawalLoading(false);
+        setRequestLoading(false);
+        showError(error[0]);
         console.log("fetch method err", error);
       }
-    } else if (requestWithdrawalStep === 2) {
+    } else if (formStep === 2) {
       const activeMethod = paymentMethods.filter(
         (val) => val.isActive === true
       );
+
       if (!activeMethod.length) {
         showError("Select a payment method");
         return;
       }
 
-      setRequestWithdrawalStep(3);
+      // fetch beneficiaries
+      // let url = "";
+      // if (activeMethod[0].code === "bank_transfer") {
+      //   url = "wallets/withdrawals/bank-details";
+      // } else if (activeMethod[0].code === "crypto") {
+      //   url = "wallets/withdrawals/crypto";
+      // }
 
-      // process withdrawal request
-      //   onClose();
-      //   setRequestWithdrawalStep(1);
-      //   setWithdrawalFormStates({
-      //     currency: "usd",
-      //     amount: "",
-      //   });
-      //   alert("Withdraw request processing");
+      // setRequestLoading(true);
+      // try {
+      //   const res = await http.get(url);
+      //   setRequestLoading(false);
+
+      //   console.log(res);
+      // } catch (error) {
+      //   setRequestLoading(false);
+      //   console.log(error);
+      // }
+      setFormStep(3);
+    } else if (formStep === 3) {
+      // process withdrawal request & reset form
+      // TODO: remeber to submit amountToReceived not amount
+      onClose();
+      setFormStep(1);
+      setRate({
+        rate: "1",
+        symbol: "$",
+      });
+      setWithdrawalFormStates({
+        currency: "usd",
+        amount: "",
+      });
+      alert("Withdraw request processing");
     }
   };
 
   const renderRequestComponent = () => {
-    if (!reqWithdrawalLoading) {
-      if (requestWithdrawalStep === 1) {
+    if (!requestLoading) {
+      if (formStep === 1) {
         return (
-          <div className="inputContainer">
-            <label className="text-start">
-              How much would you like to withdraw?
-            </label>
-            <CurrancyInput
-              amountValue={withdrawalFormStates.amount}
-              onChangeAmount={(val) =>
-                setWithdrawalFormStates({
-                  ...withdrawalFormStates,
-                  amount: val,
-                })
-              }
-              currencyValue={withdrawalFormStates.currency}
-              currencyItems={supportedCurrencies}
-              onChangeCurrency={(val) =>
-                setWithdrawalFormStates({
-                  ...withdrawalFormStates,
-                  currency: val,
-                })
-              }
-            />
-          </div>
+          <>
+            <div className="inputContainer">
+              <label className="text-start">Currency</label>
+              <CustomDropdown
+                value={withdrawalFormStates.currency}
+                itemOnClick={handleCurrencyChange}
+                dropdownItems={supportedCurrencies}
+              />
+            </div>
+
+            <div className="inputContainer">
+              <label className="text-start">
+                How much would you like to withdraw?
+              </label>
+              <CurrancyInput
+                amountValue={withdrawalFormStates.amount}
+                onChangeAmount={(val) => handleAmountChange(val)}
+                currencyValue={"usd"}
+                currencyDisabled={true}
+                currencyItems={[{ name: "USD", value: "usd" }]}
+                onChangeCurrency={() => null}
+              />
+              <div className="flexRow">
+                <small className="text-start">
+                  Rates: <b>$1 = {rate.symbol + rate.rate}</b>
+                </small>
+              </div>
+            </div>
+            <div className="inputContainer">
+              <label className="text-start">Amount to receive</label>
+              <CurrancyInput
+                amountValue={withdrawalFormStates.amountToRecieve}
+                onChangeAmount={() => null}
+                currencyValue={withdrawalFormStates.currency}
+                currencyItems={supportedCurrencies}
+                onChangeCurrency={() => null}
+                currencyDisabled={true}
+                readOnly
+              />
+            </div>
+          </>
         );
-      } else if (requestWithdrawalStep === 2) {
+      } else if (formStep === 2) {
         return (
           <>
             {paymentMethods.map((method, index) => (
@@ -153,13 +258,33 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
             ))}
           </>
         );
+      } else if (formStep === 3) {
+        return (
+          <>
+            <h4 className="text-start mb-2">Select beneficiary</h4>
+            {beneficiaries.map((ben, index) => (
+              <ThreeColumnRow
+                key={`ben-${index}`}
+                onClick={() => toggleBeneficiaryActive(ben)}
+                title={ben.name}
+                subtitle={
+                  <>
+                    <small>{ben.addressLabel}:</small> <b>{ben.address}</b>
+                  </>
+                }
+                icon={ben.icon}
+                col2Child={<CustomRadio isChecked={ben.isActive} />}
+              />
+            ))}
+            <CustomButtonII
+              text={"Add New Beneficiary"}
+              variant={"light"}
+              className={"w100 justifyCenter"}
+              centerText={true}
+            />
+          </>
+        );
       }
-    } else if (requestWithdrawalStep === 3) {
-      return (
-        <div className="inputContainer">
-          <label>Select beneficiary</label>
-        </div>
-      );
     } else {
       return <span className={"loader loader-dark"}></span>;
     }
@@ -175,15 +300,11 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
             <CustomButtonII
               text={"Back"}
               variant={"light"}
-              disabled={requestWithdrawalStep === 1 ? true : false}
-              onClick={() =>
-                setRequestWithdrawalStep(
-                  requestWithdrawalStep > 1 ? requestWithdrawalStep - 1 : 1
-                )
-              }
+              disabled={formStep === 1 ? true : false}
+              onClick={() => setFormStep(formStep > 1 ? formStep - 1 : 1)}
             />
             <CustomButtonII
-              text={requestWithdrawalStep > 2 ? "Submit" : "Next"}
+              text={formStep > 2 ? "Submit" : "Next"}
               variant={"primary"}
               onClick={processFundWallet}
             />

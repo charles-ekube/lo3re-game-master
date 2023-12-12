@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Text from "../../utils/CustomText";
 import ContactCard from "../../components/dashboard/cards/ContactCard";
 import BalanceCard from "../../components/dashboard/wallet/BalanceCard";
@@ -7,20 +7,7 @@ import { FiPlusCircle } from "react-icons/fi";
 import { IoChevronForward } from "react-icons/io5";
 import TransactionHistory from "../../components/dashboard/wallet/TransactionHistory";
 import BankCard from "../../components/dashboard/wallet/BankCard";
-import Modal from "../../utils/Modal";
-import BankIcon from "../../assets/images/icons/bank.png";
-import CardIcon from "../../assets/images/icons/card.png";
-import CryptoIcon from "../../assets/images/icons/buy-crypto.png";
-import ThreeColumnRow from "../../utils/ThreeColumnRow";
-import CustomRadio from "../../utils/CustomRadio";
 import CustomButtonII from "../../utils/CustomButtonII";
-import CustomDropdown from "../../utils/CustomDropdown";
-import http from "../../utils/utils";
-import { Swiper, SwiperSlide } from "swiper/react";
-
-import "swiper/css";
-import CurrancyInput from "../../utils/CurrancyInput";
-import { showError } from "../../utils/Alert";
 import FundWalletModal from "../../components/dashboard/widgets/FundWalletModal";
 import WithdrawWalletModal from "../../components/dashboard/widgets/WithdrawWalletModal";
 

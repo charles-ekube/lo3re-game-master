@@ -12,11 +12,16 @@ import { showError } from "../../../utils/Alert";
 
 const FundWalletModal = ({ isOpen, onClose }) => {
   const [supportedCurrencies, setSupportedCurrencies] = useState([]);
-  const [reqDepositLoading, setReqDepositLoading] = useState(false);
-  const [requestDepositStep, setRequestDepositStep] = useState(1);
+  const [requestLoading, setRequestLoading] = useState(false);
+  const [formStep, setFormStep] = useState(1);
+  const [rate, setRate] = useState({
+    rate: "1",
+    symbol: "$",
+  });
   const [depositFormStates, setDepositFormStates] = useState({
     currency: "usd",
     amount: "",
+    amountToRecieve: 0,
   });
 
   const [paymentMethods, setPaymentMethods] = useState();
@@ -30,12 +35,29 @@ const FundWalletModal = ({ isOpen, onClose }) => {
     setPaymentMethods(updatedMethods);
   };
 
+  const handleCurrencyChange = (val) => {
+    setDepositFormStates({ ...depositFormStates, currency: val });
+
+    let getRate = supportedCurrencies.filter((cur) => cur.code === val);
+    setRate({
+      rate: getRate.length ? getRate[0]?.rates[0]?.usd?.rate : 0,
+      symbol: getRate.length ? getRate[0].symbol : "?",
+    });
+  };
+
+  useEffect(() => {
+    let amountToRecieve = depositFormStates.amount * rate.rate;
+    setDepositFormStates((curState) => ({ ...curState, amountToRecieve }));
+  }, [rate.rate, depositFormStates.amount]);
+
   const fetchCurrencies = async () => {
     try {
       const res = await http.get(`wallets/supported-currencies`);
-      const newArray = res.map(({ code }) => ({
-        value: code,
-        name: code.toUpperCase(),
+      const newArray = res.map((cur) => ({
+        ...cur,
+        title: cur.name,
+        value: cur.code,
+        name: cur.code.toUpperCase(),
       }));
 
       setSupportedCurrencies(newArray);
@@ -60,16 +82,16 @@ const FundWalletModal = ({ isOpen, onClose }) => {
   };
 
   const processFundWallet = async () => {
-    if (requestDepositStep === 1) {
+    if (formStep === 1) {
       if (depositFormStates.amount === "") {
         showError("Amount is required");
         return;
       }
 
-      setReqDepositLoading(true);
+      setRequestLoading(true);
       try {
         const res = await http.get(`wallets/deposit-methods`);
-        setReqDepositLoading(false);
+        setRequestLoading(false);
 
         const availableMethods = res
           .filter((method) =>
@@ -82,14 +104,13 @@ const FundWalletModal = ({ isOpen, onClose }) => {
           }));
 
         setPaymentMethods(availableMethods);
-        setRequestDepositStep(2);
+        setFormStep(2);
         // console.log("deposit methods", selectedMethod);
-        console.log("deposit methods", res);
       } catch (error) {
-        setReqDepositLoading(false);
+        setRequestLoading(false);
         console.log("fetch method err", error);
       }
-    } else if (requestDepositStep === 2) {
+    } else if (formStep === 2) {
       const activeMethod = paymentMethods.filter(
         (val) => val.isActive === true
       );
@@ -99,8 +120,28 @@ const FundWalletModal = ({ isOpen, onClose }) => {
       }
 
       // process deposit request
+      // const payMethod = paymentMethods.filter((val) => val.isActive === true);
+      // setRequestLoading(true);
+      // try {
+      //   const fData = {
+      //     ...depositFormStates,
+      //     method: payMethod[0]?.code,
+      //   };
+      //   const res = await http.post("wallets/deposits", fData);
+      //   setRequestLoading(false);
+      //   console.log(res);
+      // } catch (error) {
+      //   console.log(error);
+      //   setRequestLoading(false);
+      //   showError("An error occurred, try again later");
+      // }
+
       onClose();
-      setRequestDepositStep(1);
+      setFormStep(1);
+      setRate({
+        rate: "1",
+        symbol: "$",
+      });
       setDepositFormStates({
         currency: "usd",
         amount: "",
@@ -110,27 +151,45 @@ const FundWalletModal = ({ isOpen, onClose }) => {
   };
 
   const renderRequestComponent = () => {
-    if (!reqDepositLoading) {
-      if (requestDepositStep === 1) {
+    if (!requestLoading) {
+      if (formStep === 1) {
         return (
-          <div className="inputContainer">
-            <label className="text-start">
-              How much would you like to deposit?
-            </label>
-            <CurrancyInput
-              amountValue={depositFormStates.amount}
-              onChangeAmount={(val) =>
-                setDepositFormStates({ ...depositFormStates, amount: val })
-              }
-              currencyValue={depositFormStates.currency}
-              currencyItems={supportedCurrencies}
-              onChangeCurrency={(val) =>
-                setDepositFormStates({ ...depositFormStates, currency: val })
-              }
-            />
-          </div>
+          <>
+            <div className="inputContainer">
+              <label className="text-start">
+                How much would you like to deposit?
+              </label>
+              <CurrancyInput
+                amountValue={depositFormStates.amount}
+                onChangeAmount={(val) =>
+                  setDepositFormStates({ ...depositFormStates, amount: val })
+                }
+                currencyValue={depositFormStates.currency}
+                currencyItems={supportedCurrencies}
+                onChangeCurrency={(val) => handleCurrencyChange(val)}
+              />
+              <div className="flexRow">
+                <small className="text-start">
+                  Rates: <b>$1 = {rate.symbol + rate.rate}</b>
+                </small>
+              </div>
+            </div>
+
+            <div className="inputContainer">
+              <label className="text-start">Amount to receive</label>
+              <CurrancyInput
+                amountValue={depositFormStates.amountToRecieve}
+                onChangeAmount={() => null}
+                currencyValue={"usd"}
+                currencyItems={[{ name: "USD", value: "usd" }]}
+                onChangeCurrency={() => null}
+                currencyDisabled={true}
+                readOnly
+              />
+            </div>
+          </>
         );
-      } else if (requestDepositStep === 2) {
+      } else if (formStep === 2) {
         return (
           <>
             {paymentMethods.map((method, index) => (
@@ -161,15 +220,11 @@ const FundWalletModal = ({ isOpen, onClose }) => {
             <CustomButtonII
               text={"Back"}
               variant={"light"}
-              disabled={requestDepositStep === 1 ? true : false}
-              onClick={() =>
-                setRequestDepositStep(
-                  requestDepositStep > 1 ? requestDepositStep - 1 : 1
-                )
-              }
+              disabled={formStep === 1 ? true : false}
+              onClick={() => setFormStep(formStep > 1 ? formStep - 1 : 1)}
             />
             <CustomButtonII
-              text={requestDepositStep > 1 ? "Submit" : "Next"}
+              text={formStep > 1 ? "Submit" : "Next"}
               variant={"primary"}
               onClick={processFundWallet}
             />

@@ -11,6 +11,7 @@ const CustomDropdown = ({
   itemOnClick,
   dropdownItems = [],
   className = "",
+  disabled = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownValue, setDropdownValue] = useState("");
@@ -18,10 +19,12 @@ const CustomDropdown = ({
   useEffect(() => {
     const val = dropdownItems.filter((item) => item.value === value);
     setDropdownValue(val[0]?.name || "");
-  }, [value]);
+  }, [value, dropdownItems]);
 
   const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+    if (!disabled) {
+      setIsOpen(!isOpen);
+    }
   };
 
   const handleOptClick = (val) => {
@@ -33,7 +36,7 @@ const CustomDropdown = ({
     <>
       <div className={`dropdown-container ${className.trim()}`}>
         <button onClick={toggleDropdown} className="dropdown-button">
-          <span>{dropdownValue || "Select Currency"}</span>
+          <span>{dropdownValue || "Select"}</span>
           {isOpen ? <IoChevronUpSharp /> : <IoChevronDownSharp />}
         </button>
 
@@ -41,8 +44,13 @@ const CustomDropdown = ({
           <div className="dropdown-content">
             <ul>
               {!dropdownItems?.length ? <li></li> : ""}
-              {dropdownItems.map((val) => (
-                <li onClick={() => handleOptClick(val?.value)}>{val?.name}</li>
+              {dropdownItems.map((val, index) => (
+                <li
+                  key={"drpd" + index}
+                  onClick={() => handleOptClick(val?.value)}
+                >
+                  {val?.name}
+                </li>
               ))}
             </ul>
           </div>
