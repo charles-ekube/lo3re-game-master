@@ -6,14 +6,15 @@ const Modal = ({
   onClose,
   hideCloseBtn = false,
   title = null,
+  zClass = "",
   children,
 }) => {
   return (
     <>
       {isOpen ? (
         <>
-          <div className="overlay z-500" onClick={onClose}></div>
-          <div className="modal">
+          <div className={`overlay z500 ${zClass}`} onClick={onClose}></div>
+          <div className={`modal ${zClass}`}>
             <div className={`flexRow justifyBetween alignCenter posRelative`}>
               <h3 className="capitalize">{title}</h3>
               <button

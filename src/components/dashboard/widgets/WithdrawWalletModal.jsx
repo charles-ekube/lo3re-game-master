@@ -10,19 +10,36 @@ import CardIcon from "../../../assets/images/icons/card.png";
 import CryptoIcon from "../../../assets/images/icons/buy-crypto.png";
 import { showError } from "../../../utils/Alert";
 import CustomDropdown from "../../../utils/CustomDropdown";
+import CustomCheckbox from "../../../utils/CustomCheckbox";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  resetBankTransferBeneficiaryForm,
+  setBankTransferBeneficiaryForm,
+} from "../../../redux/features/generalSlice";
 
 const WithdrawWalletModal = ({ isOpen, onClose }) => {
   const [supportedCurrencies, setSupportedCurrencies] = useState([]);
   const [requestLoading, setRequestLoading] = useState(false);
+  const dispatch = useDispatch();
+  const beneficiaryForm = useSelector(
+    (state) => state.general.bankTransferBeneficiaryForm
+  );
   const [rate, setRate] = useState({
     rate: "1",
     symbol: "$",
   });
   const [formStep, setFormStep] = useState(1);
   const [withdrawalFormStates, setWithdrawalFormStates] = useState({
-    currency: "usd",
+    currency: "",
     amount: "",
     amountToRecieve: 0,
+  });
+  const [finalFormState, setFinalFormState] = useState({
+    currency: "",
+    amount: 0,
+    method: "",
+    destination_id: "",
+    destination: {},
   });
 
   const [paymentMethods, setPaymentMethods] = useState();
@@ -87,6 +104,7 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     let amountToRecieve = withdrawalFormStates.amount * rate.rate;
+    amountToRecieve = parseFloat(amountToRecieve.toFixed(2));
     setWithdrawalFormStates((curState) => ({ ...curState, amountToRecieve }));
   }, [rate.rate, withdrawalFormStates.amount]);
 
@@ -101,6 +119,9 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
       }));
 
       setSupportedCurrencies(newArray);
+      if (formStep === 1) {
+        setWithdrawalFormStates({ ...withdrawalFormStates, currency: "usd" });
+      }
       // console.log("currencies", newArray);
     } catch (error) {
       console.log("fetch currency err", error);
@@ -121,10 +142,36 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
     }
   };
 
+  const requestWithdrawal = () => {
+    // process withdrawal request & reset form
+    onClose();
+    setFormStep(1);
+    setRate({
+      rate: "1",
+      symbol: "$",
+    });
+    setWithdrawalFormStates({
+      currency: "usd",
+      amount: "",
+    });
+    dispatch(resetBankTransferBeneficiaryForm());
+    setFinalFormState({
+      currency: "",
+      amount: 0,
+      method: "",
+      destination_id: "",
+      destination: {},
+    });
+    alert("Withdraw request processing");
+  };
+
   const processFundWallet = async () => {
     if (formStep === 1) {
-      if (withdrawalFormStates.amount === "") {
-        showError("Amount is required");
+      if (
+        withdrawalFormStates.amount === "" ||
+        withdrawalFormStates.currency === ""
+      ) {
+        showError("Amount and currency are required");
         return;
       }
 
@@ -181,19 +228,101 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
       // }
       setFormStep(3);
     } else if (formStep === 3) {
-      // process withdrawal request & reset form
-      // TODO: remeber to submit amountToReceived not amount
-      onClose();
-      setFormStep(1);
-      setRate({
-        rate: "1",
-        symbol: "$",
+      const activeBen = beneficiaries.filter((val) => val.isActive === true);
+      const activeMethod = paymentMethods.filter(
+        (val) => val.isActive === true
+      );
+
+      if (!activeBen.length) {
+        showError("Select a beneficiary");
+        return;
+      }
+
+      setFinalFormState({
+        ...finalFormState,
+        currency: withdrawalFormStates.currency,
+        amount: withdrawalFormStates.amountToRecieve,
+        method: activeMethod[0]?.code,
+        destination_id: activeBen[0]?.address,
       });
-      setWithdrawalFormStates({
-        currency: "usd",
-        amount: "",
-      });
-      alert("Withdraw request processing");
+
+      requestWithdrawal();
+    } else if (formStep === 4) {
+      const activeMethod = paymentMethods.filter(
+        (val) => val.isActive === true
+      );
+
+      if (activeMethod?.length && activeMethod[0]?.code === "bank_transfer") {
+        if (withdrawalFormStates.currency === "ngn") {
+          if (
+            beneficiaryForm.account_number === "" ||
+            beneficiaryForm.bank_code === ""
+          ) {
+            showError("Required fields are missing");
+            return;
+          }
+
+          if (beneficiaryForm.account_name === "") {
+            showError("Could not verify account number");
+            return;
+          }
+
+          // TODO: if user checked saveForLater save beneficiary and use destination_id returned else pass detination obj
+          // TODO: scratch all that👆🏽👆🏽, just pass saveBene & ask BE to perform above task on BE for better performance
+
+          setFinalFormState({
+            ...finalFormState,
+            currency: withdrawalFormStates.currency,
+            amount: withdrawalFormStates.amountToRecieve,
+            method: activeMethod[0]?.code,
+            destination: {
+              account_number: beneficiaryForm.account_number,
+              account_name: beneficiaryForm.account_name,
+              bank_code: beneficiaryForm.bank_code,
+              save_beneficiary: beneficiaryForm.saveForLater,
+            },
+          });
+
+          requestWithdrawal();
+        } else if (withdrawalFormStates.currency === "usd") {
+          if (
+            beneficiaryForm.routing_number === "" ||
+            beneficiaryForm.sort_code === "" ||
+            beneficiaryForm.account_number === "" ||
+            beneficiaryForm.account_name === "" ||
+            beneficiaryForm.account_type === ""
+          ) {
+            showError("Required fields are missing");
+            return;
+          }
+
+          setFinalFormState({
+            ...finalFormState,
+            currency: withdrawalFormStates.currency,
+            amount: withdrawalFormStates.amountToRecieve,
+            method: activeMethod[0]?.code,
+            destination: {
+              account_number: beneficiaryForm.account_number,
+              account_name: beneficiaryForm.account_name,
+              recipient_name: beneficiaryForm.account_name,
+              routing_number: beneficiaryForm.routing_number,
+              sort_code: beneficiaryForm.sort_code,
+              account_type: beneficiaryForm.account_type,
+              save_beneficiary: beneficiaryForm.saveForLater,
+            },
+          });
+
+          requestWithdrawal();
+        } else {
+          showError("Unknown currency");
+        }
+      } else if (activeMethod?.length && activeMethod[0]?.code === "crypto") {
+        // run validation for cryto form
+        console.log("method is crypto");
+      } else {
+        showError("Unknown payment method");
+        console.log("method is:", activeMethod);
+      }
     }
   };
 
@@ -281,8 +410,20 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
               variant={"light"}
               className={"w100 justifyCenter"}
               centerText={true}
+              onClick={() => setFormStep(4)}
             />
           </>
+        );
+      } else if (formStep === 4) {
+        return (
+          <AddBeneficiary
+            currency={withdrawalFormStates.currency}
+            payMethod={
+              paymentMethods
+                ? paymentMethods.filter((val) => val.isActive === true)[0]
+                : ""
+            }
+          />
         );
       }
     } else {
@@ -314,5 +455,171 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
     </>
   );
 };
+
+const AddBeneficiary = ({ currency, payMethod }) => {
+  // const [formStep, setFormStep] = useState(1);
+  const [requestLoading, setRequestLoading] = useState(false);
+  const dispatch = useDispatch();
+  const formState = useSelector(
+    (state) => state.general.bankTransferBeneficiaryForm
+  );
+  const accountTypeOptions = [
+    { name: "Personal Account", value: "personal" },
+    { name: "Business Account", value: "business" },
+  ];
+  const [banks] = useState([
+    {
+      name: "Access bank",
+      value: "37sd89",
+    },
+    {
+      name: "Access bank",
+      value: "37sd89",
+    },
+    {
+      name: "Access bank",
+      value: "37sd89",
+    },
+  ]);
+
+  const handleOnChange = (val, name) => {
+    dispatch(
+      setBankTransferBeneficiaryForm({
+        ...formState,
+        [name]: val,
+      })
+    );
+  };
+
+  const fetchBanks = async () => {
+    setRequestLoading(true);
+    try {
+      // 👇🏽👇🏽 not return all banks
+      const res = await http.get(`wallets/supported-banks`);
+
+      // setBanks(res);
+      console.log("banks", res);
+      setRequestLoading(false);
+    } catch (error) {
+      console.log("fetch bank err", error);
+      setRequestLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (currency?.toLowerCase() === "ngn") {
+      fetchBanks();
+    }
+  }, [currency]);
+
+  useEffect(() => {
+    if (currency === "ngn") {
+      if (formState.account_number.length === 10) {
+        // TODO: validate acct
+        handleOnChange("Tobe Fetched onValidateAcct", "account_name");
+      } else {
+        handleOnChange("", "account_name");
+      }
+    }
+  }, [formState.account_number, currency]);
+
+  const renderElem = () => {
+    if (!requestLoading) {
+      if (payMethod?.code === "bank_transfer") {
+        return (
+          <>
+            {currency === "ngn" ? (
+              <div className="inputContainer">
+                <label>Bank Name</label>
+                <CustomDropdown
+                  value={formState.bank_code}
+                  dropdownItems={banks}
+                  itemOnClick={(val) => handleOnChange(val, "bank_code")}
+                />
+              </div>
+            ) : (
+              <div className="inputContainer">
+                <label>Account Type</label>
+                <CustomDropdown
+                  value={formState.account_type}
+                  dropdownItems={accountTypeOptions}
+                  itemOnClick={(val) => handleOnChange(val, "account_type")}
+                />
+              </div>
+            )}
+            <div className="inputContainer">
+              <label>Account Number</label>
+              <input
+                type="number"
+                className="formInput"
+                value={formState.account_number}
+                onChange={(e) =>
+                  handleOnChange(e.target.value, "account_number")
+                }
+              />
+            </div>
+            <div className="inputContainer">
+              <label>
+                {currency === "ngn" ? "Account Name" : "Receipient Name"}
+              </label>
+              <input
+                type="text"
+                className="formInput"
+                value={formState.account_name}
+                onChange={(e) => handleOnChange(e.target.value, "account_name")}
+                readOnly={currency === "ngn"}
+              />
+            </div>
+            {currency === "usd" ? (
+              <>
+                <div className="inputContainer">
+                  <label>Sort Code</label>
+                  <input
+                    type="text"
+                    className="formInput"
+                    value={formState.sort_code}
+                    onChange={(e) =>
+                      handleOnChange(e.target.value, "sort_code")
+                    }
+                  />
+                </div>
+                <div className="inputContainer">
+                  <label>Routing Number</label>
+                  <input
+                    type="number"
+                    className="formInput"
+                    value={formState.routing_number}
+                    onChange={(e) =>
+                      handleOnChange(e.target.value, "routing_number")
+                    }
+                  />
+                </div>
+              </>
+            ) : (
+              ""
+            )}
+            <CustomCheckbox
+              isChecked={formState.saveForLater}
+              label={"Save for future transactions"}
+              name={"saveForLater"}
+              onChange={(e) => handleOnChange(e.target.checked, e.target.name)}
+            />
+          </>
+        );
+      } else if (payMethod?.code === "crypto") {
+        <>
+          {/* fields: select crypto, select network, enter addr, opt tag_id */}
+          <div>payment is crypto</div>
+        </>;
+      }
+    } else {
+      return <span className={"loader loader-dark"}></span>;
+    }
+  };
+
+  return <>{renderElem()}</>;
+};
+
+
 
 export default WithdrawWalletModal;

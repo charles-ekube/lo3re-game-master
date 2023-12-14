@@ -244,8 +244,12 @@ button {
   transition: .3s ease-out;
 }
 
-.z-500 {
+.z500 {
   z-index: 500;
+}
+
+.overlay.z600 {
+  z-index: 600;
 }
 
 .posRelative {

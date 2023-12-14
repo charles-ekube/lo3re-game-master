@@ -46,7 +46,8 @@ const FundWalletModal = ({ isOpen, onClose }) => {
   };
 
   useEffect(() => {
-    let amountToRecieve = depositFormStates.amount * rate.rate;
+    let amountToRecieve = depositFormStates.amount / rate.rate;
+    amountToRecieve = parseFloat(amountToRecieve.toFixed(2));
     setDepositFormStates((curState) => ({ ...curState, amountToRecieve }));
   }, [rate.rate, depositFormStates.amount]);
 

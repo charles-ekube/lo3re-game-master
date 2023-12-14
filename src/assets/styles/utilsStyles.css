@@ -150,6 +150,16 @@
   z-index: 501;
   animation: slideUp .3s ease-in-out;
   padding: 24px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal.z600 {
+  z-index: 601;
+}
+
+.modal .inputContainer label {
+  text-align: left;
 }
 
 .closeBtn {
@@ -276,7 +286,7 @@
 	cursor: not-allowed;
 }
 
-.cr-wrapper input[type="radio"]:disabled ~ span {
+.cr-wrapper input[type="checkbox"]:disabled ~ span, .cr-wrapper input[type="radio"]:disabled ~ span {
 	opacity: 0.5;
 	cursor: not-allowed;
 }
@@ -291,6 +301,57 @@
 	border-color: #232A44;
 }
 
+/* checkbox */
+.cr-wrapper input[type="checkbox"] ~ .cr-input {
+	position: absolute;
+	top: 50%;
+	left: 0;
+	height: 20px;
+	width: 20px;
+	background: #E2E8F0;
+	transition: background 250ms;
+	/* border: 1px solid #64748B; */
+	border-radius: 3px;
+	transform: translate(0, -50%);
+}
+
+.cr-wrapper input[type="checkbox"] ~ .cr-input::after {
+	content: "";
+	position: absolute;
+	display: none;
+	left: 4px;
+	top: 4px;
+	width: 12px;
+	height: 12px;
+	transition: background 250ms;
+	background-color: var(--white);
+	clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+.cr-wrapper:hover input[type="checkbox"]:not([disabled]) ~ .cr-input,
+.cr-wrapper input[type="checkbox"]:focus ~ .cr-input {
+	background: #E2E8F0;
+	border-color: #64748B;
+}
+
+.cr-wrapper input[type="checkbox"]:checked ~ .cr-input {
+	background: var(--secondary);
+	border-color: #2F7D8E;
+}
+
+.cr-wrapper input[type="checkbox"]:checked ~ .cr-input::after {
+  display: block;
+}
+
+.cr-wrapper input[type="checkbox"]:disabled ~ .cr-input::after {
+	background: var(--white);
+}
+
+.cr-wrapper:hover input[type="checkbox"]:not([disabled]):checked ~ .cr-input,
+.cr-wrapper input[type="checkbox"]:checked:focus ~ .cr-input {
+	background: var(--secondary);
+	border-color: #225D69;
+}
 
 
 /* CustomDropdown */
