@@ -507,20 +507,7 @@ const AddBeneficiary = ({ currency, payMethod }) => {
   const [supportedCryptos, setSupportedCryptos] = useState([]);
   const [cyrptoNetworks, setCryptoNetworks] = useState([]);
 
-  const [supportedBanks] = useState([
-    {
-      name: "Access bank",
-      value: "37sd89",
-    },
-    {
-      name: "Access bank",
-      value: "37sd89",
-    },
-    {
-      name: "Access bank",
-      value: "37sd89",
-    },
-  ]);
+  const [supportedBanks, setSupportedBanks] = useState([]);
 
   const handleOnChange = (val, name) => {
     if (payMethod?.code === "bank_transfer") {
@@ -543,15 +530,47 @@ const AddBeneficiary = ({ currency, payMethod }) => {
   const fetchBanks = async () => {
     setRequestLoading(true);
     try {
-      // 👇🏽👇🏽 not return all banks
       const res = await http.get(`wallets/supported-banks`);
+      const newArray = res?.data.map((cur) => ({
+        ...cur,
+        value: cur.code,
+      }));
 
-      // setBanks(res);
-      console.log("banks", res);
+      setSupportedBanks(newArray);
+      // console.log("banks", res);
       setRequestLoading(false);
     } catch (error) {
       console.log("fetch bank err", error);
       setRequestLoading(false);
+    }
+  };
+
+  const validateAccount = async () => {
+    try {
+      const { account_number, bank_code } = bankFormState;
+      handleOnChange("...", "account_name");
+      const res = await http.post(
+        `wallets/withdrawals/validate-bank-details?currency=ngn`,
+        {
+          account_number,
+          bank_code,
+        }
+      );
+
+      if (res.data?.status) {
+        const acName = res?.data?.data?.account_name;
+        if (acName) {
+          handleOnChange(acName, "account_name");
+        }
+      } else {
+        showError("Could not resolve account name");
+        console.log(res);
+        handleOnChange("", "account_name");
+      }
+    } catch (error) {
+      showError("Could not resolve account name");
+      console.log(error);
+      handleOnChange("", "account_name");
     }
   };
 
@@ -569,7 +588,6 @@ const AddBeneficiary = ({ currency, payMethod }) => {
 
       // setBanks(res);
       setSupportedCryptos(newArray);
-      console.log("cryptos", res);
       setRequestLoading(false);
     } catch (error) {
       console.log("fetch bank err", error);
@@ -593,12 +611,12 @@ const AddBeneficiary = ({ currency, payMethod }) => {
     if (currency === "ngn") {
       if (bankFormState.account_number.length === 10) {
         // TODO: validate acct
-        handleOnChange("Tobe Fetched onValidateAcct", "account_name");
+        validateAccount();
       } else {
         handleOnChange("", "account_name");
       }
     }
-  }, [bankFormState.account_number, currency]);
+  }, [bankFormState.account_number, currency, bankFormState.bank_code]);
 
   // add network
   useEffect(() => {
@@ -615,6 +633,7 @@ const AddBeneficiary = ({ currency, payMethod }) => {
     }
   }, [cryptoFormState.coin_id, supportedCryptos]);
 
+  // show/hide tag_id input
   useEffect(() => {
     const selectedCoin = supportedCryptos.filter(
       (val) => val.id === cryptoFormState.coin_id
@@ -775,7 +794,7 @@ const AddBeneficiary = ({ currency, payMethod }) => {
   };
 
   return <>{renderElem()}</>;
-};
+};;
 
 
 
