@@ -150,7 +150,7 @@
   z-index: 501;
   animation: slideUp .3s ease-in-out;
   padding: 24px;
-  max-height: 90vh;
+  max-height: 80vh;
   overflow-y: auto;
 }
 

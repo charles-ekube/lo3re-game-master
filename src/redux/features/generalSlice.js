@@ -26,6 +26,13 @@ export const general = createSlice({
       routing_number: "",
       note: "",
     },
+    cryptoBeneficiaryForm: {
+      coin_id: "",
+      network: "",
+      address: "",
+      tag_id: "",
+      saveForLater: false,
+    },
   },
   reducers: {
     toggleSidebar: (state, action) => {
@@ -41,6 +48,9 @@ export const general = createSlice({
     setBankTransferBeneficiaryForm: (state, action) => {
       state.bankTransferBeneficiaryForm = action.payload;
     },
+    setCryptoBeneficiaryForm: (state, action) => {
+      state.cryptoBeneficiaryForm = action.payload;
+    },
     resetBankTransferBeneficiaryForm: (state) => {
       state.bankTransferBeneficiaryForm = {
         account_number: "",
@@ -55,6 +65,14 @@ export const general = createSlice({
         note: "",
       };
     },
+    resetCryptoBeneficiaryForm: (state) => {
+      state.cryptoBeneficiaryForm = {
+        coin_id: "",
+        network: "",
+        address: "",
+        tag_id: "",
+      };
+    },
   },
 });
 
@@ -64,5 +82,7 @@ export const {
   updateAddLotteryForm,
   setBankTransferBeneficiaryForm,
   resetBankTransferBeneficiaryForm,
+  setCryptoBeneficiaryForm,
+  resetCryptoBeneficiaryForm,
 } = general.actions;
 export default general.reducer;

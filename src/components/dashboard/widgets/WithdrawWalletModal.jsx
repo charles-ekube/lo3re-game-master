@@ -14,7 +14,9 @@ import CustomCheckbox from "../../../utils/CustomCheckbox";
 import { useDispatch, useSelector } from "react-redux";
 import {
   resetBankTransferBeneficiaryForm,
+  resetCryptoBeneficiaryForm,
   setBankTransferBeneficiaryForm,
+  setCryptoBeneficiaryForm,
 } from "../../../redux/features/generalSlice";
 
 const WithdrawWalletModal = ({ isOpen, onClose }) => {
@@ -23,6 +25,9 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
   const beneficiaryForm = useSelector(
     (state) => state.general.bankTransferBeneficiaryForm
+  );
+  const cryptoBeneficiaryForm = useSelector(
+    (state) => state.general.cryptoBeneficiaryForm
   );
   const [rate, setRate] = useState({
     rate: "1",
@@ -155,6 +160,7 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
       amount: "",
     });
     dispatch(resetBankTransferBeneficiaryForm());
+    dispatch(resetCryptoBeneficiaryForm());
     setFinalFormState({
       currency: "",
       amount: 0,
@@ -317,8 +323,29 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
           showError("Unknown currency");
         }
       } else if (activeMethod?.length && activeMethod[0]?.code === "crypto") {
-        // run validation for cryto form
-        console.log("method is crypto");
+        if (
+          cryptoBeneficiaryForm.coin_id === "" ||
+          cryptoBeneficiaryForm.network === "" ||
+          cryptoBeneficiaryForm.address === ""
+        ) {
+          showError("Required fields are missing");
+          return;
+        }
+
+        setFinalFormState({
+          ...finalFormState,
+          currency: withdrawalFormStates.currency,
+          amount: withdrawalFormStates.amountToRecieve,
+          method: activeMethod[0]?.code,
+          destination: {
+            coin_id: cryptoBeneficiaryForm.coin_id,
+            address: cryptoBeneficiaryForm.address,
+            tag_id: cryptoBeneficiaryForm.tag_id,
+            save_beneficiary: cryptoBeneficiaryForm.saveForLater,
+          },
+        });
+
+        requestWithdrawal();
       } else {
         showError("Unknown payment method");
         console.log("method is:", activeMethod);
@@ -460,14 +487,22 @@ const AddBeneficiary = ({ currency, payMethod }) => {
   // const [formStep, setFormStep] = useState(1);
   const [requestLoading, setRequestLoading] = useState(false);
   const dispatch = useDispatch();
-  const formState = useSelector(
+  const bankFormState = useSelector(
     (state) => state.general.bankTransferBeneficiaryForm
+  );
+  const cryptoFormState = useSelector(
+    (state) => state.general.cryptoBeneficiaryForm
   );
   const accountTypeOptions = [
     { name: "Personal Account", value: "personal" },
     { name: "Business Account", value: "business" },
   ];
-  const [banks] = useState([
+
+  const [showTagInput, setShowTagInput] = useState(false);
+  const [supportedCryptos, setSupportedCryptos] = useState([]);
+  const [cyrptoNetworks, setCryptoNetworks] = useState([]);
+
+  const [supportedBanks] = useState([
     {
       name: "Access bank",
       value: "37sd89",
@@ -483,12 +518,21 @@ const AddBeneficiary = ({ currency, payMethod }) => {
   ]);
 
   const handleOnChange = (val, name) => {
-    dispatch(
-      setBankTransferBeneficiaryForm({
-        ...formState,
-        [name]: val,
-      })
-    );
+    if (payMethod?.code === "bank_transfer") {
+      dispatch(
+        setBankTransferBeneficiaryForm({
+          ...bankFormState,
+          [name]: val,
+        })
+      );
+    } else {
+      dispatch(
+        setCryptoBeneficiaryForm({
+          ...cryptoFormState,
+          [name]: val,
+        })
+      );
+    }
   };
 
   const fetchBanks = async () => {
@@ -506,22 +550,75 @@ const AddBeneficiary = ({ currency, payMethod }) => {
     }
   };
 
-  useEffect(() => {
-    if (currency?.toLowerCase() === "ngn") {
-      fetchBanks();
-    }
-  }, [currency]);
+  const fetchCryptos = async () => {
+    setRequestLoading(true);
+    try {
+      // 👇🏽👇🏽 not return all banks
+      const res = await http.get(`wallets/supported-coins`);
+      const newArray = res.map((crypto) => ({
+        ...crypto,
+        value: crypto.id,
+        name: crypto.name.toUpperCase(),
+      }));
 
+      // setBanks(res);
+      setSupportedCryptos(newArray);
+      console.log("cryptos", res);
+      setRequestLoading(false);
+    } catch (error) {
+      console.log("fetch bank err", error);
+      setRequestLoading(false);
+    }
+  };
+
+  // fetch supported banks/cryptos
+  useEffect(() => {
+    if (payMethod?.code === "bank_transfer") {
+      if (currency?.toLowerCase() === "ngn") {
+        fetchBanks();
+      }
+    } else {
+      fetchCryptos();
+    }
+  }, [currency, payMethod]);
+
+  // validate acct
   useEffect(() => {
     if (currency === "ngn") {
-      if (formState.account_number.length === 10) {
+      if (bankFormState.account_number.length === 10) {
         // TODO: validate acct
         handleOnChange("Tobe Fetched onValidateAcct", "account_name");
       } else {
         handleOnChange("", "account_name");
       }
     }
-  }, [formState.account_number, currency]);
+  }, [bankFormState.account_number, currency]);
+
+  // add network
+  useEffect(() => {
+    const selectedCoin = supportedCryptos.filter(
+      (val) => val.id === cryptoFormState.coin_id
+    );
+    if (selectedCoin.length) {
+      const networkArr = selectedCoin[0].networks.map((val) => ({
+        name: val,
+        value: val,
+      }));
+      setCryptoNetworks(networkArr);
+      console.log(networkArr);
+    }
+  }, [cryptoFormState.coin_id, supportedCryptos]);
+
+  useEffect(() => {
+    const selectedCoin = supportedCryptos.filter(
+      (val) => val.id === cryptoFormState.coin_id
+    );
+    if (selectedCoin.length && selectedCoin[0].name === "RIPPLE") {
+      setShowTagInput(true);
+    } else {
+      setShowTagInput(false);
+    }
+  }, [cryptoFormState.coin_id, supportedCryptos]);
 
   const renderElem = () => {
     if (!requestLoading) {
@@ -532,8 +629,8 @@ const AddBeneficiary = ({ currency, payMethod }) => {
               <div className="inputContainer">
                 <label>Bank Name</label>
                 <CustomDropdown
-                  value={formState.bank_code}
-                  dropdownItems={banks}
+                  value={bankFormState.bank_code}
+                  dropdownItems={supportedBanks}
                   itemOnClick={(val) => handleOnChange(val, "bank_code")}
                 />
               </div>
@@ -541,7 +638,7 @@ const AddBeneficiary = ({ currency, payMethod }) => {
               <div className="inputContainer">
                 <label>Account Type</label>
                 <CustomDropdown
-                  value={formState.account_type}
+                  value={bankFormState.account_type}
                   dropdownItems={accountTypeOptions}
                   itemOnClick={(val) => handleOnChange(val, "account_type")}
                 />
@@ -552,7 +649,7 @@ const AddBeneficiary = ({ currency, payMethod }) => {
               <input
                 type="number"
                 className="formInput"
-                value={formState.account_number}
+                value={bankFormState.account_number}
                 onChange={(e) =>
                   handleOnChange(e.target.value, "account_number")
                 }
@@ -565,7 +662,7 @@ const AddBeneficiary = ({ currency, payMethod }) => {
               <input
                 type="text"
                 className="formInput"
-                value={formState.account_name}
+                value={bankFormState.account_name}
                 onChange={(e) => handleOnChange(e.target.value, "account_name")}
                 readOnly={currency === "ngn"}
               />
@@ -577,7 +674,7 @@ const AddBeneficiary = ({ currency, payMethod }) => {
                   <input
                     type="text"
                     className="formInput"
-                    value={formState.sort_code}
+                    value={bankFormState.sort_code}
                     onChange={(e) =>
                       handleOnChange(e.target.value, "sort_code")
                     }
@@ -588,18 +685,29 @@ const AddBeneficiary = ({ currency, payMethod }) => {
                   <input
                     type="number"
                     className="formInput"
-                    value={formState.routing_number}
+                    value={bankFormState.routing_number}
                     onChange={(e) =>
                       handleOnChange(e.target.value, "routing_number")
                     }
                   />
+                </div>
+                <div className="inputContainer">
+                  <label>Note</label>
+                  <textarea
+                    className="formInput"
+                    value={bankFormState.description}
+                    onChange={(e) => handleOnChange(e.target.value, "note")}
+                    placeholder="Optional"
+                    cols="30"
+                    rows="3"
+                  ></textarea>
                 </div>
               </>
             ) : (
               ""
             )}
             <CustomCheckbox
-              isChecked={formState.saveForLater}
+              isChecked={bankFormState.saveForLater}
               label={"Save for future transactions"}
               name={"saveForLater"}
               onChange={(e) => handleOnChange(e.target.checked, e.target.name)}
@@ -607,10 +715,53 @@ const AddBeneficiary = ({ currency, payMethod }) => {
           </>
         );
       } else if (payMethod?.code === "crypto") {
-        <>
-          {/* fields: select crypto, select network, enter addr, opt tag_id */}
-          <div>payment is crypto</div>
-        </>;
+        return (
+          <>
+            {/* fields: select crypto, select network, enter addr, opt tag_id */}
+            <div className="inputContainer">
+              <label>Select Coin</label>
+              <CustomDropdown
+                value={cryptoFormState.coin_id}
+                dropdownItems={supportedCryptos}
+                itemOnClick={(val) => handleOnChange(val, "coin_id")}
+              />
+            </div>
+            <div className="inputContainer">
+              <label>Select Network</label>
+              <CustomDropdown
+                value={cryptoFormState.network}
+                dropdownItems={cyrptoNetworks}
+                itemOnClick={(val) => handleOnChange(val, "network")}
+              />
+            </div>
+            <div className="inputContainer">
+              <label>Wallet address</label>
+              <input
+                type={"text"}
+                className="formInput"
+                value={cryptoFormState.address}
+                onChange={(e) => handleOnChange(e.target.value, "address")}
+              />
+            </div>
+            {showTagInput && (
+              <div className="inputContainer">
+                <label>Tag ID</label>
+                <input
+                  type={"text"}
+                  className="formInput"
+                  value={cryptoFormState.tag_id}
+                  onChange={(e) => handleOnChange(e.target.value, "tag_id")}
+                />
+              </div>
+            )}
+            <CustomCheckbox
+              isChecked={cryptoFormState.saveForLater}
+              label={"Save for future transactions"}
+              name={"saveForLater"}
+              onChange={(e) => handleOnChange(e.target.checked, e.target.name)}
+            />
+          </>
+        );
       }
     } else {
       return <span className={"loader loader-dark"}></span>;
