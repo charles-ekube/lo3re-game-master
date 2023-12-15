@@ -72,6 +72,11 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
     },
   ]);
 
+  const closeModal = () => {
+    setFormStep(1);
+    onClose();
+  };
+
   const toggleActive = (clickedMethod) => {
     const updatedMethods = paymentMethods.map((method) => ({
       ...method,
@@ -149,7 +154,7 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
 
   const requestWithdrawal = () => {
     // process withdrawal request & reset form
-    onClose();
+    closeModal();
     setFormStep(1);
     setRate({
       rate: "1",
@@ -460,7 +465,7 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
 
   return (
     <>
-      <Modal title={"Withdraw Wallet"} isOpen={isOpen} onClose={onClose}>
+      <Modal title={"Withdraw Wallet"} isOpen={isOpen} onClose={closeModal}>
         <div>{renderRequestComponent()}</div>
 
         <div className="modalFooter">
@@ -559,6 +564,7 @@ const AddBeneficiary = ({ currency, payMethod }) => {
         ...crypto,
         value: crypto.id,
         name: crypto.name.toUpperCase(),
+        icon: crypto.logo_url,
       }));
 
       // setBanks(res);

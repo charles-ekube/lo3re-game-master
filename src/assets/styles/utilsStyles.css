@@ -150,9 +150,28 @@
   z-index: 501;
   animation: slideUp .3s ease-in-out;
   padding: 24px;
-  max-height: 80vh;
+  max-height: 95vh;
   overflow-y: auto;
 }
+
+
+.modal::-webkit-scrollbar{
+  width: 8px;
+}
+
+.h-scroll::-webkit-scrollbar{
+  height: 8px;
+}
+
+.modal::-webkit-scrollbar-track, .h-scroll::-webkit-scrollbar-track{
+  background: var(--lightGrey);
+}
+
+.modal::-webkit-scrollbar-thumb, .h-scroll::-webkit-scrollbar-thumb {
+  background: var(--secondary);
+  border-radius: 5px;
+}
+
 
 .modal.z600 {
   z-index: 601;
@@ -387,6 +406,20 @@
 .dropdown-content li {
   padding: 10px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dropdown-button > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.dropdown-content li > img, .dropdown-button img {
+  width: 20px;
+  height: 20px;
 }
 
 .dropdown-content li:hover {
@@ -424,5 +457,19 @@
 @media screen and (max-width: 550px) {
   .modal {
     width: 90%;
+    max-height: 80vh;
+  }
+
+  .utilRow .title {
+    font-size: 15px;
+  }
+
+  .utilRow .subtitle {
+    font-size: 12px;
+  }
+
+  .utilRow .icon {
+    width: 45px;
+    height: 45px;
   }
 }

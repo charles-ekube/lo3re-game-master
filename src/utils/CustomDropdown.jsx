@@ -15,10 +15,14 @@ const CustomDropdown = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownValue, setDropdownValue] = useState("");
+  const [dropdownIcon, setDropdownIcon] = useState("");
 
   useEffect(() => {
     const val = dropdownItems.filter((item) => item.value === value);
     setDropdownValue(val[0]?.name || "");
+    if (val[0]?.icon) {
+      setDropdownIcon(val[0]?.icon);
+    }
   }, [value, dropdownItems]);
 
   const toggleDropdown = () => {
@@ -36,25 +40,27 @@ const CustomDropdown = ({
     <>
       <div className={`dropdown-container ${className.trim()}`}>
         <button onClick={toggleDropdown} className="dropdown-button">
-          <span>{dropdownValue || "Select"}</span>
+          <span>
+            {dropdownIcon ? <img src={dropdownIcon} alt="" /> : ""}
+            {dropdownValue || "Select"}
+          </span>
           {isOpen ? <IoChevronUpSharp /> : <IoChevronDownSharp />}
         </button>
 
-        {isOpen && (
-          <div className="dropdown-content">
-            <ul>
-              {!dropdownItems?.length ? <li></li> : ""}
-              {dropdownItems.map((val, index) => (
-                <li
-                  key={"drpd" + index}
-                  onClick={() => handleOptClick(val?.value)}
-                >
-                  {val?.name}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        <div className={`dropdown-content ${!isOpen ? "dNone" : ""}`}>
+          <ul>
+            {!dropdownItems?.length ? <li></li> : ""}
+            {dropdownItems.map((val, index) => (
+              <li
+                key={"drpd" + index}
+                onClick={() => handleOptClick(val?.value)}
+              >
+                {val?.icon && <img src={val?.icon} alt="" />}
+                {val?.name}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </>
   );

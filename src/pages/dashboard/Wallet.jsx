@@ -10,10 +10,17 @@ import BankCard from "../../components/dashboard/wallet/BankCard";
 import CustomButtonII from "../../utils/CustomButtonII";
 import FundWalletModal from "../../components/dashboard/widgets/FundWalletModal";
 import WithdrawWalletModal from "../../components/dashboard/widgets/WithdrawWalletModal";
+import Modal from "../../utils/Modal";
+import WalletAdd from "../../assets/images/icons/wallet-add.png";
+import useCopyToClipBoard from "../../hooks/useCopyToClipboard";
+import { LuCopy } from "react-icons/lu";
+import { AiOutlineCheck } from "react-icons/ai";
 
 const Wallet = () => {
   const [fundWalletModal, setFundWalletModal] = useState(false);
   const [withdrawWalletModal, setWithdrawWalletModal] = useState(false);
+  const [showTxnModal, setShowTxnModal] = useState(false);
+  const { handleCopyClick, isCopied } = useCopyToClipBoard();
 
   return (
     <>
@@ -28,17 +35,17 @@ const Wallet = () => {
             <BalanceCard
               title={"Locked Balance"}
               figure={"0.00"}
-              subtitle={"Total gains 0%"}
+              subtitle={"To be credited on 20/10/23"}
             />
             <BalanceCard
               title={"Total Deposit"}
               figure={"0.00"}
-              subtitle={"Total gains 0%"}
+              subtitle={"Updated 36mins ago"}
             />
             <BalanceCard
               title={"Total Withdrawal"}
               figure={"0.00"}
-              subtitle={"Total gains 0%"}
+              subtitle={"Updated 36mins ago"}
             />
           </div>
           <div className="flexRow justifyCenter gap-1">
@@ -64,11 +71,26 @@ const Wallet = () => {
               </p>
             </div>
             <div className="historyContent">
-              <TransactionHistory isCreditTxn={true} />
-              <TransactionHistory isCreditTxn={true} />
-              <TransactionHistory isCreditTxn={true} />
-              <TransactionHistory isCreditTxn={false} />
-              <TransactionHistory isCreditTxn={false} />
+              <TransactionHistory
+                onTxnOpen={() => setShowTxnModal(true)}
+                isCreditTxn={true}
+              />
+              <TransactionHistory
+                onTxnOpen={() => setShowTxnModal(true)}
+                isCreditTxn={true}
+              />
+              <TransactionHistory
+                onTxnOpen={() => setShowTxnModal(true)}
+                isCreditTxn={true}
+              />
+              <TransactionHistory
+                onTxnOpen={() => setShowTxnModal(true)}
+                isCreditTxn={false}
+              />
+              <TransactionHistory
+                onTxnOpen={() => setShowTxnModal(true)}
+                isCreditTxn={false}
+              />
             </div>
           </div>
         </div>
@@ -102,6 +124,54 @@ const Wallet = () => {
         isOpen={withdrawWalletModal}
         onClose={() => setWithdrawWalletModal(false)}
       />
+
+      <Modal isOpen={showTxnModal} onClose={() => setShowTxnModal(false)}>
+        <h2 className="modal-amount satoshi-text">+$30.00</h2>
+        <span className="f14 text-muted">Transaction successful</span>
+        <div className="pill">
+          <div className="pill-icon">
+            <img src={WalletAdd} />
+          </div>
+          <p>Wallet Fund | Oct 20, 2023 11:06</p>
+        </div>
+        <div className="modal-body">
+          <div className="flexRow justifyBetween modalItemRow">
+            <p className="text-muted">Transaction type</p>
+            <p>Bank transfer</p>
+          </div>
+
+          <div className="flexRow justifyBetween modalItemRow">
+            <p className="text-muted">From</p>
+            <p>Lo3re</p>
+          </div>
+
+          <div className="flexRow justifyBetween modalItemRow">
+            <p className="text-muted">Account name</p>
+            <p>Lo3re</p>
+          </div>
+
+          <div className="flexRow justifyBetween modalItemRow">
+            <p className="text-muted">Bank details</p>
+            <div>
+              <p className="mb-1">000 000 000</p>
+              <p>Sterling Bank</p>
+            </div>
+          </div>
+
+          <div className="flexRow justifyBetween modalItemRow">
+            <p className="text-muted">Transaction ID</p>
+            <div className="flexRow alignCenter gap-1">
+              <p className="text-muted">000 000 000 000</p>
+              <div
+                style={{ cursor: "pointer" }}
+                onClick={() => handleCopyClick("000 000 000 000")}
+              >
+                {isCopied ? <AiOutlineCheck color="green" /> : <LuCopy />}
+              </div>
+            </div>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 };
