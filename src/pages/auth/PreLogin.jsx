@@ -7,35 +7,29 @@ import CustomInput from "../../utils/CustomInput";
 import Button from "../../utils/CustomButton";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
-import { showError, showSuccess } from "../../utils/Alert";
+import { showError } from "../../utils/Alert";
 import {
   GoogleAuthProvider,
-  signInWithEmailAndPassword,
   signInWithPopup,
+  sendSignInLinkToEmail,
 } from "firebase/auth";
+import { setFlow } from "../../utils/Helpers";
 
-const Login = ({ signInEmail }) => {
+const PreLogin = () => {
   const navigate = useNavigate();
   const singUp = () => {
     navigate("/signUp");
   };
-  const forgotPassword = () => {
-    navigate("/forgotPassword");
-  };
 
   const [state, setState] = useState({
-    email: signInEmail,
-    password: "",
+    email: "",
     error: null,
     loading: false,
   });
   const onChangeEmail = (e) => {
     setState({ ...state, email: e.target.value });
   };
-  const onChangePassword = (e) => {
-    setState({ ...state, password: e.target.value });
-  };
-  const { email, password } = state;
+  const { email } = state;
 
   const handleFirebaseError = (firebaseError) => {
     if (firebaseError.code && firebaseError.message) {
@@ -56,21 +50,32 @@ const Login = ({ signInEmail }) => {
   };
 
   const loginUser = async () => {
-    if (email !== "" || password !== "") {
-      if (email !== signInEmail) {
-        showError("Email must match signIn email");
-      }
-
+    if (email !== "") {
       setState({ ...state, loading: true });
       try {
-        const res = await signInWithEmailAndPassword(auth, email, password);
-        console.log(res);
-
-        // sign user in
-        setState({ ...state, loading: false });
-        window.localStorage.setItem("accessToken", res.user.accessToken);
-        showSuccess("Successful 👍");
-        navigate("/dashboard");
+        const actionCodeSettings = {
+          url: `http://localhost:3000/verify?mode=signIn&email=${email}`, // Replace with your app's URL
+          handleCodeInApp: true,
+        };
+        sendSignInLinkToEmail(auth, email, actionCodeSettings)
+          .then(() => {
+            setFlow("login");
+            localStorage.setItem("emailForSignIn", email);
+            navigate("/signin-link", {
+              state: {
+                data: {
+                  message: "🟢 Sign in link has been sent to your email.",
+                  email: email,
+                },
+              },
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+            handleFirebaseError(error);
+            setState({ ...state, loading: false });
+            // showError("An error occured while sending signin link");
+          });
       } catch (error) {
         handleFirebaseError(error);
         setState({ ...state, loading: false });
@@ -87,8 +92,8 @@ const Login = ({ signInEmail }) => {
       const result = await signInWithPopup(auth, provider);
 
       // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
+      //   const credential = GoogleAuthProvider.credentialFromResult(result);
+      //   const token = credential.accessToken;
 
       // The signed-in user info.
       const user = result.user;
@@ -144,23 +149,11 @@ const Login = ({ signInEmail }) => {
               label={"Your email"}
               value={state.email}
               onChange={onChangeEmail}
-              readOnly={true}
             />
           </div>
-          <div>
-            <CustomInput
-              label={"Password"}
-              type={"password"}
-              value={state.password}
-              onChange={onChangePassword}
-            />
-          </div>
-          <button className={"forgotBtn"} onClick={forgotPassword}>
-            <Text>Forgot password?</Text>
-          </button>
           <div>
             <Button
-              text={"Login"}
+              text={"Send link"}
               className={"authBtn"}
               onClick={loginUser}
               loading={state.loading}
@@ -187,4 +180,4 @@ const Login = ({ signInEmail }) => {
   );
 };
 
-export default Login;
+export default PreLogin;

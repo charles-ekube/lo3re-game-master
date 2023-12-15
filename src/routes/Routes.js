@@ -15,12 +15,14 @@ import LinkReset from '../pages/auth/ResetLink'
 import DashboardLayout from '../pages/dashboard/DashboardLayout'
 import HandleEmailActions from '../pages/auth/HandleEmailActions'
 import RoutesAuth from "./RoutesAuth";
+import PreLogin from "../pages/auth/PreLogin";
+import CompleteProfile from "../pages/auth/CompleteProfile";
 
 const RoutesContainer = () => {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<PreLogin />} />
         <Route path="/signUp" element={<SignUp />} />
         <Route path="/verification" element={<VerifyOtp />} />
         <Route path="/verify-email" element={<ConfirmVerify />} />
@@ -33,6 +35,7 @@ const RoutesContainer = () => {
         <Route path="/resetDone" element={<ConfirmNewPassword />} />
         <Route path="/selectProfile" element={<SelectProfile />} />
         <Route path="/verify" element={<HandleEmailActions />} />
+        <Route path="/complete-profile" element={<CompleteProfile />} />
         <Route
           path="/dashboard/*"
           element={<RoutesAuth children={<DashboardLayout />} />}

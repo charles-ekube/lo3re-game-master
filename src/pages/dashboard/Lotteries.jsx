@@ -7,6 +7,7 @@ import CardSlider from "../../components/dashboard/overview/CardSlider";
 import { FaEllipsis } from "react-icons/fa6";
 import { MdVerified } from "react-icons/md";
 import "../../assets/styles/lotteries.css";
+import { Link } from "react-router-dom";
 
 const Lotteries = () => {
   const [tabs, setTabs] = useState([
@@ -49,7 +50,7 @@ const Lotteries = () => {
             <BalanceCard
               title={"Total Earned"}
               figure={"0.00"}
-              subtitle={"Total gains 0%"}
+              subtitle={"Lotteries deployed: 0"}
             />
             <BalanceCard
               title={"Wallet Balance"}
@@ -61,13 +62,16 @@ const Lotteries = () => {
             <div className="flexRow justifyBetween">
               <h3 className="satoshi-text">Your Lotteries</h3>
               <p className="flexRow alignCenter">
-                View all <IoChevronForward fontSize={"20px"} />
+                <Link to={"/dashboard/lotteries/add"} className="blackText">
+                  Create a Lottery
+                </Link>
               </p>
             </div>
             <div className="tabContainer">
               <div className="tab">
-                {tabs.map((tab) => (
+                {tabs.map((tab, index) => (
                   <button
+                    key={"tab-" + index}
                     className={`capitalize ${tab.isActive ? "active" : ""}`}
                     onClick={() => toggleTabs(tab)}
                   >

@@ -11,11 +11,14 @@ import { auth } from "../../firebase";
 import Logo from "../../assets/images/logo.svg";
 import Text from "../../utils/CustomText";
 import Button from "../../utils/CustomButton";
+import Login from "./Login";
 
 const HandleEmailActions = () => {
   const location = useLocation();
   const [redirectUrl, setRedirectUrl] = useState(null);
   const [message, setMessage] = useState("");
+  const [renderLogin, setRenderLogin] = useState(false);
+  const [signInEmail, setSignInEmail] = useState("");
   const navigate = useNavigate();
 
   const handleFirebaseError = (firebaseError) => {
@@ -46,7 +49,7 @@ const HandleEmailActions = () => {
     const actionCode = searchParams.get("oobCode");
     // (Optional) Get the continue URL & apiKey from the query parameter if available.
     const continueUrl = searchParams.get("continueUrl");
-    const apiKey = searchParams.get("apiKey");
+    // const apiKey = searchParams.get("apiKey");
     // (Optional) Get the language code if available.
     const lang = searchParams.get("lang") || "en";
     if (mode) {
@@ -62,7 +65,7 @@ const HandleEmailActions = () => {
           break;
 
         case "signIn":
-          handleSignInUser(auth);
+          handleSignInUser(auth, continueUrl);
           break;
 
         default:
@@ -90,30 +93,29 @@ const HandleEmailActions = () => {
       });
   }
 
-  function handleSignInUser(auth) {
+  function handleSignInUser(auth, continueUrl) {
     if (isSignInWithEmailLink(auth, window.location.href)) {
-      let email = window.localStorage.getItem("emailForSignIn");
-      if (!email) {
-        // User opened the link on a different device. To prevent session fixation
-        // attacks, ask the user to provide the associated email again. For example:
-        email = window.prompt("Please provide your email for confirmation");
-      }
+      const url = new URL(continueUrl);
+      const emailParam = url.searchParams.get("email");
+      const decodedEmail = decodeURIComponent(emailParam);
+
+      // console.log(window.location.href);
+      console.log("decoded email", decodedEmail);
+
       // The client SDK will parse the code from the link for you.
-      signInWithEmailLink(auth, email, window.location.href)
+      signInWithEmailLink(auth, decodedEmail, window.location.href)
         .then((result) => {
-          setMessage(
-            "🟢 Login successful, you will be redirected to your dashboard"
-          );
-          window.localStorage.removeItem("emailForSignIn");
-          // console.log(result)
-          window.localStorage.setItem("accessToken", result.user.accessToken);
-          navigate(`/dashboard`);
+          if (result?._tokenResponse?.isNewUser) {
+            navigate(`/complete-profile`);
+          } else {
+            setSignInEmail(decodedEmail);
+            setRenderLogin(true);
+          }
         })
         .catch((error) => {
-          // Some error occurred, you can inspect the code: error.code
-          // Common errors could be invalid email and invalid or expired OTPs.
           console.log("email signin", error);
           handleFirebaseError(error);
+          navigate("/");
         });
     }
   }
@@ -142,37 +144,41 @@ const HandleEmailActions = () => {
 
   return (
     <>
-      {/* implement custom UI here */}
-      <main className={"authMainContainer"}>
-        <section className={"authContainer"}>
-          <header>
-            <img src={Logo} alt="logo" />
-            <div className={"verifyHeaderText"}>
-              <Text tag={"h2"} className={"f26 boldText"}>
-                Unlock Your Lucky Streak🍀✨
-              </Text>
-              <Text
-                tag={"p"}
-                style={{ lineHeight: "26px" }}
-                className={"f16 regularText"}
-              >
-                {message}
-              </Text>
-            </div>
-          </header>
-          <div className={"formContainer"}>
-            {redirectUrl && (
-              <div>
-                <Button
-                  text={"Login"}
-                  className={"authBtn"}
-                  onClick={redirect}
-                />
+      {!renderLogin ? (
+        <main className={"authMainContainer"}>
+          {/* implement custom UI here */}
+          <section className={"authContainer"}>
+            <header>
+              <img src={Logo} alt="logo" />
+              <div className={"verifyHeaderText"}>
+                <Text tag={"h2"} className={"f26 boldText"}>
+                  Unlock Your Lucky Streak🍀✨
+                </Text>
+                <Text
+                  tag={"p"}
+                  style={{ lineHeight: "26px" }}
+                  className={"f16 regularText"}
+                >
+                  {message}
+                </Text>
               </div>
-            )}
-          </div>
-        </section>
-      </main>
+            </header>
+            <div className={"formContainer"}>
+              {redirectUrl && (
+                <div>
+                  <Button
+                    text={"Login"}
+                    className={"authBtn"}
+                    onClick={redirect}
+                  />
+                </div>
+              )}
+            </div>
+          </section>
+        </main>
+      ) : (
+        <Login signInEmail={signInEmail} />
+      )}
     </>
   );
 };
