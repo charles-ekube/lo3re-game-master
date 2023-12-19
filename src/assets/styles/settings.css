@@ -143,6 +143,10 @@
         text-align: center;
         margin-top: 10px;
     }
+
+    .userStats {
+        width: 100%;
+    }
 }
 
 
