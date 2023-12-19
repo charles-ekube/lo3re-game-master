@@ -40,12 +40,14 @@ const Settings = () => {
                 Edit Profile
               </Link>
             </div>
-            <div className="linkContainer flexRow justifyBetween alignCenter">
-              <Link to={"kyc"} className={"link"}>
+            <Link to={"kyc"} className={"link"}>
+              <div className="linkContainer flexRow justifyBetween alignCenter">
                 KYC Verification
-              </Link>
-              <div className="status-pill pill-invalid btnSm">Not verified</div>
-            </div>
+                <div className="status-pill pill-invalid btnSm">
+                  Not verified
+                </div>
+              </div>
+            </Link>
             <div className="linkContainer">
               <Link to={"accounts"} className={"link"}>
                 Accounts and Cards

@@ -2,7 +2,7 @@ import React from "react";
 import CardSlider from "../../components/dashboard/overview/CardSlider";
 import Text from "../../utils/CustomText";
 import ContactCard from "../../components/dashboard/cards/ContactCard";
-import { MdOutlineKeyboardBackspace } from "react-icons/md";
+import { IoIosArrowRoundBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 
 const Kyc = () => {
@@ -17,7 +17,7 @@ const Kyc = () => {
       <section className="mainContainer">
         <div className="content">
           <div className="settingHeader">
-            <MdOutlineKeyboardBackspace
+            <IoIosArrowRoundBack
               size={34}
               className={"arrow-back"}
               onClick={goBack}

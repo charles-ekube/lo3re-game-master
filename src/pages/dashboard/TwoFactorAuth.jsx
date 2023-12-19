@@ -67,6 +67,7 @@ const TwoFactorAuth = () => {
               icon={Mail}
               col2Child={
                 <CustomButtonII
+                  style={{ width: "67px" }}
                   text={"Set Up"}
                   variant={"light"}
                   className={"btnSm"}

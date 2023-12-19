@@ -147,6 +147,14 @@
     .userStats {
         width: 100%;
     }
+
+    .mainContainer > .content {
+        padding: 35px 15px;
+    }
+
+    .userStats > .stats {
+        padding: 16px 18px;
+    }
 }
 
 
