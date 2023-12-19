@@ -169,6 +169,8 @@ button {
 
 .btnSm {
   padding: 10px 12px !important;
+  font-size: 14px !important;
+  height: inherit;
 }
 
 .btn-dark {
@@ -288,6 +290,17 @@ button {
 
 .formInput:focus {
   outline-color: #ccc;
+}
+
+
+
+
+
+
+.faintDivider {
+  margin: 20px 0;
+  border: 1px solid var(--lightGreyII);
+  border-top: 0;
 }
 
 /* media queries  */

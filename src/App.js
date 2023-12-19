@@ -1,11 +1,14 @@
-import logo from './logo.svg';
-import './App.css';
-import SignUp from './pages/auth/SignUp';
-import RoutesContainer from './routes/Routes';
+// import logo from './logo.svg';
+import "./App.css";
+// import SignUp from './pages/auth/SignUp';
+import RoutesContainer from "./routes/Routes";
+import ScrollToTop from "./utils/ScrollToTop";
 
 function App() {
   return (
-    <RoutesContainer />
+    <ScrollToTop>
+      <RoutesContainer />
+    </ScrollToTop>
   );
 }
 

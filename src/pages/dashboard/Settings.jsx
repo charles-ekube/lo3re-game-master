@@ -44,7 +44,7 @@ const Settings = () => {
               <Link to={"kyc"} className={"link"}>
                 KYC Verification
               </Link>
-              <div className="status-pill pill-invalid">Not verified</div>
+              <div className="status-pill pill-invalid btnSm">Not verified</div>
             </div>
             <div className="linkContainer">
               <Link to={"accounts"} className={"link"}>
@@ -67,7 +67,7 @@ const Settings = () => {
             </div>
             <div className="linkContainer">
               <Link to={"uniques-players"} className={"link"}>
-                Unique players
+                Unique Players
               </Link>
             </div>
           </div>
@@ -76,7 +76,7 @@ const Settings = () => {
             <p className="text-muted">Security</p>
             <div className="linkContainer">
               <Link to={"#"} className={"link"}>
-                Allow notifications
+                Allow Notifications
               </Link>
             </div>
             <div className="linkContainer">
@@ -84,6 +84,12 @@ const Settings = () => {
                 Password reset
               </Link>
             </div>
+            <Link to={"2fa"} className={"link"}>
+              <div className="linkContainer flexRow justifyBetween alignCenter">
+                <span>Two-Factor Authentication</span>
+                <div className="status-pill pill-invalid btnSm">Disabled</div>
+              </div>
+            </Link>
           </div>
 
           <div className="settings">

@@ -8,7 +8,8 @@ import http from "../../../utils/utils";
 import BankIcon from "../../../assets/images/icons/bank.png";
 import CardIcon from "../../../assets/images/icons/card.png";
 import CryptoIcon from "../../../assets/images/icons/buy-crypto.png";
-import { showError } from "../../../utils/Alert";
+import { showError, showSuccess } from "../../../utils/Alert";
+import { handleFirebaseError } from "../../../utils/Helpers";
 
 const FundWalletModal = ({ isOpen, onClose }) => {
   const [supportedCurrencies, setSupportedCurrencies] = useState([]);
@@ -19,7 +20,7 @@ const FundWalletModal = ({ isOpen, onClose }) => {
     symbol: "$",
   });
   const [depositFormStates, setDepositFormStates] = useState({
-    currency: "usd",
+    currency: "",
     amount: "",
     amountToRecieve: 0,
   });
@@ -62,6 +63,9 @@ const FundWalletModal = ({ isOpen, onClose }) => {
       }));
 
       setSupportedCurrencies(newArray);
+      if (formStep === 1) {
+        setDepositFormStates({ ...depositFormStates, currency: "usd" });
+      }
       // console.log("currencies", newArray);
     } catch (error) {
       console.log("fetch currency err", error);
@@ -84,8 +88,11 @@ const FundWalletModal = ({ isOpen, onClose }) => {
 
   const processFundWallet = async () => {
     if (formStep === 1) {
-      if (depositFormStates.amount === "") {
-        showError("Amount is required");
+      if (
+        depositFormStates.amount === "" ||
+        depositFormStates.currency === ""
+      ) {
+        showError("Amount and currency are required");
         return;
       }
 
@@ -121,33 +128,49 @@ const FundWalletModal = ({ isOpen, onClose }) => {
       }
 
       // process deposit request
-      // const payMethod = paymentMethods.filter((val) => val.isActive === true);
-      // setRequestLoading(true);
-      // try {
-      //   const fData = {
-      //     ...depositFormStates,
-      //     method: payMethod[0]?.code,
-      //   };
-      //   const res = await http.post("wallets/deposits", fData);
-      //   setRequestLoading(false);
-      //   console.log(res);
-      // } catch (error) {
-      //   console.log(error);
-      //   setRequestLoading(false);
-      //   showError("An error occurred, try again later");
-      // }
+      const payMethod = paymentMethods.filter((val) => val.isActive === true);
+      setRequestLoading(true);
+      try {
+        const fData = {
+          ...depositFormStates,
+          method: payMethod[0]?.code,
+        };
+        const res = await http.post("wallets/deposits", fData);
+        setRequestLoading(false);
 
-      onClose();
-      setFormStep(1);
-      setRate({
-        rate: "1",
-        symbol: "$",
-      });
-      setDepositFormStates({
-        currency: "usd",
-        amount: "",
-      });
-      alert("Deposit request processing");
+        if (depositFormStates.currency === "ngn") {
+          let checkoutUrl = res?.meta?.data?.authorization_url;
+          window.open(checkoutUrl, "_blank");
+        } else {
+          if (payMethod[0]?.code === "credit_card") {
+            showError("Payment with credit card not available");
+            return;
+          } else if (payMethod[0]?.code === "crypto") {
+            let checkoutUrl = res?.meta?.hosted_url;
+            window.open(checkoutUrl, "_blank");
+          }
+        }
+
+        console.log(res);
+        onClose();
+        setFormStep(1);
+        setRate({
+          rate: "1",
+          symbol: "$",
+        });
+        setDepositFormStates({
+          currency: "usd",
+          amount: "",
+        });
+        showSuccess(
+          "Request processing, you will be redirected to a checkout page"
+        );
+      } catch (error) {
+        console.log(error);
+        setRequestLoading(false);
+        handleFirebaseError(error);
+        // showError("An error occurred, try again later");
+      }
     }
   };
 

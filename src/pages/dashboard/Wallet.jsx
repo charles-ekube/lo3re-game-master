@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Text from "../../utils/CustomText";
 import ContactCard from "../../components/dashboard/cards/ContactCard";
 import BalanceCard from "../../components/dashboard/wallet/BalanceCard";
@@ -15,12 +15,22 @@ import WalletAdd from "../../assets/images/icons/wallet-add.png";
 import useCopyToClipBoard from "../../hooks/useCopyToClipboard";
 import { LuCopy } from "react-icons/lu";
 import { AiOutlineCheck } from "react-icons/ai";
+import http from "../../utils/utils";
 
 const Wallet = () => {
   const [fundWalletModal, setFundWalletModal] = useState(false);
   const [withdrawWalletModal, setWithdrawWalletModal] = useState(false);
   const [showTxnModal, setShowTxnModal] = useState(false);
   const { handleCopyClick, isCopied } = useCopyToClipBoard();
+
+  // const fetchWallet = async () => {
+  //   const res = await http.get("wallets");
+  //   console.log(res);
+  // };
+
+  // useEffect(() => {
+  //   fetchWallet();
+  // }, []);
 
   return (
     <>

@@ -14,6 +14,7 @@ import Kyc from "./Kyc";
 import Lotteries from "./Lotteries";
 import AddLottery from "./AddLottery";
 import PreviewLottery from "./PreviewLottery";
+import TwoFactorAuth from "./TwoFactorAuth";
 
 const DashboardLayout = () => {
   const dispatch = useDispatch();
@@ -47,6 +48,7 @@ const DashboardLayout = () => {
             <Route path="" element={<Settings />} />
             <Route path="edit-profile" element={<EditProfile />} />
             <Route path="kyc" element={<Kyc />} />
+            <Route path="2fa" element={<TwoFactorAuth />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

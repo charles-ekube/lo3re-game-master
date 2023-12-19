@@ -114,6 +114,26 @@
 }
 
 
+
+/* 2FA */
+.tFaModal .tFaContent {
+    display: flex;
+    text-align: left;
+    justify-content: space-between;
+}
+
+.modalQRContainer {
+    width: 100px;
+    height: 100px;
+    background-color: antiquewhite;
+}
+
+.modalQRContainer img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
 @media screen and (max-width: 763px) {
     .avatarStatsContainer {
         flex-direction: column;
@@ -122,5 +142,16 @@
     .userStats > .userName {
         text-align: center;
         margin-top: 10px;
+    }
+}
+
+
+@media screen and (max-width: 550px) {
+    .tFaContent {
+        flex-direction: column-reverse;
+    }
+
+    .modalQRContainer {
+        margin-bottom: 10px;
     }
 }
