@@ -15,13 +15,17 @@ import WalletAdd from "../../assets/images/icons/wallet-add.png";
 import useCopyToClipBoard from "../../hooks/useCopyToClipboard";
 import { LuCopy } from "react-icons/lu";
 import { AiOutlineCheck } from "react-icons/ai";
-import http from "../../utils/utils";
+// import http from "../../utils/utils";
+// import { useFetchWalletQuery } from "../../redux/services/accountApi";
 
 const Wallet = () => {
   const [fundWalletModal, setFundWalletModal] = useState(false);
   const [withdrawWalletModal, setWithdrawWalletModal] = useState(false);
   const [showTxnModal, setShowTxnModal] = useState(false);
   const { handleCopyClick, isCopied } = useCopyToClipBoard();
+  // const { data: wallet, error } = useFetchWalletQuery();
+  // console.log(wallet);
+  // console.log(error);
 
   // const fetchWallet = async () => {
   //   const res = await http.get("wallets");

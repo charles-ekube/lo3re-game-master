@@ -76,16 +76,15 @@ const Settings = () => {
 
           <div className="settings">
             <p className="text-muted">Security</p>
-            <div className="linkContainer">
-              <Link to={"#"} className={"link"}>
-                Allow Notifications
-              </Link>
-            </div>
-            <div className="linkContainer">
-              <Link to={"password-reset"} className={"link"}>
-                Password reset
-              </Link>
-            </div>
+            <Link to={"#"} className={"link"}>
+              <div className="linkContainer">Allow Notifications</div>
+            </Link>
+            <Link to={"password-reset"} className={"link"}>
+              <div className="linkContainer">Password Reset</div>
+            </Link>
+            <Link to={"wallet-pin"} className={"link"}>
+              <div className="linkContainer">Wallet Pin</div>
+            </Link>
             <Link to={"2fa"} className={"link"}>
               <div className="linkContainer flexRow justifyBetween alignCenter">
                 <span>Two-Factor Authentication</span>

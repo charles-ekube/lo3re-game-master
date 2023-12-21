@@ -99,9 +99,6 @@ const HandleEmailActions = () => {
       const emailParam = url.searchParams.get("email");
       const decodedEmail = decodeURIComponent(emailParam);
 
-      // console.log(window.location.href);
-      console.log("decoded email", decodedEmail);
-
       // The client SDK will parse the code from the link for you.
       signInWithEmailLink(auth, decodedEmail, window.location.href)
         .then((result) => {

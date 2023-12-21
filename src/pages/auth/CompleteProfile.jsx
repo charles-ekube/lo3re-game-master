@@ -1,22 +1,9 @@
-import React, { useEffect, useState } from "react";
-import Logo from "../../assets/images/logo.svg";
-import GoogleLogo from "../../assets/images/google.svg";
+import React, { useState } from "react";
 import Text from "../../utils/CustomText";
-import Or from "../../assets/images/or.svg";
 import CustomInput from "../../utils/CustomInput";
 import Button from "../../utils/CustomButton";
 import { useNavigate } from "react-router-dom";
-import {
-  createUserWithEmailAndPassword,
-  updateProfile,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-  sendEmailVerification,
-  updatePassword,
-} from "firebase/auth";
-import { setFlow } from "../../utils/Helpers";
-import http from "../../utils/utils";
+import { updateProfile, updatePassword } from "firebase/auth";
 import { showError, showSuccess } from "../../utils/Alert";
 import { auth } from "../../firebase";
 
@@ -93,6 +80,15 @@ const CompleteProfile = () => {
   return (
     <main className={"authMainContainer"}>
       <section className={"authContainer"}>
+        <header>
+          {/* <img src={Logo} alt="logo" /> */}
+          <div style={{ margin: "32px 0 42px" }}>
+            <Text tag={"h2"} className={"boldText"}>
+              Kindly complete your profile setup
+            </Text>
+          </div>
+        </header>
+
         <div className={"formContainer"}>
           <div>
             <CustomInput

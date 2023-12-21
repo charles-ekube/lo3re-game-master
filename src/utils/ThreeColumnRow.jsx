@@ -1,7 +1,7 @@
 import React from "react";
 
 const ThreeColumnRow = ({
-  icon,
+  icon = null,
   iconBgClass = "bgGrey",
   title,
   subtitle,
@@ -12,9 +12,11 @@ const ThreeColumnRow = ({
     <>
       <div className="flexRow justifyBetween utilRow" onClick={onClick}>
         <div className="flexRow alignCenter">
-          <div className={`icon ${iconBgClass}`}>
-            <img src={icon} />
-          </div>
+          {icon && (
+            <div className={`icon ${iconBgClass}`}>
+              <img src={icon} />
+            </div>
+          )}
           <div className="FlexColumn justifyCenter textLeft">
             <p className="title">{title}</p>
             <p className="subtitle">{subtitle}</p>
