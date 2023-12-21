@@ -181,6 +181,10 @@
   text-align: left;
 }
 
+.modal .inputContainer label.text-center {
+  text-align: center;
+}
+
 .closeBtn {
   position: absolute;
   top: -20px;

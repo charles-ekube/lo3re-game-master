@@ -27,6 +27,7 @@ function RequireAuth({ children }) {
           navigate("/");
         } else {
           // User's token is still valid
+          dispatch(updateUserDetail(user));
           console.log("User token is still valid");
         }
       } else {

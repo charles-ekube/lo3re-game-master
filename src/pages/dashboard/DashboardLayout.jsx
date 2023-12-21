@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SideBar from "../../components/dashboard/widgets/SideBar";
 import TopNav from "../../components/dashboard/widgets/TopNav";
-import { Outlet, Route, Routes, useNavigate } from "react-router-dom";
+import { Outlet, Route, Routes } from "react-router-dom";
 import NotFound from "../../utils/NotFound";
 import Overview from "./Overview";
 import Wallet from "./Wallet";
@@ -22,7 +22,6 @@ import Modal from "../../utils/Modal";
 import OtpInput from "../../utils/CustomOtp";
 import { showError, showSuccess } from "../../utils/Alert";
 import { useActivateWalletPinMutation } from "../../redux/services/walletApi";
-import CustomInput from "../../utils/CustomInput";
 
 const DashboardLayout = () => {
   const dispatch = useDispatch();
@@ -36,15 +35,8 @@ const DashboardLayout = () => {
     useActivateWalletPinMutation();
   const [showWalletPinModal, setShowWalletPinModal] = useState(false);
   const [pin, setPin] = useState("");
-
-  const handleOnPinChange = (e) => {
-    const value = e.target.value;
-
-    const isNumeric = /^\d+$/.test(value);
-
-    if (value === "" || (isNumeric && value.length <= 6)) {
-      setPin(value);
-    }
+  const onChange = (value) => {
+    setPin(value);
   };
 
   useEffect(() => {
@@ -124,15 +116,10 @@ const DashboardLayout = () => {
         zClass={"tFaModal"}
       >
         <div className="inputContainer">
-          <label className="text-start text-muted">
+          <label className="text-center text-muted">
             Create Your 6-Digit PIN
           </label>
-          <CustomInput
-            type={"password"}
-            placeholder={"Enter wallet pin"}
-            value={pin}
-            onChange={(e) => handleOnPinChange(e)}
-          />
+          <OtpInput valueLength={6} value={pin} onChange={onChange} />
         </div>
         <CustomButtonII
           text={"Confirm"}
