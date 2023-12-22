@@ -18,7 +18,12 @@ const CustomButtonII = ({
   return (
     <button className={combinedClassName} onClick={onClick} {...otherProps}>
       {loading ? (
-        <span className={"loader"}></span>
+        <div
+          className="flexRow justifyCenter alignCenter"
+          style={{ width: "100%", height: "100%" }}
+        >
+          <span className={"loader"}></span>
+        </div>
       ) : (
         <Text
           className={`regularText flexRow alignCenter ${

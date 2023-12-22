@@ -26,6 +26,20 @@ export const walletApi = createApi({
         body: data,
       }),
     }),
+    checkWalletPin: builder.mutation({
+      query: (data) => ({
+        url: `auth/wallet/pin`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    requestWithdrawal: builder.mutation({
+      query: (data) => ({
+        url: `wallets/withdrawals`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -33,4 +47,6 @@ export const {
   useFetchWalletBalanceQuery,
   useActivateWalletPinMutation,
   useUpdateWalletPinMutation,
+  useCheckWalletPinMutation,
+  useRequestWithdrawalMutation,
 } = walletApi;

@@ -14,7 +14,7 @@ const ThreeColumnRow = ({
         <div className="flexRow alignCenter">
           {icon && (
             <div className={`icon ${iconBgClass}`}>
-              <img src={icon} />
+              <img src={icon} alt="" />
             </div>
           )}
           <div className="FlexColumn justifyCenter textLeft">

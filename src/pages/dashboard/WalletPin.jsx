@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import CustomButtonII from "../../utils/CustomButtonII";
 import ThreeColumnRow from "../../utils/ThreeColumnRow";
 import Modal from "../../utils/Modal";
-import CustomInput from "../../utils/CustomInput";
+// import CustomInput from "../../utils/CustomInput";
 import { useUpdateWalletPinMutation } from "../../redux/services/walletApi";
 import { showError, showSuccess } from "../../utils/Alert";
 import OtpInput from "../../utils/CustomOtp";

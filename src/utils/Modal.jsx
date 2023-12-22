@@ -7,12 +7,14 @@ const Modal = ({
   hideCloseBtn = false,
   title = null,
   zClass = "",
+  glassOverlay = false,
   children,
 }) => {
   return (
     <>
       {isOpen ? (
         <>
+          {glassOverlay && <div className="glassMorph"></div>}
           <div className={`overlay z500 ${zClass}`} onClick={onClose}></div>
           <div className={`modal ${zClass}`}>
             <div className={`flexRow justifyBetween alignCenter posRelative`}>

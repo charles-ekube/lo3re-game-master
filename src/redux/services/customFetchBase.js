@@ -1,9 +1,4 @@
-import {
-  BaseQueryFn,
-  FetchArgs,
-  FetchBaseQueryError,
-  fetchBaseQuery,
-} from "@reduxjs/toolkit/query";
+import { fetchBaseQuery } from "@reduxjs/toolkit/query";
 import { showError } from "../../utils/Alert";
 // import { logout } from "../features/authSlice";
 

@@ -34,18 +34,19 @@ const TopNav = () => {
   }, []);
 
   // Check if displayName is a string and not empty
+  let firstLetter = "";
+  let lastLetter = "";
   if (
     typeof userDetails?.displayName !== "string" ||
     userDetails?.displayName.length === 0
   ) {
-    return null;
+    firstLetter = "u";
+    lastLetter = "s";
+  } else {
+    firstLetter = userDetails?.displayName[0];
+    lastLetter = userDetails?.displayName[userDetails?.displayName.length - 1];
   }
 
-  const firstLetter = userDetails?.displayName[0];
-  const lastLetter =
-    userDetails?.displayName[userDetails?.displayName.length - 1];
-  // const firstLetter = "u";
-  // const lastLetter = "s";
 
   return (
     <>

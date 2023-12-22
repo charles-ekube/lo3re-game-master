@@ -8,7 +8,7 @@ import http from "../../../utils/utils";
 import BankIcon from "../../../assets/images/icons/bank.png";
 import CardIcon from "../../../assets/images/icons/card.png";
 import CryptoIcon from "../../../assets/images/icons/buy-crypto.png";
-import { showError } from "../../../utils/Alert";
+import { showError, showSuccess } from "../../../utils/Alert";
 import CustomDropdown from "../../../utils/CustomDropdown";
 import CustomCheckbox from "../../../utils/CustomCheckbox";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,6 +18,11 @@ import {
   setBankTransferBeneficiaryForm,
   setCryptoBeneficiaryForm,
 } from "../../../redux/features/generalSlice";
+import OtpInput from "../../../utils/CustomOtp";
+import {
+  useCheckWalletPinMutation,
+  useRequestWithdrawalMutation,
+} from "../../../redux/services/walletApi";
 
 const WithdrawWalletModal = ({ isOpen, onClose }) => {
   const [supportedCurrencies, setSupportedCurrencies] = useState([]);
@@ -34,6 +39,12 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
     symbol: "$",
   });
   const [formStep, setFormStep] = useState(1);
+  const [showEmailCodeModal, setShowEmailCodeModal] = useState(false);
+  const [showWalletPinModal, setShowWalletPinModal] = useState(false);
+  const [checkWalletPin, { isLoading: isCheckWalletPinLoading }] =
+    useCheckWalletPinMutation();
+  const [reqWithdraw, { isLoading: isReqWithdrawLoading }] =
+    useRequestWithdrawalMutation();
   const [withdrawalFormStates, setWithdrawalFormStates] = useState({
     currency: "",
     amount: "",
@@ -45,6 +56,8 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
     method: "",
     destination_id: "",
     destination: {},
+    wallet_pin: "",
+    code: "",
   });
 
   const [paymentMethods, setPaymentMethods] = useState();
@@ -73,8 +86,28 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
   ]);
 
   const closeModal = () => {
-    setFormStep(1);
     onClose();
+    setFormStep(1);
+    setShowEmailCodeModal(false);
+    setRate({
+      rate: "1",
+      symbol: "$",
+    });
+    setWithdrawalFormStates({
+      currency: "usd",
+      amount: "",
+    });
+    dispatch(resetBankTransferBeneficiaryForm());
+    dispatch(resetCryptoBeneficiaryForm());
+    setFinalFormState({
+      currency: "",
+      amount: 0,
+      method: "",
+      destination_id: "",
+      destination: {},
+      wallet_pin: "",
+      code: "",
+    });
   };
 
   const toggleActive = (clickedMethod) => {
@@ -118,27 +151,27 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
     setWithdrawalFormStates((curState) => ({ ...curState, amountToRecieve }));
   }, [rate.rate, withdrawalFormStates.amount]);
 
-  const fetchCurrencies = async () => {
-    try {
-      const res = await http.get(`wallets/supported-currencies`);
-      const newArray = res.map((cur) => ({
-        ...cur,
-        title: cur.name,
-        value: cur.code,
-        name: cur.code.toUpperCase(),
-      }));
-
-      setSupportedCurrencies(newArray);
-      if (formStep === 1) {
-        setWithdrawalFormStates({ ...withdrawalFormStates, currency: "usd" });
-      }
-      // console.log("currencies", newArray);
-    } catch (error) {
-      console.log("fetch currency err", error);
-    }
-  };
-
   useEffect(() => {
+    const fetchCurrencies = async () => {
+      try {
+        const res = await http.get(`wallets/supported-currencies`);
+        const newArray = res.map((cur) => ({
+          ...cur,
+          title: cur.name,
+          value: cur.code,
+          name: cur.code.toUpperCase(),
+        }));
+
+        setSupportedCurrencies(newArray);
+        if (formStep === 1) {
+          setWithdrawalFormStates((state) => ({ ...state, currency: "usd" }));
+        }
+        // console.log("currencies", newArray);
+      } catch (error) {
+        console.log("fetch currency err", error);
+      }
+    };
+
     fetchCurrencies();
   }, []);
 
@@ -152,28 +185,69 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
     }
   };
 
-  const requestWithdrawal = () => {
-    // process withdrawal request & reset form
-    closeModal();
-    setFormStep(1);
-    setRate({
-      rate: "1",
-      symbol: "$",
-    });
-    setWithdrawalFormStates({
-      currency: "usd",
-      amount: "",
-    });
-    dispatch(resetBankTransferBeneficiaryForm());
-    dispatch(resetCryptoBeneficiaryForm());
-    setFinalFormState({
-      currency: "",
-      amount: 0,
-      method: "",
-      destination_id: "",
-      destination: {},
-    });
-    alert("Withdraw request processing");
+  const requestWithdrawal = async () => {
+    if (finalFormState.code === "") {
+      showError("Enter code");
+      return;
+    }
+
+    await reqWithdraw(finalFormState)
+      .unwrap()
+      .then((resp) => {
+        console.log(resp);
+        showSuccess("Withdrawal request sent");
+
+        closeModal();
+      })
+      .catch((err) => {
+        console.log(err);
+        showError(
+          err?.message ||
+            err?.data?.message ||
+            "An error occurred, try again later"
+        );
+      });
+  };
+
+  const requestWalletPin = () => {
+    setShowWalletPinModal(true);
+  };
+
+  const onWPinChange = (value) => {
+    setFinalFormState({ ...finalFormState, wallet_pin: value });
+  };
+
+  const validateWalletPin = async () => {
+    if (finalFormState.wallet_pin === "") {
+      showError("Provide wallet pin");
+      return;
+    }
+
+    await checkWalletPin({ pin: finalFormState.wallet_pin })
+      .unwrap()
+      .then(async (resp) => {
+        if (resp?.success) {
+          const res = await http.get("/auth/mfa/email");
+          if (res?.success) {
+            setShowWalletPinModal(false);
+            setShowEmailCodeModal(true);
+            showSuccess("A code has been sent to your email");
+          } else {
+            showError(
+              res?.message ||
+                res?.data?.message ||
+                "An error occurred, could not send email code"
+            );
+          }
+        } else {
+          showError("check pin failed");
+          console.log(resp);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        showError(err?.message || err?.data?.message || "An error occurred");
+      });
   };
 
   const processFundWallet = async () => {
@@ -257,7 +331,7 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
         destination_id: activeBen[0]?.address,
       });
 
-      requestWithdrawal();
+      requestWalletPin();
     } else if (formStep === 4) {
       const activeMethod = paymentMethods.filter(
         (val) => val.isActive === true
@@ -278,9 +352,6 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
             return;
           }
 
-          // TODO: if user checked saveForLater save beneficiary and use destination_id returned else pass detination obj
-          // TODO: scratch all that👆🏽👆🏽, just pass saveBene & ask BE to perform above task on BE for better performance
-
           setFinalFormState({
             ...finalFormState,
             currency: withdrawalFormStates.currency,
@@ -294,7 +365,7 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
             },
           });
 
-          requestWithdrawal();
+          requestWalletPin();
         } else if (withdrawalFormStates.currency === "usd") {
           if (
             beneficiaryForm.routing_number === "" ||
@@ -323,7 +394,7 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
             },
           });
 
-          requestWithdrawal();
+          requestWalletPin();
         } else {
           showError("Unknown currency");
         }
@@ -350,7 +421,7 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
           },
         });
 
-        requestWithdrawal();
+        requestWalletPin();
       } else {
         showError("Unknown payment method");
         console.log("method is:", activeMethod);
@@ -484,6 +555,63 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
           </div>
         </div>
       </Modal>
+
+      <Modal
+        title={"Enter Wallet Pin"}
+        isOpen={showWalletPinModal}
+        onClose={() => setShowWalletPinModal(false)}
+        zClass={"z600"}
+        glassOverlay={true}
+      >
+        <div className="inputContainer">
+          <label className="text-center text-muted">
+            Enter Your 6-Digit wallet PIN
+          </label>
+          <OtpInput
+            valueLength={6}
+            value={finalFormState.wallet_pin}
+            onChange={onWPinChange}
+          />
+        </div>
+        <CustomButtonII
+          text={"Confirm"}
+          className={"w100"}
+          onClick={validateWalletPin}
+          centerText={true}
+          loading={isCheckWalletPinLoading}
+        />
+      </Modal>
+
+      <Modal
+        title={"Enter Security Code"}
+        isOpen={showEmailCodeModal}
+        onClose={() => setShowEmailCodeModal(false)}
+        zClass={"z600"}
+        glassOverlay={true}
+      >
+        <div className="inputContainer">
+          <label className="text-start text-muted">
+            To confirm this request, please enter the security code we emailed
+            to you.
+          </label>
+          <input
+            type="text"
+            placeholder="Enter the code to verify"
+            className="formInput"
+            value={finalFormState.code}
+            onChange={(e) =>
+              setFinalFormState({ ...finalFormState, code: e.target.value })
+            }
+          />
+        </div>
+        <CustomButtonII
+          text={"Confirm"}
+          className={"w100"}
+          onClick={requestWithdrawal}
+          loading={isReqWithdrawLoading}
+          centerText={true}
+        />
+      </Modal>
     </>
   );
 };
@@ -610,7 +738,6 @@ const AddBeneficiary = ({ currency, payMethod }) => {
   useEffect(() => {
     if (currency === "ngn") {
       if (bankFormState.account_number.length === 10) {
-        // TODO: validate acct
         validateAccount();
       } else {
         handleOnChange("", "account_name");

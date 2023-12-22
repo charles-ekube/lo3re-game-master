@@ -39,7 +39,7 @@ function RequireAuth({ children }) {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [dispatch, navigate]);
 
   if (!token) {
     return <Navigate to="/" state={{ from: location }} replace />;
