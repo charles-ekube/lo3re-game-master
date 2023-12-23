@@ -10,6 +10,7 @@ import Modal from "../../utils/Modal";
 import { LuCopy } from "react-icons/lu";
 import { AiOutlineCheck } from "react-icons/ai";
 import useCopyToClipBoard from "../../hooks/useCopyToClipboard";
+import { useFetchProfileQuery } from "../../redux/services/accountApi";
 
 const Mobile =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 4V20H17V4H7ZM6 2H18C18.5523 2 19 2.44772 19 3V21C19 21.5523 18.5523 22 18 22H6C5.44772 22 5 21.5523 5 21V3C5 2.44772 5.44772 2 6 2ZM12 17C12.5523 17 13 17.4477 13 18C13 18.5523 12.5523 19 12 19C11.4477 19 11 18.5523 11 18C11 17.4477 11.4477 17 12 17Z' fill='rgba(16,16,16,1)'%3E%3C/path%3E%3C/svg%3E";
@@ -25,9 +26,18 @@ const TwoFactorAuth = () => {
   const [showAuthAppModal, setShowAuthAppModal] = useState(false);
   const [showEmailAuthModal, setShowEmailAuthModal] = useState(false);
   const { handleCopyClick, isCopied } = useCopyToClipBoard();
+  const { data: user } = useFetchProfileQuery();
+
+  const isEmail2faActive = user?.user?.security?.email;
 
   const goBack = () => {
     navigate(-1);
+  };
+
+  const emailAuthOnClick = () => {
+    if (!emailAuthOnClick) {
+      setShowEmailAuthModal(true);
+    }
   };
 
   return (
@@ -61,17 +71,21 @@ const TwoFactorAuth = () => {
             />
             <hr className="faintDivider" />
             <ThreeColumnRow
-              onClick={() => setShowEmailAuthModal(true)}
+              onClick={() => emailAuthOnClick()}
               title={"Email for Two-Factor Authentication"}
               subtitle={"Use the security code sent to your email as your 2FA"}
               icon={Mail}
               col2Child={
-                <CustomButtonII
-                  style={{ width: "67px" }}
-                  text={"Set Up"}
-                  variant={"light"}
-                  className={"btnSm"}
-                />
+                isEmail2faActive ? (
+                  <div className="status-pill pill-success btnSm">Enabled</div>
+                ) : (
+                  <CustomButtonII
+                    style={{ width: "67px" }}
+                    text={"Set Up"}
+                    variant={"light"}
+                    className={"btnSm"}
+                  />
+                )
               }
             />
           </div>

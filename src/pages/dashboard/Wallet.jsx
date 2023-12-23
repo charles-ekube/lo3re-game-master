@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Text from "../../utils/CustomText";
 import ContactCard from "../../components/dashboard/cards/ContactCard";
 import BalanceCard from "../../components/dashboard/wallet/BalanceCard";
@@ -15,6 +15,7 @@ import WalletAdd from "../../assets/images/icons/wallet-add.png";
 import useCopyToClipBoard from "../../hooks/useCopyToClipboard";
 import { LuCopy } from "react-icons/lu";
 import { AiOutlineCheck } from "react-icons/ai";
+import { useFetchTransactionsQuery } from "../../redux/services/walletApi";
 // import http from "../../utils/utils";
 // import { useFetchWalletQuery } from "../../redux/services/accountApi";
 
@@ -23,6 +24,8 @@ const Wallet = () => {
   const [withdrawWalletModal, setWithdrawWalletModal] = useState(false);
   const [showTxnModal, setShowTxnModal] = useState(false);
   const { handleCopyClick, isCopied } = useCopyToClipBoard();
+  const { data } = useFetchTransactionsQuery();
+  console.log(data);
   // const { data: wallet, error } = useFetchWalletQuery();
   // console.log(wallet);
   // console.log(error);
@@ -144,7 +147,7 @@ const Wallet = () => {
         <span className="f14 text-muted">Transaction successful</span>
         <div className="pill">
           <div className="pill-icon">
-            <img src={WalletAdd} />
+            <img src={WalletAdd} alt="" />
           </div>
           <p>Wallet Fund | Oct 20, 2023 11:06</p>
         </div>

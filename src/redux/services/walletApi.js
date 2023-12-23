@@ -12,6 +12,11 @@ export const walletApi = createApi({
       // transformResponse: (results: { data: { user: UserDetail } }) =>
       //   results.data.user,
     }),
+    fetchTransactions: builder.query({
+      query: () => `/wallets/transactions`,
+      // transformResponse: (results: { data: { user: UserDetail } }) =>
+      //   results.data.user,
+    }),
     activateWalletPin: builder.mutation({
       query: (data) => ({
         url: `/auth/wallet/pin/new`,
@@ -49,4 +54,5 @@ export const {
   useUpdateWalletPinMutation,
   useCheckWalletPinMutation,
   useRequestWithdrawalMutation,
+  useFetchTransactionsQuery,
 } = walletApi;

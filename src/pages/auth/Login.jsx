@@ -1,18 +1,12 @@
 import React, { useState } from "react";
 import Logo from "../../assets/images/logo.svg";
-import GoogleLogo from "../../assets/images/google.svg";
 import Text from "../../utils/CustomText";
-import Or from "../../assets/images/or.svg";
 import CustomInput from "../../utils/CustomInput";
 import Button from "../../utils/CustomButton";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import { showError, showSuccess } from "../../utils/Alert";
-import {
-  GoogleAuthProvider,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const Login = ({ signInEmail }) => {
   const navigate = useNavigate();
@@ -81,44 +75,6 @@ const Login = ({ signInEmail }) => {
     }
   };
 
-  const signInWithGoogle = async () => {
-    try {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-
-      // The signed-in user info.
-      const user = result.user;
-
-      // IdP data available using getAdditionalUserInfo(result)
-      // ...
-
-      console.log("Google Sign-In successful:", user);
-    } catch (error) {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-
-      // The email of the user's account used.
-      const email = error.customData?.email;
-
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
-
-      console.error(
-        "Google Sign-In error:",
-        errorCode,
-        errorMessage,
-        email,
-        credential
-      );
-      handleFirebaseError(error);
-    }
-  };
-
   return (
     <main className={"authMainContainer"}>
       <section className={"authContainer"}>
@@ -129,14 +85,6 @@ const Login = ({ signInEmail }) => {
               Login
             </Text>
           </div>
-          <button
-            className={"flexRow alignCenter justifyCenter googleAuthBtn"}
-            onClick={signInWithGoogle}
-          >
-            <img src={GoogleLogo} alt="logo" />
-            <Text className={"satoshi-medium-text"}>Continue with Google</Text>
-          </button>
-          <img src={Or} alt="or" style={{ width: "100%" }} />
         </header>
         <div className={"formContainer"}>
           <div>

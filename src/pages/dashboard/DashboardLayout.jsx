@@ -46,7 +46,7 @@ const DashboardLayout = () => {
         setShowWalletPinModal(true);
       }
     }
-  }, [isUserError, isUserLoading]);
+  }, [isUserError, isUserLoading, user]);
 
   const setWalletPin = async () => {
     if (pin === "") {

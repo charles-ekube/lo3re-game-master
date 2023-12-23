@@ -173,7 +173,7 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
     };
 
     fetchCurrencies();
-  }, []);
+  }, [formStep]);
 
   const returnPayMethodIcon = (code) => {
     if (code === "bank_transfer") {

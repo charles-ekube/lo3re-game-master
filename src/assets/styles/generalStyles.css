@@ -2,6 +2,7 @@
   --primary: #FFD600;
   --secondary: #232A44;
   --success: #06C167;
+  --successDark: #024022;
   --danger: #FC7F79;
   --white: #FFF;
   --lightGrey: #F3F3F3;
@@ -281,6 +282,11 @@ button {
 .pill-invalid {
   background-color: var(--lightGrey);
   color: var(--black);
+}
+
+.pill-success {
+  background-color: var(--success);
+  color: var(--successDark);
 }
 
 .inputContainer label {

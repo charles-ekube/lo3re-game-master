@@ -14,31 +14,31 @@ function RequireAuth({ children }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // Check if the user's token is near expiration
-        const expirationTime = user.authTime + user.expiresIn * 1000; // Convert seconds to milliseconds
-        const now = Date.now();
+        // The user is signed in
+        const expirationTime = user?.stsTokenManager?.expirationTime || 0;
+        const currentTime = Math.floor(Date.now() / 1000);
+        // console.log("xptim", expirationTime);
+        // console.log("curti", currentTime);
 
-        if (now >= expirationTime) {
-          // User's token is likely expired or about to expire
-          // You can take appropriate actions here, such as refreshing the token
-          console.log("User token is expired or about to expire");
+        if (expirationTime < currentTime) {
+          console.log("Token expired");
+
+          // log user out
           localStorage.removeItem("accessToken");
           dispatch(updateUserDetail({}));
           navigate("/");
         } else {
-          // User's token is still valid
           dispatch(updateUserDetail(user));
-          console.log("User token is still valid");
+          console.log("Token valid");
         }
       } else {
-        // User is signed out
-        console.log("User is signed out");
+        // The user is signed out
+        console.log("User signed out");
       }
     });
 
-    return () => {
-      unsubscribe();
-    };
+    // Cleanup the subscription when the component unmounts
+    return () => unsubscribe();
   }, [dispatch, navigate]);
 
   if (!token) {

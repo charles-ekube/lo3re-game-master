@@ -52,6 +52,67 @@ const HandleEmailActions = () => {
     // const apiKey = searchParams.get("apiKey");
     // (Optional) Get the language code if available.
     const lang = searchParams.get("lang") || "en";
+
+    function handleResetPassword(auth, actionCode, continueUrl, lang) {
+      // Localize the UI to the selected language as determined by the lang
+      // parameter.
+
+      // Verify the password reset code is valid.
+      verifyPasswordResetCode(auth, actionCode)
+        .then((email) => {
+          // const accountEmail = email;
+          navigate(`/createPassword?actionCode=${actionCode}`);
+        })
+        .catch((error) => {
+          // Invalid or expired action code. Ask user to try to reset the password
+          // again.
+          console.log(error);
+          handleFirebaseError(error);
+        });
+    }
+
+    function handleSignInUser(auth, continueUrl) {
+      if (isSignInWithEmailLink(auth, window.location.href)) {
+        const url = new URL(continueUrl);
+        const emailParam = url.searchParams.get("email");
+        const decodedEmail = decodeURIComponent(emailParam);
+
+        // The client SDK will parse the code from the link for you.
+        signInWithEmailLink(auth, decodedEmail, window.location.href)
+          .then((result) => {
+            if (result?._tokenResponse?.isNewUser) {
+              navigate(`/complete-profile`);
+            } else {
+              setSignInEmail(decodedEmail);
+              setRenderLogin(true);
+            }
+          })
+          .catch((error) => {
+            console.log("email signin", error);
+            handleFirebaseError(error);
+            navigate("/");
+          });
+      }
+    }
+
+    function handleVerifyEmail(auth, actionCode, continueUrl, lang) {
+      // Localize the UI to the selected language as determined by the lang
+      // parameter.
+      // Try to apply the email verification code.
+      applyActionCode(auth, actionCode)
+        .then((resp) => {
+          console.log("verify email", resp);
+          setMessage("🟢 Email confirmation successful");
+          setRedirectUrl("/");
+        })
+        .catch((error) => {
+          // Code is invalid or expired. Ask the user to verify their email address
+          // again.
+          console.log(error);
+          handleFirebaseError(error);
+        });
+    }
+
     if (mode) {
       switch (mode) {
         case "resetPassword":
@@ -73,67 +134,7 @@ const HandleEmailActions = () => {
         // Error: invalid mode.
       }
     }
-  }, [location.search]);
-
-  function handleResetPassword(auth, actionCode, continueUrl, lang) {
-    // Localize the UI to the selected language as determined by the lang
-    // parameter.
-
-    // Verify the password reset code is valid.
-    verifyPasswordResetCode(auth, actionCode)
-      .then((email) => {
-        // const accountEmail = email;
-        navigate(`/createPassword?actionCode=${actionCode}`);
-      })
-      .catch((error) => {
-        // Invalid or expired action code. Ask user to try to reset the password
-        // again.
-        console.log(error);
-        handleFirebaseError(error);
-      });
-  }
-
-  function handleSignInUser(auth, continueUrl) {
-    if (isSignInWithEmailLink(auth, window.location.href)) {
-      const url = new URL(continueUrl);
-      const emailParam = url.searchParams.get("email");
-      const decodedEmail = decodeURIComponent(emailParam);
-
-      // The client SDK will parse the code from the link for you.
-      signInWithEmailLink(auth, decodedEmail, window.location.href)
-        .then((result) => {
-          if (result?._tokenResponse?.isNewUser) {
-            navigate(`/complete-profile`);
-          } else {
-            setSignInEmail(decodedEmail);
-            setRenderLogin(true);
-          }
-        })
-        .catch((error) => {
-          console.log("email signin", error);
-          handleFirebaseError(error);
-          navigate("/");
-        });
-    }
-  }
-
-  function handleVerifyEmail(auth, actionCode, continueUrl, lang) {
-    // Localize the UI to the selected language as determined by the lang
-    // parameter.
-    // Try to apply the email verification code.
-    applyActionCode(auth, actionCode)
-      .then((resp) => {
-        console.log("verify email", resp);
-        setMessage("🟢 Email confirmation successful");
-        setRedirectUrl("/");
-      })
-      .catch((error) => {
-        // Code is invalid or expired. Ask the user to verify their email address
-        // again.
-        console.log(error);
-        handleFirebaseError(error);
-      });
-  }
+  }, [location.search, navigate]);
 
   const redirect = () => {
     window.location.href = redirectUrl;

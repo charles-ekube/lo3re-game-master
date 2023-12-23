@@ -52,29 +52,29 @@ const FundWalletModal = ({ isOpen, onClose }) => {
     setDepositFormStates((curState) => ({ ...curState, amountToRecieve }));
   }, [rate.rate, depositFormStates.amount]);
 
-  const fetchCurrencies = async () => {
-    try {
-      const res = await http.get(`wallets/supported-currencies`);
-      const newArray = res.map((cur) => ({
-        ...cur,
-        title: cur.name,
-        value: cur.code,
-        name: cur.code.toUpperCase(),
-      }));
-
-      setSupportedCurrencies(newArray);
-      if (formStep === 1) {
-        setDepositFormStates({ ...depositFormStates, currency: "usd" });
-      }
-      // console.log("currencies", newArray);
-    } catch (error) {
-      console.log("fetch currency err", error);
-    }
-  };
-
   useEffect(() => {
+    const fetchCurrencies = async () => {
+      if (formStep === 1) {
+        try {
+          const res = await http.get(`wallets/supported-currencies`);
+          const newArray = res.map((cur) => ({
+            ...cur,
+            title: cur.name,
+            value: cur.code,
+            name: cur.code.toUpperCase(),
+          }));
+
+          setSupportedCurrencies(newArray);
+          setDepositFormStates((state) => ({ ...state, currency: "usd" }));
+          // console.log("currencies", newArray);
+        } catch (error) {
+          console.log("fetch currency err", error);
+        }
+      }
+    };
+
     fetchCurrencies();
-  }, []);
+  }, [formStep]);
 
   const returnPayMethodIcon = (code) => {
     if (code === "bank_transfer") {
@@ -138,20 +138,19 @@ const FundWalletModal = ({ isOpen, onClose }) => {
         const res = await http.post("wallets/deposits", fData);
         setRequestLoading(false);
 
+        // console.log(res);
+        let checkoutUrl = "";
         if (depositFormStates.currency === "ngn") {
-          let checkoutUrl = res?.meta?.data?.authorization_url;
-          window.open(checkoutUrl, "_blank");
+          checkoutUrl = res?.meta?.data?.authorization_url;
         } else {
           if (payMethod[0]?.code === "credit_card") {
-            showError("Payment with credit card not available");
-            return;
+            checkoutUrl = res?.meta?.url;
           } else if (payMethod[0]?.code === "crypto") {
-            let checkoutUrl = res?.meta?.hosted_url;
-            window.open(checkoutUrl, "_blank");
+            checkoutUrl = res?.meta?.hosted_url;
           }
         }
 
-        console.log(res);
+        window.open(checkoutUrl, "_blank");
         onClose();
         setFormStep(1);
         setRate({

@@ -1,6 +1,6 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query";
 import { showError } from "../../utils/Alert";
-// import { logout } from "../features/authSlice";
+import { updateUserDetail } from "../features/generalSlice";
 
 const baseUrl = "https://us-central1-lo3re-ee26a.cloudfunctions.net/api/";
 
@@ -21,12 +21,13 @@ const baseQuery = async (args, api, extraOptions) => {
   if (
     result.error &&
     // @ts-ignore
-    result.error?.data?.message === "invalid jwt token provided"
+    result?.error?.status === 401
   ) {
     showError("Session expired");
-    // redirect("/login");
-    // api.dispatch(logout());
-    // window.location.replace("/login");
+
+    localStorage.removeItem("accessToken");
+    api.dispatch(updateUserDetail({}));
+    window.location.replace("/");
   }
   return result;
 };
