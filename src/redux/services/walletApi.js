@@ -4,18 +4,17 @@ import baseQuery from "./customFetchBase";
 export const walletApi = createApi({
   reducerPath: "walletApi",
   baseQuery,
-  tagTypes: ["balance"],
+  tagTypes: ["balance", "transactions"],
   endpoints: (builder) => ({
     fetchWalletBalance: builder.query({
       query: () => `/wallets`,
       providesTags: ["balance"],
-      // transformResponse: (results: { data: { user: UserDetail } }) =>
-      //   results.data.user,
+      transformResponse: (results) => results.data,
     }),
     fetchTransactions: builder.query({
-      query: () => `/wallets/transactions`,
-      // transformResponse: (results: { data: { user: UserDetail } }) =>
-      //   results.data.user,
+      query: (query) => `/wallets/transactions${query ? "?" + query : ""}`,
+      providesTags: ["transactions"],
+      transformResponse: (results) => results.data,
     }),
     activateWalletPin: builder.mutation({
       query: (data) => ({

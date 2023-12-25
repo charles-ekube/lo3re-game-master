@@ -1,19 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import Text from "../../utils/CustomText";
 import ContactCard from "../../components/dashboard/cards/ContactCard";
-import { IoChevronForward } from "react-icons/io5";
 import TransactionHistory from "../../components/dashboard/wallet/TransactionHistory";
 import BankCard from "../../components/dashboard/wallet/BankCard";
-import Modal from "../../utils/Modal";
-import WalletAdd from "../../assets/images/icons/wallet-add.png";
-import { LuCopy } from "react-icons/lu";
-import { AiOutlineCheck } from "react-icons/ai";
-import useCopyToClipBoard from "../../hooks/useCopyToClipboard";
 import "../../assets/styles/history.css";
+import { useFetchTransactionsQuery } from "../../redux/services/walletApi";
+import Loader from "../../utils/Loader";
+import { showError } from "../../utils/Alert";
 
 const History = () => {
-  const [showTxnModal, setShowTxnModal] = useState(false);
-  const { handleCopyClick, isCopied } = useCopyToClipBoard();
+  const {
+    data: transactionHistory,
+    isLoading: isTransactionHistoryLoading,
+    error: transactionHistoryError,
+  } = useFetchTransactionsQuery();
+
+  useEffect(() => {
+    if (transactionHistoryError) {
+      console.log(transactionHistoryError);
+      showError(
+        transactionHistoryError?.message ||
+          transactionHistoryError?.data?.message ||
+          "An error occurred, could not fetch transaction history"
+      );
+    }
+  }, [transactionHistoryError]);
 
   return (
     <>
@@ -22,36 +33,33 @@ const History = () => {
           <div>
             <div className="flexRow justifyBetween">
               <h3>Transactions history</h3>
-              <p className="flexRow alignCenter">
-                View all <IoChevronForward fontSize={"20px"} />
-              </p>
             </div>
             <div className="historyContent">
-              <TransactionHistory
-                onTxnOpen={() => setShowTxnModal(true)}
-                isCreditTxn={true}
-                status={true}
+              <Loader
+                isLoading={isTransactionHistoryLoading}
+                variety="dark"
+                height="100px"
               />
-              <TransactionHistory
-                onTxnOpen={() => setShowTxnModal(true)}
-                isCreditTxn={true}
-                status={true}
-              />
-              <TransactionHistory
-                onTxnOpen={() => setShowTxnModal(true)}
-                isCreditTxn={true}
-                status={false}
-              />
-              <TransactionHistory
-                onTxnOpen={() => setShowTxnModal(true)}
-                isCreditTxn={false}
-                status={true}
-              />
-              <TransactionHistory
-                onTxnOpen={() => setShowTxnModal(true)}
-                isCreditTxn={false}
-                status={false}
-              />
+              {!transactionHistory?.data?.length &&
+              !isTransactionHistoryLoading ? (
+                <p className="text-muted text-center mt40">
+                  You have not performed any transactions yet.
+                </p>
+              ) : (
+                ""
+              )}
+              {transactionHistory?.data?.map((value) => (
+                <TransactionHistory
+                  key={"tnx-" + value?.id}
+                  txnId={value?.id}
+                  type={value?.type}
+                  amount={value?.amount}
+                  currency={value?.currency}
+                  date={value?.createdAt?._seconds}
+                  status={value?.status}
+                  method={value?.method}
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -76,54 +84,6 @@ const History = () => {
           </div>
         </aside>
       </section>
-
-      <Modal isOpen={showTxnModal} onClose={() => setShowTxnModal(false)}>
-        <h2 className="modal-amount satoshi-text">+$30.00</h2>
-        <span className="f14 text-muted">Transaction successful</span>
-        <div className="pill">
-          <div className="pill-icon">
-            <img src={WalletAdd} />
-          </div>
-          <p>Wallet Fund | Oct 20, 2023 11:06</p>
-        </div>
-        <div className="modal-body">
-          <div className="flexRow justifyBetween modalItemRow">
-            <p className="text-muted">Transaction type</p>
-            <p>Bank transfer</p>
-          </div>
-
-          <div className="flexRow justifyBetween modalItemRow">
-            <p className="text-muted">From</p>
-            <p>Lo3re</p>
-          </div>
-
-          <div className="flexRow justifyBetween modalItemRow">
-            <p className="text-muted">Account name</p>
-            <p>Lo3re</p>
-          </div>
-
-          <div className="flexRow justifyBetween modalItemRow">
-            <p className="text-muted">Bank details</p>
-            <div>
-              <p className="mb-1">000 000 000</p>
-              <p>Sterling Bank</p>
-            </div>
-          </div>
-
-          <div className="flexRow justifyBetween modalItemRow">
-            <p className="text-muted">Transaction ID</p>
-            <div className="flexRow alignCenter gap-1">
-              <p className="text-muted">000 000 000 000</p>
-              <div
-                style={{ cursor: "pointer" }}
-                onClick={() => handleCopyClick("000 000 000 000")}
-              >
-                {isCopied ? <AiOutlineCheck color="green" /> : <LuCopy />}
-              </div>
-            </div>
-          </div>
-        </div>
-      </Modal>
     </>
   );
 };

@@ -49,7 +49,7 @@ const CompleteProfile = () => {
   };
 
   const updateUser = async () => {
-    if (password !== "" || confirmPassword !== "" || displayName !== "") {
+    if (password !== "" && confirmPassword !== "" && displayName !== "") {
       //implement strong password for account security reasons
       if (password === confirmPassword) {
         setState({ ...state, loading: true });

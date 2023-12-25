@@ -12,6 +12,7 @@ import { useUpdateWalletPinMutation } from "../../redux/services/walletApi";
 import { showError, showSuccess } from "../../utils/Alert";
 import OtpInput from "../../utils/CustomOtp";
 
+const finalUpdatePinFormStep = 3;
 const WalletPin = () => {
   const navigate = useNavigate();
   const [showUpdatePinModal, setShowUpdatePinModal] = useState(false);
@@ -21,6 +22,7 @@ const WalletPin = () => {
   const [pinFormState, setPinFormState] = useState({
     old_pin: "",
     new_pin: "",
+    confirm_pin: "",
   });
 
   const onOldPinChange = (value) => {
@@ -29,6 +31,10 @@ const WalletPin = () => {
 
   const onNewPinChange = (value) => {
     setPinFormState({ ...pinFormState, new_pin: value });
+  };
+
+  const onConfirmPinChange = (value) => {
+    setPinFormState({ ...pinFormState, confirm_pin: value });
   };
 
   const goBack = () => {
@@ -55,6 +61,20 @@ const WalletPin = () => {
     } else if (updatePinFormStep === 2) {
       if (pinFormState.new_pin.length < 6) {
         showError("Enter new pin");
+        return;
+      }
+
+      setUpdatePinFormStep(3);
+    } else if (updatePinFormStep === finalUpdatePinFormStep) {
+      if (pinFormState.confirm_pin.length < 6) {
+        showError("Enter confirm pin");
+        return;
+      }
+
+      if (pinFormState.confirm_pin !== pinFormState.new_pin) {
+        showError("Confirm pin does not match new pin");
+        setPinFormState({ ...pinFormState, new_pin: "", confirm_pin: "" });
+        setUpdatePinFormStep(2);
         return;
       }
 
@@ -89,6 +109,19 @@ const WalletPin = () => {
           </div>
         </>
       );
+    } else if (updatePinFormStep === 3) {
+      return (
+        <>
+          <div className="inputContainer">
+            <label className="text-center text-muted">Confirm new pin</label>
+            <OtpInput
+              valueLength={6}
+              value={pinFormState.confirm_pin}
+              onChange={onConfirmPinChange}
+            />
+          </div>
+        </>
+      );
     }
   };
 
@@ -102,6 +135,7 @@ const WalletPin = () => {
         setPinFormState({
           old_pin: "",
           new_pin: "",
+          confirm_pin: "",
         });
         setUpdatePinFormStep(1);
         setShowUpdatePinModal(false);
@@ -113,6 +147,7 @@ const WalletPin = () => {
         setPinFormState({
           old_pin: "",
           new_pin: "",
+          confirm_pin: "",
         });
       });
   };
@@ -160,7 +195,7 @@ const WalletPin = () => {
       >
         {renderChangeWalletForm()}
         <CustomButtonII
-          text={updatePinFormStep > 1 ? "Confirm" : "Next"}
+          text={updatePinFormStep < finalUpdatePinFormStep ? "Next" : "Confirm"}
           className={"w100"}
           centerText={true}
           onClick={processUpdatePin}

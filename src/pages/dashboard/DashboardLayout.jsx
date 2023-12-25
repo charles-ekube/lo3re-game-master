@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import SideBar from "../../components/dashboard/widgets/SideBar";
 import TopNav from "../../components/dashboard/widgets/TopNav";
-import { Outlet, Route, Routes } from "react-router-dom";
+import { Outlet, Route, Routes, useNavigate } from "react-router-dom";
 import NotFound from "../../utils/NotFound";
 import Overview from "./Overview";
 import Wallet from "./Wallet";
@@ -17,61 +17,42 @@ import AddLottery from "./AddLottery";
 import PreviewLottery from "./PreviewLottery";
 import TwoFactorAuth from "./TwoFactorAuth";
 import WalletPin from "./WalletPin";
-import CustomButtonII from "../../utils/CustomButtonII";
-import Modal from "../../utils/Modal";
-import OtpInput from "../../utils/CustomOtp";
-import { showError, showSuccess } from "../../utils/Alert";
-import { useActivateWalletPinMutation } from "../../redux/services/walletApi";
+import Logo from "../../assets/images/logo.svg";
+import Text from "../../utils/CustomText";
 
 const DashboardLayout = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const showSidebar = useSelector((state) => state.general.showSidebar);
   const {
     data: user,
     isError: isUserError,
     isLoading: isUserLoading,
   } = useFetchProfileQuery();
-  const [activateWalletPin, { isLoading: isActivateWalletLoading }] =
-    useActivateWalletPinMutation();
-  const [showWalletPinModal, setShowWalletPinModal] = useState(false);
-  const [pin, setPin] = useState("");
-  const onChange = (value) => {
-    setPin(value);
-  };
 
   useEffect(() => {
     if (!isUserError && !isUserLoading) {
       const isWalletPinActive = user?.user?.security?.wallet_pin;
       if (!isWalletPinActive) {
-        setShowWalletPinModal(true);
+        navigate("/activate-wallet-pin");
       }
     }
-  }, [isUserError, isUserLoading, user]);
-
-  const setWalletPin = async () => {
-    if (pin === "") {
-      showError("Enter your 6-digit wallet pin");
-      return;
-    }
-
-    await activateWalletPin({ pin, confirm_pin: pin })
-      .unwrap()
-      .then((resp) => {
-        showSuccess("Pin activated successfully");
-        setShowWalletPinModal(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        showError(
-          err?.message ||
-            err?.data?.message ||
-            "An error occured try again later"
-        );
-      });
-  };
+  }, [isUserError, isUserLoading, user, navigate]);
 
   return (
     <>
+      {isUserLoading && (
+        <div className="fullScreenloader">
+          <div>
+            <img src={Logo} className={"animateLogo"} alt="logo" />
+            <div className={"verifyHeaderText"}>
+              <Text tag={"h2"} className={"f26 boldText"}>
+                Unlock Your Lucky Streak🍀✨
+              </Text>
+            </div>
+          </div>
+        </div>
+      )}
       <main className={"dashboardLayoutContainer"}>
         {showSidebar && (
           <div
@@ -107,28 +88,6 @@ const DashboardLayout = () => {
           <Outlet />
         </section>
       </main>
-
-      <Modal
-        title={"Set Wallet Pin"}
-        isOpen={showWalletPinModal}
-        onClose={() => null}
-        hideCloseBtn={true}
-        zClass={"tFaModal"}
-      >
-        <div className="inputContainer">
-          <label className="text-center text-muted">
-            Create Your 6-Digit PIN
-          </label>
-          <OtpInput valueLength={6} value={pin} onChange={onChange} />
-        </div>
-        <CustomButtonII
-          text={"Confirm"}
-          className={"w100"}
-          onClick={setWalletPin}
-          centerText={true}
-          loading={isActivateWalletLoading}
-        />
-      </Modal>
     </>
   );
 };

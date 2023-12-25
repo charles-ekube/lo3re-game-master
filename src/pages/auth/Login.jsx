@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Logo from "../../assets/images/logo.svg";
 import Text from "../../utils/CustomText";
 import CustomInput from "../../utils/CustomInput";
@@ -7,9 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import { showError, showSuccess } from "../../utils/Alert";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { useFetchProfileQuery } from "../../redux/services/accountApi";
 
 const Login = ({ signInEmail }) => {
   const navigate = useNavigate();
+  const [userSkip, setUserSkip] = useState(true);
   const singUp = () => {
     navigate("/signUp");
   };
@@ -17,6 +19,11 @@ const Login = ({ signInEmail }) => {
     navigate("/forgotPassword");
   };
 
+  const {
+    data: user,
+    error: userError,
+    isSuccess: isFetchUserSuccess,
+  } = useFetchProfileQuery(null, { skip: userSkip });
   const [state, setState] = useState({
     email: signInEmail,
     password: "",
@@ -49,8 +56,35 @@ const Login = ({ signInEmail }) => {
     }
   };
 
+  useEffect(() => {
+    if (userError) {
+      setState((prevState) => ({ ...prevState, loading: false }));
+      showError(
+        userError?.message ||
+          userError?.data?.message ||
+          "An error occurred, could not validate user"
+      );
+      localStorage.removeItem("accessToken");
+    }
+  }, [userError]);
+
+  useEffect(() => {
+    if (isFetchUserSuccess) {
+      setState((state) => ({ ...state, loading: false }));
+      console.log("im running");
+      const isWalletPinActive = user?.user?.security?.wallet_pin;
+      if (!isWalletPinActive) {
+        navigate("/activate-wallet-pin");
+      } else {
+        // sign user in
+        showSuccess("Successful 👍");
+        navigate("/dashboard");
+      }
+    }
+  }, [isFetchUserSuccess, user, navigate]);
+
   const loginUser = async () => {
-    if (email !== "" || password !== "") {
+    if (email !== "" && password !== "") {
       if (email !== signInEmail) {
         showError("Email must match signIn email");
       }
@@ -58,13 +92,11 @@ const Login = ({ signInEmail }) => {
       setState({ ...state, loading: true });
       try {
         const res = await signInWithEmailAndPassword(auth, email, password);
-        console.log(res);
+        localStorage.setItem("accessToken", res.user.accessToken);
+        setUserSkip(false);
 
-        // sign user in
-        setState({ ...state, loading: false });
-        window.localStorage.setItem("accessToken", res.user.accessToken);
-        showSuccess("Successful 👍");
-        navigate("/dashboard");
+        console.log(res);
+        // rest is handled in useEffect
       } catch (error) {
         handleFirebaseError(error);
         setState({ ...state, loading: false });

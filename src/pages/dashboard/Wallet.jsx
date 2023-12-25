@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Text from "../../utils/CustomText";
 import ContactCard from "../../components/dashboard/cards/ContactCard";
 import BalanceCard from "../../components/dashboard/wallet/BalanceCard";
@@ -10,34 +10,37 @@ import BankCard from "../../components/dashboard/wallet/BankCard";
 import CustomButtonII from "../../utils/CustomButtonII";
 import FundWalletModal from "../../components/dashboard/widgets/FundWalletModal";
 import WithdrawWalletModal from "../../components/dashboard/widgets/WithdrawWalletModal";
-import Modal from "../../utils/Modal";
-import WalletAdd from "../../assets/images/icons/wallet-add.png";
-import useCopyToClipBoard from "../../hooks/useCopyToClipboard";
-import { LuCopy } from "react-icons/lu";
-import { AiOutlineCheck } from "react-icons/ai";
-import { useFetchTransactionsQuery } from "../../redux/services/walletApi";
-// import http from "../../utils/utils";
-// import { useFetchWalletQuery } from "../../redux/services/accountApi";
+import {
+  useFetchTransactionsQuery,
+  useFetchWalletBalanceQuery,
+} from "../../redux/services/walletApi";
+import { Link } from "react-router-dom";
+import Loader from "../../utils/Loader";
+import { showError } from "../../utils/Alert";
 
 const Wallet = () => {
   const [fundWalletModal, setFundWalletModal] = useState(false);
   const [withdrawWalletModal, setWithdrawWalletModal] = useState(false);
-  const [showTxnModal, setShowTxnModal] = useState(false);
-  const { handleCopyClick, isCopied } = useCopyToClipBoard();
-  const { data } = useFetchTransactionsQuery();
-  console.log(data);
-  // const { data: wallet, error } = useFetchWalletQuery();
-  // console.log(wallet);
+  const { data: transactionHistory, isLoading: isTransactionHistoryLoading } =
+    useFetchTransactionsQuery("limit=5");
+  const {
+    data: walletBalance,
+    isLoading: isWalletBalanceLoading,
+    error: walletBalanceError,
+  } = useFetchWalletBalanceQuery();
+  console.log(walletBalance);
   // console.log(error);
 
-  // const fetchWallet = async () => {
-  //   const res = await http.get("wallets");
-  //   console.log(res);
-  // };
-
-  // useEffect(() => {
-  //   fetchWallet();
-  // }, []);
+  useEffect(() => {
+    if (walletBalanceError) {
+      console.log(walletBalanceError);
+      showError(
+        walletBalanceError?.message ||
+          walletBalanceError?.data?.message ||
+          "An error occurred, could not fetch wallet balance"
+      );
+    }
+  }, [walletBalanceError]);
 
   return (
     <>
@@ -46,12 +49,14 @@ const Wallet = () => {
           <div className="cardContainer">
             <BalanceCard
               title={"Wallet Balance"}
-              figure={"0.00"}
+              figure={walletBalance?.balance}
+              isBalanceLoading={isWalletBalanceLoading}
               subtitle={"Total gains 0%"}
             />
             <BalanceCard
               title={"Locked Balance"}
-              figure={"0.00"}
+              figure={walletBalance?.locked_balance}
+              isBalanceLoading={isWalletBalanceLoading}
               subtitle={"To be credited on 20/10/23"}
             />
             <BalanceCard
@@ -83,31 +88,42 @@ const Wallet = () => {
           <div className="historyContainer">
             <div className="flexRow justifyBetween">
               <h3>Recent Transactions</h3>
-              <p className="flexRow alignCenter">
-                View all <IoChevronForward fontSize={"20px"} />
-              </p>
+              <Link to={"/dashboard/history"} className="blackText">
+                <p className="flexRow alignCenter">
+                  View all <IoChevronForward fontSize={"20px"} />
+                </p>
+              </Link>
             </div>
             <div className="historyContent">
-              <TransactionHistory
-                onTxnOpen={() => setShowTxnModal(true)}
-                isCreditTxn={true}
+              <Loader
+                isLoading={isTransactionHistoryLoading}
+                variety="dark"
+                height="100px"
               />
-              <TransactionHistory
-                onTxnOpen={() => setShowTxnModal(true)}
-                isCreditTxn={true}
-              />
-              <TransactionHistory
-                onTxnOpen={() => setShowTxnModal(true)}
-                isCreditTxn={true}
-              />
-              <TransactionHistory
+              {!transactionHistory?.data?.length &&
+              !isTransactionHistoryLoading ? (
+                <p className="text-muted text-center mt40">
+                  You have not performed any transactions yet.
+                </p>
+              ) : (
+                ""
+              )}
+              {transactionHistory?.data?.map((value) => (
+                <TransactionHistory
+                  key={"tnx-" + value?.id}
+                  txnId={value?.id}
+                  type={value?.type}
+                  amount={value?.amount}
+                  currency={value?.currency}
+                  date={value?.createdAt?._seconds}
+                  status={value?.status}
+                  method={value?.method}
+                />
+              ))}
+              {/* <TransactionHistory
                 onTxnOpen={() => setShowTxnModal(true)}
                 isCreditTxn={false}
-              />
-              <TransactionHistory
-                onTxnOpen={() => setShowTxnModal(true)}
-                isCreditTxn={false}
-              />
+              /> */}
             </div>
           </div>
         </div>
@@ -141,54 +157,6 @@ const Wallet = () => {
         isOpen={withdrawWalletModal}
         onClose={() => setWithdrawWalletModal(false)}
       />
-
-      <Modal isOpen={showTxnModal} onClose={() => setShowTxnModal(false)}>
-        <h2 className="modal-amount satoshi-text">+$30.00</h2>
-        <span className="f14 text-muted">Transaction successful</span>
-        <div className="pill">
-          <div className="pill-icon">
-            <img src={WalletAdd} alt="" />
-          </div>
-          <p>Wallet Fund | Oct 20, 2023 11:06</p>
-        </div>
-        <div className="modal-body">
-          <div className="flexRow justifyBetween modalItemRow">
-            <p className="text-muted">Transaction type</p>
-            <p>Bank transfer</p>
-          </div>
-
-          <div className="flexRow justifyBetween modalItemRow">
-            <p className="text-muted">From</p>
-            <p>Lo3re</p>
-          </div>
-
-          <div className="flexRow justifyBetween modalItemRow">
-            <p className="text-muted">Account name</p>
-            <p>Lo3re</p>
-          </div>
-
-          <div className="flexRow justifyBetween modalItemRow">
-            <p className="text-muted">Bank details</p>
-            <div>
-              <p className="mb-1">000 000 000</p>
-              <p>Sterling Bank</p>
-            </div>
-          </div>
-
-          <div className="flexRow justifyBetween modalItemRow">
-            <p className="text-muted">Transaction ID</p>
-            <div className="flexRow alignCenter gap-1">
-              <p className="text-muted">000 000 000 000</p>
-              <div
-                style={{ cursor: "pointer" }}
-                onClick={() => handleCopyClick("000 000 000 000")}
-              >
-                {isCopied ? <AiOutlineCheck color="green" /> : <LuCopy />}
-              </div>
-            </div>
-          </div>
-        </div>
-      </Modal>
     </>
   );
 };

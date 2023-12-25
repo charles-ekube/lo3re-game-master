@@ -147,7 +147,11 @@ const HandleEmailActions = () => {
           {/* implement custom UI here */}
           <section className={"authContainer"}>
             <header>
-              <img src={Logo} alt="logo" />
+              <img
+                src={Logo}
+                className={!redirectUrl ? "animateLogo" : ""}
+                alt="logo"
+              />
               <div className={"verifyHeaderText"}>
                 <Text tag={"h2"} className={"f26 boldText"}>
                   Unlock Your Lucky Streak🍀✨

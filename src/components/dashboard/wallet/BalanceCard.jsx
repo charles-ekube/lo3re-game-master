@@ -1,8 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PiEyeSlash, PiEyeLight } from "react-icons/pi";
 
-const BalanceCard = ({ title, figure, subtitle }) => {
+const BalanceCard = ({ title, figure, subtitle, isBalanceLoading }) => {
   const [hideBalance, setHideBalance] = useState(false);
+
+  useEffect(() => {
+    if (isBalanceLoading) {
+      setHideBalance(true);
+    } else {
+      setHideBalance(false);
+    }
+  }, [isBalanceLoading]);
 
   return (
     <>
