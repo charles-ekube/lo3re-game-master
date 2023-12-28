@@ -39,6 +39,29 @@ export const beneficiariesApi = createApi({
       }),
       invalidatesTags: ["bankBene"],
     }),
+    addCryptoBeneficiary: builder.mutation({
+      query: (data) => ({
+        url: `wallets/withdrawals/crypto`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["cryptoBene"],
+    }),
+    updateCryptoBeneficiary: builder.mutation({
+      query: (data) => ({
+        url: `wallets/withdrawals/crypto/${data.id}`,
+        method: "PUT",
+        body: data.data,
+      }),
+      invalidatesTags: ["cryptoBene"],
+    }),
+    deleteCryptoBeneficiary: builder.mutation({
+      query: (id) => ({
+        url: `wallets/withdrawals/crypto/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["cryptoBene"],
+    }),
   }),
 });
 
@@ -48,4 +71,7 @@ export const {
   useAddBankBeneficiaryMutation,
   useDeleteBankBeneficiaryMutation,
   useUpdateBankBeneficiaryMutation,
+  useAddCryptoBeneficiaryMutation,
+  useUpdateCryptoBeneficiaryMutation,
+  useDeleteCryptoBeneficiaryMutation,
 } = beneficiariesApi;

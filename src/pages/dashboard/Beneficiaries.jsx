@@ -6,10 +6,13 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import {
   useAddBankBeneficiaryMutation,
+  useAddCryptoBeneficiaryMutation,
   useDeleteBankBeneficiaryMutation,
+  useDeleteCryptoBeneficiaryMutation,
   useFetchBankBeneficiariesQuery,
   useFetchCryptoBeneficiariesQuery,
   useUpdateBankBeneficiaryMutation,
+  useUpdateCryptoBeneficiaryMutation,
 } from "../../redux/services/beneficiariesApi";
 import Loader from "../../utils/Loader";
 import CustomButtonII from "../../utils/CustomButtonII";
@@ -30,30 +33,47 @@ const accountTypeOptions = [
 const Beneficiaries = () => {
   const navigate = useNavigate();
   const [showAddBankBeneModal, setShowAddBankBeneModal] = useState(false);
+  const [showAddCryptoBeneModal, setShowAddCryptoBeneModal] = useState(false);
   const { data: bankBeneficiaries, isLoading: isBankBeneLoading } =
     useFetchBankBeneficiariesQuery();
-  const { data: cryptoBeneficiaries } = useFetchCryptoBeneficiariesQuery();
+  const { data: cryptoBeneficiaries, isLoading: isCryptoBeneLoading } =
+    useFetchCryptoBeneficiariesQuery();
   const [supportedBanks, setSupportedBanks] = useState([]);
+  const [supportedCryptos, setSupportedCryptos] = useState([]);
   const [selectedBenecficiary, setSelectedBenecficiary] = useState(null);
-  //   const [tabs, setTabs] = useState([
-  //     {
-  //       name: "Bank Transfers",
-  //       isActive: true,
-  //     },
-  //     {
-  //       name: "Crypto",
-  //       isActive: false,
-  //     },
-  //   ]);
+  const [selectedCryptoBenecficiary, setSelectedCryptoBenecficiary] =
+    useState(null);
+  const [tabs, setTabs] = useState([
+    {
+      name: "Bank Transfers",
+      isActive: true,
+    },
+    {
+      name: "Crypto",
+      isActive: false,
+    },
+  ]);
 
-  //   const toggleTabs = (clickedItem) => {
-  //     const updatedTabs = tabs.map((item) => ({
-  //       ...item,
-  //       isActive: item === clickedItem, // Set to true for the clicked profile, false for others
-  //     }));
+  const returnActiveTab = () => {
+    const activeTab = tabs.filter((tab) => tab.isActive);
+    return activeTab[0];
+  };
 
-  //     setTabs(updatedTabs); // Update the state with the new array
-  //   };
+  const returnCoin = (coin_id) => {
+    const coin = supportedCryptos.filter((val) => val.id === coin_id);
+    if (coin.length) {
+      return coin[0];
+    }
+  };
+
+  const toggleTabs = (clickedItem) => {
+    const updatedTabs = tabs.map((item) => ({
+      ...item,
+      isActive: item === clickedItem, // Set to true for the clicked profile, false for others
+    }));
+
+    setTabs(updatedTabs); // Update the state with the new array
+  };
 
   // TODO: call w/rtk query
   const fetchBanks = async () => {
@@ -83,12 +103,32 @@ const Beneficiaries = () => {
     fetchBanks();
     //   fetchCryptos();
   }, []);
-  console.log(bankBeneficiaries);
-  console.log(cryptoBeneficiaries);
 
   const goBack = () => {
     navigate(-1);
   };
+
+  const fetchCryptos = async () => {
+    // setRequestLoading(true);
+    try {
+      const res = await http.get(`wallets/supported-coins`);
+      const newArray = res.map((crypto) => ({
+        ...crypto,
+        value: crypto.id,
+        name: crypto.name.toUpperCase(),
+        icon: crypto.logo_url,
+      }));
+
+      setSupportedCryptos(newArray);
+    } catch (error) {
+      console.log("fetch bank err", error);
+    }
+  };
+
+  // fetch supported banks/cryptos
+  useEffect(() => {
+    fetchCryptos();
+  }, []);
 
   const returnBankName = (bank_code) => {
     const bank = supportedBanks.filter((val) => val?.code === bank_code);
@@ -104,9 +144,71 @@ const Beneficiaries = () => {
     setShowAddBankBeneModal(false);
   };
 
+  const handleAddCryptoBenModalClose = () => {
+    setSelectedCryptoBenecficiary(null);
+    setShowAddCryptoBeneModal(false);
+  };
+
   const openEditModal = (value) => {
     setSelectedBenecficiary(value);
     setShowAddBankBeneModal(true);
+  };
+
+  const openEditCryptoModal = (value) => {
+    setSelectedCryptoBenecficiary(value);
+    setShowAddCryptoBeneModal(true);
+  };
+
+  const handleAddNewBeneficiary = () => {
+    if (returnActiveTab().name === "Crypto") {
+      setShowAddCryptoBeneModal(true);
+    } else {
+      setShowAddBankBeneModal(true);
+    }
+  };
+
+  const renderElem = () => {
+    if (returnActiveTab()?.name === "Crypto") {
+      return (
+        <>
+          {!cryptoBeneficiaries?.length && !isCryptoBeneLoading ? (
+            <p className="text-muted text-center mt40">
+              You have not added any crypto beneficiaries yet.
+            </p>
+          ) : (
+            ""
+          )}
+          {cryptoBeneficiaries?.map((value) => (
+            <CryptoBeneficiaryRow
+              key={`ben-${value?.id}`}
+              coinInfo={returnCoin(value?.coin_id)}
+              onClick={() => openEditCryptoModal(value)}
+              beneficiary={value}
+            />
+          ))}
+        </>
+      );
+    } else {
+      return (
+        <>
+          {!bankBeneficiaries?.length && !isBankBeneLoading ? (
+            <p className="text-muted text-center mt40">
+              You have not added any bank transfer beneficiaries yet.
+            </p>
+          ) : (
+            ""
+          )}
+          {bankBeneficiaries?.map((value) => (
+            <BeneficiaryRow
+              key={`ben-${value?.id}`}
+              bankName={returnBankName(value?.bank_code)}
+              onClick={() => openEditModal(value)}
+              beneficiary={value}
+            />
+          ))}
+        </>
+      );
+    }
   };
 
   return (
@@ -122,48 +224,35 @@ const Beneficiaries = () => {
             <div className="headerTitle text-center">Manage Beneficiaries</div>
           </div>
           {/* tab switch */}
-          {/* <div className="tabContainer">
-            <div className="switchTabs">
+          <div className="tabContainer">
+            <div className="switchTabs twoCols">
               {tabs.map((tab, index) => (
                 <button
                   key={"tab-" + index}
-                  className={`capitalize ${tab.isActive ? "active" : ""}`}
+                  className={`capitalize switchBtn ${
+                    tab.isActive ? "active" : ""
+                  }`}
                   onClick={() => toggleTabs(tab)}
                 >
                   {tab.name}
                 </button>
               ))}
             </div>
-          </div> */}
+          </div>
           {/* content */}
           <div className="settingContent">
             <Loader
-              isLoading={isBankBeneLoading}
+              isLoading={isBankBeneLoading || isCryptoBeneLoading}
               variety="dark"
               height="100px"
             />
-            {!bankBeneficiaries?.length && !isBankBeneLoading ? (
-              <p className="text-muted text-center mt40">
-                You have not added any beneficiaries yet.
-              </p>
-            ) : (
-              ""
-            )}
-            {bankBeneficiaries?.map((value) => (
-              <BeneficiaryRow
-                key={`ben-${value?.id}`}
-                bankName={returnBankName(value?.bank_code)}
-                onClick={() => openEditModal(value)}
-                beneficiary={value}
-              />
-            ))}
-
+            {renderElem()}
             <CustomButtonII
               text={"Add New Beneficiary"}
               variant={"light"}
               className={"w100 justifyCenter mt40"}
               centerText={true}
-              onClick={() => setShowAddBankBeneModal(true)}
+              onClick={handleAddNewBeneficiary}
             />
           </div>
         </div>
@@ -185,10 +274,19 @@ const Beneficiaries = () => {
         onClose={handleAddBenModalClose}
         beneficiaryToUpdate={selectedBenecficiary}
       />
+
+      <CryptoBeneModal
+        isOpen={showAddCryptoBeneModal}
+        onClose={handleAddCryptoBenModalClose}
+        cryptoBeneficiaryToUpdate={selectedCryptoBenecficiary}
+      />
     </>
   );
 };
 
+/************************************
+ * Bank beneficiary modal and row
+ * ***********************************/
 const BeneficiaryRow = ({ beneficiary, bankName, onClick }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -631,5 +729,293 @@ const BankBeneModal = ({ isOpen, onClose, beneficiaryToUpdate = null }) => {
     </Modal>
   );
 };
+
+/************************************
+ * Crypto beneficiary modal and row
+ * ***********************************/
+const CryptoBeneficiaryRow = ({ beneficiary, coinInfo, onClick }) => {
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const [deleteBeneficiary, { isLoading: isDeleteBeneficiaryLoading }] =
+    useDeleteCryptoBeneficiaryMutation();
+
+  const handleDeleteBeneficiary = async () => {
+    await deleteBeneficiary(beneficiary?.id)
+      .unwrap()
+      .then(() => {
+        showSuccess("Beneficiary deleted");
+        setShowDeleteModal(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        showError(err?.message || err?.data?.message || "An error occurred");
+      });
+  };
+
+  return (
+    <>
+      <ThreeColumnRow
+        onClick={onClick}
+        twoWayClick={true}
+        onClick2={() => setShowDeleteModal(true)}
+        title={beneficiary?.title || beneficiary?.address}
+        subtitle={
+          <>
+            <small>{coinInfo?.name}:</small>{" "}
+            <b>{beneficiary?.network + " network"}</b>
+          </>
+        }
+        icon={coinInfo?.logo_url}
+        col2Child={<BsTrash3 fontSize={"20px"} color={"#FC7F79"} />}
+      />
+
+      <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
+        <div className="flexRow justifyCenter">
+          <img src={WasteCollection} className="deleteIllustration" alt="" />
+        </div>
+        <h3 className="deleteTitle">Delete Beneficiary</h3>
+        <p className="deleteSubtitle">
+          Are you sure you want to delete this beneficiary?
+        </p>
+        <div className="flexRow gap-1 mt35">
+          <CustomButtonII
+            variant="light"
+            text={"Don't delete"}
+            className={"w50"}
+            centerText={true}
+            onClick={() => setShowDeleteModal(false)}
+          />
+          <CustomButtonII
+            variant="ghost-danger"
+            text={"Yes, delete"}
+            className={"w50"}
+            centerText={true}
+            loading={isDeleteBeneficiaryLoading}
+            onClick={handleDeleteBeneficiary}
+          />
+        </div>
+      </Modal>
+    </>
+  );
+};
+
+const CryptoBeneModal = ({
+  isOpen,
+  onClose,
+  cryptoBeneficiaryToUpdate = null,
+}) => {
+  const [formState, setFormState] = useState({
+    title: "",
+    coin_id: "",
+    network: "",
+    address: "",
+    tag_id: "",
+  });
+  const [showTagInput, setShowTagInput] = useState(false);
+  const [supportedCryptos, setSupportedCryptos] = useState([]);
+  const [cyrptoNetworks, setCryptoNetworks] = useState([]);
+  const [updateCryptoBeneficiary, { isLoading: isUpdateCryptoBenLoading }] =
+    useUpdateCryptoBeneficiaryMutation();
+  const [addCryptoBeneficiary, { isLoading: isAddCryptoBeneficiaryLoading }] =
+    useAddCryptoBeneficiaryMutation();
+
+  const handleOnChange = (val, name) => {
+    setFormState({ ...formState, [name]: val });
+  };
+
+  const fetchCryptos = async () => {
+    // setRequestLoading(true);
+    try {
+      const res = await http.get(`wallets/supported-coins`);
+      const newArray = res.map((crypto) => ({
+        ...crypto,
+        value: crypto.id,
+        name: crypto.name.toUpperCase(),
+        icon: crypto.logo_url,
+      }));
+
+      // setBanks(res);
+      setSupportedCryptos(newArray);
+      //   setRequestLoading(false);
+    } catch (error) {
+      console.log("fetch bank err", error);
+      //   setRequestLoading(false);
+    }
+  };
+
+  // fetch supported banks/cryptos
+  useEffect(() => {
+    fetchCryptos();
+  }, []);
+
+  useEffect(() => {
+    if (cryptoBeneficiaryToUpdate) {
+      console.log("im running");
+      setFormState((prevState) => ({
+        ...prevState,
+        title: cryptoBeneficiaryToUpdate?.title,
+        coin_id: cryptoBeneficiaryToUpdate?.coin_id,
+        network: cryptoBeneficiaryToUpdate?.network,
+        address: cryptoBeneficiaryToUpdate?.address,
+        tag_id: cryptoBeneficiaryToUpdate?.tag_id,
+      }));
+    } else {
+      setFormState((prevState) => ({
+        ...prevState,
+        title: "",
+        coin_id: "",
+        network: "",
+        address: "",
+        tag_id: "",
+      }));
+    }
+  }, [cryptoBeneficiaryToUpdate]);
+
+  useEffect(() => {
+    const selectedCoin = supportedCryptos.filter(
+      (val) => val.id === formState.coin_id
+    );
+    if (selectedCoin.length) {
+      const networkArr = selectedCoin[0].networks.map((val) => ({
+        name: val,
+        value: val,
+      }));
+      setCryptoNetworks(networkArr);
+      //   console.log(networkArr);
+    }
+  }, [formState.coin_id, supportedCryptos]);
+
+  // show/hide tag_id input
+  useEffect(() => {
+    const selectedCoin = supportedCryptos.filter(
+      (val) => val.id === formState.coin_id
+    );
+    if (selectedCoin.length && selectedCoin[0].name === "RIPPLE") {
+      setShowTagInput(true);
+    } else {
+      setShowTagInput(false);
+    }
+  }, [formState.coin_id, supportedCryptos]);
+
+  const handleSubmit = async () => {
+    if (
+      formState.coin_id === "" ||
+      formState.network === "" ||
+      formState.address === ""
+    ) {
+      showError("Required fields are missing");
+      return;
+    }
+
+    if (cryptoBeneficiaryToUpdate) {
+      await updateCryptoBeneficiary({
+        id: cryptoBeneficiaryToUpdate?.id,
+        data: formState,
+      })
+        .unwrap()
+        .then(() => {
+          showSuccess("Beneficiary updated");
+          setFormState({
+            ...formState,
+            title: "",
+            coin_id: "",
+            network: "",
+            address: "",
+            tag_id: "",
+          });
+          onClose();
+        })
+        .catch((err) => {
+          console.log(err);
+          showError(err?.message || err?.data?.message || "An error occurred");
+        });
+    } else {
+      await addCryptoBeneficiary(formState)
+        .unwrap()
+        .then(() => {
+          showSuccess("Beneficiary added");
+          setFormState({
+            ...formState,
+            title: "",
+            coin_id: "",
+            network: "",
+            address: "",
+            tag_id: "",
+          });
+          onClose();
+        })
+        .catch((err) => {
+          console.log(err);
+          showError(err?.message || err?.data?.message || "An error occurred");
+        });
+    }
+  };
+
+  return (
+    <Modal
+      title={`${cryptoBeneficiaryToUpdate ? "Edit" : "Add"} Crypto Beneficiary`}
+      isOpen={isOpen}
+      onClose={onClose}
+    >
+      <>
+        {/* fields: select crypto, select network, enter addr, opt tag_id */}
+        <div className="inputContainer">
+          <label>Title</label>
+          <input
+            type={"text"}
+            className="formInput"
+            value={formState.title}
+            onChange={(e) => handleOnChange(e.target.value, "title")}
+          />
+        </div>
+        <div className="inputContainer">
+          <label>Select Coin</label>
+          <CustomDropdown
+            value={formState.coin_id}
+            dropdownItems={supportedCryptos}
+            itemOnClick={(val) => handleOnChange(val, "coin_id")}
+          />
+        </div>
+        <div className="inputContainer">
+          <label>Select Network</label>
+          <CustomDropdown
+            value={formState.network}
+            dropdownItems={cyrptoNetworks}
+            itemOnClick={(val) => handleOnChange(val, "network")}
+          />
+        </div>
+        <div className="inputContainer">
+          <label>Wallet address</label>
+          <input
+            type={"text"}
+            className="formInput"
+            value={formState.address}
+            onChange={(e) => handleOnChange(e.target.value, "address")}
+          />
+        </div>
+        {showTagInput && (
+          <div className="inputContainer">
+            <label>Tag ID</label>
+            <input
+              type={"text"}
+              className="formInput"
+              value={formState.tag_id}
+              onChange={(e) => handleOnChange(e.target.value, "tag_id")}
+            />
+          </div>
+        )}
+
+        <CustomButtonII
+          text={"Save"}
+          className={"w100"}
+          centerText={true}
+          onClick={handleSubmit}
+          loading={isAddCryptoBeneficiaryLoading || isUpdateCryptoBenLoading}
+        />
+      </>
+    </Modal>
+  );
+};
+
 
 export default Beneficiaries;

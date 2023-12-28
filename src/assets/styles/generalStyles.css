@@ -18,6 +18,7 @@
   margin: 0;
   box-sizing: border-box;
   font-family: "satoshi", sans-serif;
+  transition: all .3s ease-out;
 }
 
 button {

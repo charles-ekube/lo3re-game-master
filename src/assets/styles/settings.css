@@ -155,6 +155,32 @@
     margin: auto;
     background-color: var(--lightGrey);
     border-radius: 30px;
+    display: flex;
+    gap: 8px;
+    justify-content: space-evenly;
+    overflow: hidden;
+    padding: 5px;
+    margin-bottom: 30px;
+    margin-top: -10px;
+}
+
+.switchTabs > .switchBtn {
+    padding: 8px;
+    border-radius: 30px;
+    border: none;
+}
+
+.switchTabs > .switchBtn:hover {
+    background-color: var(--lightGreyII);
+}
+
+.switchTabs > .switchBtn.active {
+    background-color: var(--secondary);
+    color: var(--white);
+}
+
+.switchTabs.twoCols > .switchBtn {
+    width: 50%;
 }
 
 @media screen and (max-width: 763px) {
@@ -196,5 +222,9 @@
 
     .deleteSubtitle {
         font-size: 14px;
+    }
+
+    .switchTabs {
+        width: 80%;
     }
 }
