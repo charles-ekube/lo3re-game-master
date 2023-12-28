@@ -57,7 +57,7 @@ const Settings = () => {
               </div>
             </Link>
             <div className="linkContainer">
-              <Link to={"accounts"} className={"link"}>
+              <Link to={"beneficiaries"} className={"link"}>
                 Accounts and Cards
               </Link>
             </div>

@@ -4,7 +4,7 @@
   --success: #06C167;
   --successDark: #024022;
   --danger: #FC7F79;
-  --dangerDark: #542A28;
+  --dangerDark: #DE1135;
   --warning: #FFD600;
   --white: #FFF;
   --lightGrey: #F3F3F3;
@@ -185,13 +185,14 @@ button {
   color: var(--white);
 }
 
-.btn-primary, .btn-light, .btn-secondary {
+.btn-primary, .btn-light, .btn-secondary, .btn-danger, .btn-ghost-danger {
   background-color: var(--secondary);
   color: var(--white);
   border: none;
   padding: 14px 16px;
   font-size: 14px;
   font-weight: 500;
+  transition: all .3s ease-out;
 }
 
 .btn-secondary {
@@ -202,6 +203,21 @@ button {
 .btn-light {
   background-color: var(--lightGreyII);
   color: var(--black);
+}
+
+.btn-danger {
+  background-color: var(--danger);
+  color: var(--white);
+}
+
+.btn-ghost-danger {
+  background-color: transparent;
+  color: var(--dangerDark);
+}
+
+.btn-ghost-danger:hover {
+  background-color: var(--dangerDark);
+  color: var(--white);
 }
 
 .btn-light:disabled {

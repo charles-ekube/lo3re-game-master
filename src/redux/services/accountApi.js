@@ -4,7 +4,7 @@ import baseQuery from "./customFetchBase";
 export const accountApi = createApi({
   reducerPath: "accountApi",
   baseQuery,
-  tagTypes: ["profile"],
+  tagTypes: ["profile", "bankBene", "cryptoBene"],
   endpoints: (builder) => ({
     fetchProfile: builder.query({
       query: () => `/user`,

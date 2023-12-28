@@ -133,6 +133,30 @@
     /* object-fit: contain; */
 }
 
+
+
+/* beneficiaries */
+.deleteTitle {
+    font-size: 27px;
+    font-weight: 700;
+}
+
+.deleteSubtitle {
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.deleteIllustration {
+    width: 60%;
+}
+
+.switchTabs {
+    width: 50%;
+    margin: auto;
+    background-color: var(--lightGrey);
+    border-radius: 30px;
+}
+
 @media screen and (max-width: 763px) {
     .avatarStatsContainer {
         flex-direction: column;
@@ -164,5 +188,13 @@
 
     .modalQRContainer {
         margin-bottom: 10px;
+    }
+
+    .deleteTitle {
+        font-size: 20px;
+    }
+
+    .deleteSubtitle {
+        font-size: 14px;
     }
 }

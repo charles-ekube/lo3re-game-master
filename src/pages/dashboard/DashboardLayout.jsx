@@ -19,6 +19,7 @@ import TwoFactorAuth from "./TwoFactorAuth";
 import WalletPin from "./WalletPin";
 import Logo from "../../assets/images/logo.svg";
 import Text from "../../utils/CustomText";
+import Beneficiaries from "./Beneficiaries";
 
 const DashboardLayout = () => {
   const dispatch = useDispatch();
@@ -89,6 +90,7 @@ const DashboardLayout = () => {
               <Route path="kyc" element={<Kyc />} />
               <Route path="2fa" element={<TwoFactorAuth />} />
               <Route path="wallet-pin" element={<WalletPin />} />
+              <Route path="beneficiaries" element={<Beneficiaries />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

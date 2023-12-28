@@ -14,12 +14,13 @@ import {
   useFetchTransactionsQuery,
   useFetchWalletBalanceQuery,
 } from "../../redux/services/walletApi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../utils/Loader";
 import { showError } from "../../utils/Alert";
 import { useFetchProfileQuery } from "../../redux/services/accountApi";
 
 const Wallet = () => {
+  const navigate = useNavigate();
   const [fundWalletModal, setFundWalletModal] = useState(false);
   const [withdrawWalletModal, setWithdrawWalletModal] = useState(false);
   const { data: transactionHistory, isLoading: isTransactionHistoryLoading } =
@@ -55,6 +56,10 @@ const Wallet = () => {
       );
     }
   }, [walletBalanceError]);
+
+  const toBeneficiaries = () => {
+    navigate("/dashboard/settings/beneficiaries");
+  };
 
   return (
     <>
@@ -144,12 +149,14 @@ const Wallet = () => {
         {/* aside */}
         <aside className={"asideViewContainer"}>
           <div className="bankCardsContainer">
-            <h3>Banks and Cards</h3>
+            <h3>Recent Beneficiaries</h3>
             <div className="content mt-2">
               <BankCard name={"MasterCard"} />
               <BankCard name={"Sterling"} />
             </div>
-            <button className="cardLinkBtn">Link a bank or card</button>
+            <button className="cardLinkBtn" onClick={toBeneficiaries}>
+              Manage beneficiaries
+            </button>
           </div>
 
           {/* customer corner */}

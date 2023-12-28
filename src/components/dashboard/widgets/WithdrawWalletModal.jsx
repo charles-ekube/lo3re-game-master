@@ -42,6 +42,7 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
   const [formStep, setFormStep] = useState(1);
   const [showEmailCodeModal, setShowEmailCodeModal] = useState(false);
   const [showWalletPinModal, setShowWalletPinModal] = useState(false);
+  const [isSendOtpLoading, setIsSendOtpLoading] = useState(false);
   const [checkWalletPin, { isLoading: isCheckWalletPinLoading }] =
     useCheckWalletPinMutation();
   const [reqWithdraw, { isLoading: isReqWithdrawLoading }] =
@@ -237,7 +238,9 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
             setShowWalletPinModal(false);
             setShowEmailCodeModal(true);
           } else {
+            setIsSendOtpLoading(true);
             const res = await http.get("/auth/mfa/email");
+            setIsSendOtpLoading(false);
             if (res?.success) {
               setShowWalletPinModal(false);
               setShowEmailCodeModal(true);
@@ -591,7 +594,7 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
           className={"w100"}
           onClick={validateWalletPin}
           centerText={true}
-          loading={isCheckWalletPinLoading}
+          loading={isCheckWalletPinLoading || isSendOtpLoading}
         />
       </Modal>
 

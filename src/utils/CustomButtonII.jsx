@@ -1,7 +1,7 @@
 import React from "react";
 import Text from "./CustomText";
 
-// varaints => primary, secondary, light
+// varaints => primary, secondary, light, danger, ghost-danger
 const CustomButtonII = ({
   text,
   onClick,
