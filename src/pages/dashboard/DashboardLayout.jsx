@@ -5,7 +5,7 @@ import { Outlet, Route, Routes, useNavigate } from "react-router-dom";
 import NotFound from "../../utils/NotFound";
 import Overview from "./Overview";
 import Wallet from "./Wallet";
-import { toggleSidebar } from "../../redux/features/generalSlice";
+import { logOutUser, toggleSidebar } from "../../redux/features/generalSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useFetchProfileQuery } from "../../redux/services/accountApi";
 import History from "./History";
@@ -32,12 +32,19 @@ const DashboardLayout = () => {
 
   useEffect(() => {
     if (!isUserError && !isUserLoading) {
+      const TFAVerified = JSON.parse(localStorage.getItem("TFAVerified"));
       const isWalletPinActive = user?.user?.security?.wallet_pin;
+      const isAuthApp2faActive = user?.user?.security["2fa"]
+        ? user?.user?.security["2fa"]?.status === "verified"
+        : false;
       if (!isWalletPinActive) {
         navigate("/activate-wallet-pin");
+      } else if (isAuthApp2faActive && !TFAVerified) {
+        // console.log("2fa active and not set");
+        dispatch(logOutUser());
       }
     }
-  }, [isUserError, isUserLoading, user, navigate]);
+  }, [isUserError, isUserLoading, user, navigate, dispatch]);
 
   return (
     <>

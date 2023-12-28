@@ -4,6 +4,7 @@
   --success: #06C167;
   --successDark: #024022;
   --danger: #FC7F79;
+  --dangerDark: #542A28;
   --warning: #FFD600;
   --white: #FFF;
   --lightGrey: #F3F3F3;
@@ -216,6 +217,11 @@ button {
   background-color: var(--lightGrey);
 }
 
+.btnDanger {
+  background-color: var(--danger);
+  color: var(--white);
+}
+
 
 .text-start {
   text-align: left;
@@ -258,7 +264,7 @@ button {
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   height: 100%;
@@ -284,7 +290,7 @@ button {
 
 .pill-success {
   background-color: var(--success);
-  color: var(--successDark);
+  color: var(--white);
 }
 
 .inputContainer label {

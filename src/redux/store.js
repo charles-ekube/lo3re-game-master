@@ -4,6 +4,7 @@ import {
 } from "@reduxjs/toolkit";
 import generalReducer from "./features/generalSlice";
 import { accountApi } from "./services/accountApi";
+import { twoFAApi } from "./services/twoFAApi";
 import { walletApi } from "./services/walletApi";
 
 export const store = configureStore({
@@ -11,6 +12,7 @@ export const store = configureStore({
     general: generalReducer,
     [accountApi.reducerPath]: accountApi.reducer,
     [walletApi.reducerPath]: walletApi.reducer,
+    [twoFAApi.reducerPath]: twoFAApi.reducer,
   },
   devTools: process.env.NODE_ENV === "development",
   middleware: (getDefaultMiddleware) =>
@@ -20,5 +22,6 @@ export const store = configureStore({
       //   authApi.middleware,
       accountApi.middleware,
       walletApi.middleware,
+      twoFAApi.middleware,
     ]),
 });

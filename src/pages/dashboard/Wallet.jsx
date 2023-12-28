@@ -17,6 +17,7 @@ import {
 import { Link } from "react-router-dom";
 import Loader from "../../utils/Loader";
 import { showError } from "../../utils/Alert";
+import { useFetchProfileQuery } from "../../redux/services/accountApi";
 
 const Wallet = () => {
   const [fundWalletModal, setFundWalletModal] = useState(false);
@@ -28,7 +29,20 @@ const Wallet = () => {
     isLoading: isWalletBalanceLoading,
     error: walletBalanceError,
   } = useFetchWalletBalanceQuery();
-  console.log(walletBalance);
+  const { data: user } = useFetchProfileQuery();
+
+  const isEmail2faActive = user?.user?.security?.email;
+  const isAuthApp2faActive = user?.user?.security["2fa"]
+    ? user?.user?.security["2fa"]?.status === "verified"
+    : false;
+
+  const openWithdrawModal = () => {
+    if (isEmail2faActive || isAuthApp2faActive) {
+      setWithdrawWalletModal(true);
+    } else {
+      showError("Set up 2FA to withdraw");
+    }
+  };
   // console.log(error);
 
   useEffect(() => {
@@ -75,8 +89,7 @@ const Wallet = () => {
               text={"Withdraw"}
               variant={"light"}
               icon={<PiBank fontSize={"18px"} />}
-              onClick={() => setWithdrawWalletModal(true)}
-              disabled={false}
+              onClick={openWithdrawModal}
             />
             <CustomButtonII
               text={"Fund wallet"}

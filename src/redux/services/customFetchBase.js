@@ -1,6 +1,6 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query";
 import { showError } from "../../utils/Alert";
-import { updateUserDetail } from "../features/generalSlice";
+import { logOutUser } from "../features/generalSlice";
 
 const baseUrl = "https://us-central1-lo3re-ee26a.cloudfunctions.net/api/";
 
@@ -25,9 +25,7 @@ const baseQuery = async (args, api, extraOptions) => {
   ) {
     showError("Session expired");
 
-    localStorage.removeItem("accessToken");
-    api.dispatch(updateUserDetail({}));
-    window.location.replace("/");
+    api.dispatch(logOutUser({}));
   }
   return result;
 };

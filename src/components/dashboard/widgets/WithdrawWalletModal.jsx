@@ -23,6 +23,7 @@ import {
   useCheckWalletPinMutation,
   useRequestWithdrawalMutation,
 } from "../../../redux/services/walletApi";
+import { useFetchProfileQuery } from "../../../redux/services/accountApi";
 
 const WithdrawWalletModal = ({ isOpen, onClose }) => {
   const [supportedCurrencies, setSupportedCurrencies] = useState([]);
@@ -60,6 +61,11 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
     code: "",
   });
 
+  const { data: user } = useFetchProfileQuery();
+
+  const isAuthApp2faActive = user?.user?.security["2fa"]
+    ? user?.user?.security["2fa"]?.status === "verified"
+    : false;
   const [paymentMethods, setPaymentMethods] = useState();
   const [beneficiaries, setBeneficiaries] = useState([
     {
@@ -218,7 +224,7 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
   };
 
   const validateWalletPin = async () => {
-    if (finalFormState.wallet_pin === "") {
+    if (finalFormState.wallet_pin < 6) {
       showError("Provide wallet pin");
       return;
     }
@@ -227,17 +233,22 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
       .unwrap()
       .then(async (resp) => {
         if (resp?.success) {
-          const res = await http.get("/auth/mfa/email");
-          if (res?.success) {
+          if (isAuthApp2faActive) {
             setShowWalletPinModal(false);
             setShowEmailCodeModal(true);
-            showSuccess("A code has been sent to your email");
           } else {
-            showError(
-              res?.message ||
-                res?.data?.message ||
-                "An error occurred, could not send email code"
-            );
+            const res = await http.get("/auth/mfa/email");
+            if (res?.success) {
+              setShowWalletPinModal(false);
+              setShowEmailCodeModal(true);
+              showSuccess("A code has been sent to your email");
+            } else {
+              showError(
+                res?.message ||
+                  res?.data?.message ||
+                  "An error occurred, could not send email code"
+              );
+            }
           }
         } else {
           showError("check pin failed");
@@ -252,11 +263,13 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
 
   const processFundWallet = async () => {
     if (formStep === 1) {
-      if (
-        withdrawalFormStates.amount === "" ||
-        withdrawalFormStates.currency === ""
-      ) {
-        showError("Amount and currency are required");
+      if (withdrawalFormStates.amount === "") {
+        showError("Amount is required");
+        return;
+      }
+
+      if (withdrawalFormStates.currency === "") {
+        showError("Currency is required");
         return;
       }
 
@@ -591,8 +604,9 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
       >
         <div className="inputContainer">
           <label className="text-start text-muted">
-            To confirm this request, please enter the security code we emailed
-            to you.
+            {isAuthApp2faActive
+              ? "To confirm this request, please enter the security code from your Authenticator App"
+              : "To confirm this request, please enter the security code we emailed to you"}
           </label>
           <input
             type="text"

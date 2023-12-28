@@ -4,8 +4,16 @@ import Text from "../../utils/CustomText";
 import ContactCard from "../../components/dashboard/cards/ContactCard";
 import { Link } from "react-router-dom";
 import "../../assets/styles/settings.css";
+import { useFetchProfileQuery } from "../../redux/services/accountApi";
 
 const Settings = () => {
+  const { data: user } = useFetchProfileQuery();
+
+  const isEmail2faActive = user?.user?.security?.email;
+  const isAuthApp2faActive = user?.user?.security["2fa"]
+    ? user?.user?.security["2fa"]?.status === "verified"
+    : false;
+
   return (
     <>
       <section className="mainContainer">
@@ -88,7 +96,13 @@ const Settings = () => {
             <Link to={"2fa"} className={"link"}>
               <div className="linkContainer flexRow justifyBetween alignCenter">
                 <span>Two-Factor Authentication</span>
-                <div className="status-pill pill-invalid btnSm">Disabled</div>
+                {isEmail2faActive || isAuthApp2faActive ? (
+                  <div className="status-pill pill-success btnSm">Enabled</div>
+                ) : (
+                  <div className="status-pill pill-invalid btnSm">
+                    Not Enabled
+                  </div>
+                )}
               </div>
             </Link>
           </div>

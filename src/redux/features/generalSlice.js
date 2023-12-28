@@ -73,6 +73,13 @@ export const general = createSlice({
         tag_id: "",
       };
     },
+    logOutUser: (state) => {
+      // log user out
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("TFAVerified");
+      state.userDetail = {};
+      window.location.replace("/");
+    },
   },
 });
 
@@ -84,5 +91,6 @@ export const {
   resetBankTransferBeneficiaryForm,
   setCryptoBeneficiaryForm,
   resetCryptoBeneficiaryForm,
+  logOutUser,
 } = general.actions;
 export default general.reducer;

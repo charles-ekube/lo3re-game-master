@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
-import { updateUserDetail } from "../redux/features/generalSlice";
+import { logOutUser, updateUserDetail } from "../redux/features/generalSlice";
 
 function RequireAuth({ children }) {
   let location = useLocation();
@@ -24,9 +24,7 @@ function RequireAuth({ children }) {
           console.log("Token expired");
 
           // log user out
-          localStorage.removeItem("accessToken");
-          dispatch(updateUserDetail({}));
-          navigate("/");
+          dispatch(logOutUser());
         } else {
           dispatch(updateUserDetail(user));
           console.log("Token valid");

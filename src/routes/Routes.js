@@ -17,6 +17,7 @@ import RoutesAuth from "./RoutesAuth";
 import PreLogin from "../pages/auth/PreLogin";
 import CompleteProfile from "../pages/auth/CompleteProfile";
 import ActivateWalletPin from "../pages/auth/ActivateWalletPin";
+import Verify2FA from "../pages/auth/Verify2FA";
 
 const RoutesContainer = () => {
   return (
@@ -37,6 +38,7 @@ const RoutesContainer = () => {
         <Route path="/verify" element={<HandleEmailActions />} />
         <Route path="/complete-profile" element={<CompleteProfile />} />
         <Route path="/activate-wallet-pin" element={<ActivateWalletPin />} />
+        <Route path="/verify-2fa" element={<Verify2FA />} />
         <Route
           path="/dashboard/*"
           element={<RoutesAuth children={<DashboardLayout />} />}

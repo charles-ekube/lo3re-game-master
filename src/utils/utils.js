@@ -1,5 +1,5 @@
 import axios from "axios";
-import { updateUserDetail } from "../redux/features/generalSlice";
+import { logOutUser } from "../redux/features/generalSlice";
 import { store } from "../redux/store";
 
 const apiRootUrl = "https://us-central1-lo3re-ee26a.cloudfunctions.net/api/";
@@ -59,9 +59,7 @@ const http = {
               message = "You are not authorized to access this resource.";
               errors = error.response.data;
 
-              localStorage.removeItem("accessToken");
-              store.dispatch(updateUserDetail({}));
-              window.location.replace("/");
+              store.dispatch(logOutUser());
               // navigate('Auth', { screen: 'Landing' })
               // store.dispatch(signOut())
               break;

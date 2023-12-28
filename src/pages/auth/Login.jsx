@@ -71,10 +71,14 @@ const Login = ({ signInEmail }) => {
   useEffect(() => {
     if (isFetchUserSuccess) {
       setState((state) => ({ ...state, loading: false }));
-      console.log("im running");
       const isWalletPinActive = user?.user?.security?.wallet_pin;
+      const isAuthApp2faActive = user?.user?.security["2fa"]
+        ? user?.user?.security["2fa"]?.status === "verified"
+        : false;
       if (!isWalletPinActive) {
         navigate("/activate-wallet-pin");
+      } else if (isAuthApp2faActive) {
+        navigate("/verify-2fa");
       } else {
         // sign user in
         showSuccess("Successful 👍");

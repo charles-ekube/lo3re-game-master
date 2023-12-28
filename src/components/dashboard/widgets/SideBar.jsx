@@ -1,6 +1,6 @@
 import React from "react";
 import Logo from "../../../assets/images/logo.svg";
-import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom/dist";
+import { NavLink, useLocation } from "react-router-dom/dist";
 import Text from "../../../utils/CustomText";
 import {
   CiBellOn,
@@ -14,8 +14,8 @@ import { signOut } from "firebase/auth";
 import { PiGearSixLight } from "react-icons/pi";
 import { useDispatch } from "react-redux";
 import {
+  logOutUser,
   toggleSidebar,
-  updateUserDetail,
 } from "../../../redux/features/generalSlice";
 import { auth } from "../../../firebase";
 
@@ -24,11 +24,11 @@ const SideBar = () => {
   const currentPath = location.pathname;
   const getPath = currentPath.split("/");
   let ActivePath = null;
-  const navigate = useNavigate();
-  const params = useParams();
-  const getParamArr = Object.entries(params);
-  const getID = getParamArr[0][1].split("/");
-  const id = getID[1];
+  // const navigate = useNavigate();
+  // const params = useParams();
+  // const getParamArr = Object.entries(params);
+  // const getID = getParamArr[0][1].split("/");
+  // const id = getID[1];
   const dispatch = useDispatch();
   // const navigate("")
 
@@ -39,9 +39,7 @@ const SideBar = () => {
   const logOut = async () => {
     try {
       await signOut(auth);
-      localStorage.removeItem("accessToken");
-      dispatch(updateUserDetail({}));
-      navigate("/");
+      dispatch(logOutUser());
     } catch (err) {
       console.error(err);
     }
