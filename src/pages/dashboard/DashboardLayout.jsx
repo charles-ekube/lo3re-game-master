@@ -35,9 +35,10 @@ const DashboardLayout = () => {
     if (!isUserError && !isUserLoading) {
       const TFAVerified = JSON.parse(localStorage.getItem("TFAVerified"));
       const isWalletPinActive = user?.user?.security?.wallet_pin;
-      const isAuthApp2faActive = user?.user?.security["2fa"]
-        ? user?.user?.security["2fa"]?.status === "verified"
-        : false;
+      const isAuthApp2faActive =
+        user?.user?.security && user?.user?.security["2fa"]
+          ? user?.user?.security["2fa"]?.status === "verified"
+          : false;
       if (!isWalletPinActive) {
         navigate("/activate-wallet-pin");
       } else if (isAuthApp2faActive && !TFAVerified) {
