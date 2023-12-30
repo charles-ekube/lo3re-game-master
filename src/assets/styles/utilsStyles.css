@@ -156,7 +156,7 @@
 
 
 .modal::-webkit-scrollbar{
-  width: 8px;
+  width: 5px;
 }
 
 .h-scroll::-webkit-scrollbar{

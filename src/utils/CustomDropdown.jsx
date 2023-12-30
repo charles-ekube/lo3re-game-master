@@ -39,7 +39,10 @@ const CustomDropdown = ({
   return (
     <>
       <div className={`dropdown-container ${className.trim()}`}>
-        <button onClick={toggleDropdown} className="dropdown-button">
+        <button
+          onClick={toggleDropdown}
+          className={`dropdown-button ${disabled ? "isDisabled" : ""}`}
+        >
           <span>
             {dropdownIcon ? <img src={dropdownIcon} alt="" /> : ""}
             {dropdownValue || "Select"}

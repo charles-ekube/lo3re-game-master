@@ -44,6 +44,14 @@ export const walletApi = createApi({
         body: data,
       }),
     }),
+    fetchSupportedBanks: builder.query({
+      query: () => `/wallets/supported-banks`,
+      providesTags: ["balance"],
+      transformResponse: (results) => results.data,
+    }),
+    fetchSupportedCryptos: builder.query({
+      query: () => `/wallets/supported-coins`,
+    }),
   }),
 });
 
@@ -54,4 +62,6 @@ export const {
   useCheckWalletPinMutation,
   useRequestWithdrawalMutation,
   useFetchTransactionsQuery,
+  useFetchSupportedBanksQuery,
+  useFetchSupportedCryptosQuery,
 } = walletApi;

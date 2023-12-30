@@ -18,10 +18,13 @@ import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../utils/Loader";
 import { showError } from "../../utils/Alert";
 import { useFetchProfileQuery } from "../../redux/services/accountApi";
+import Modal from "../../utils/Modal";
+import Shield from "../../assets/images/shield-keyhole-fill.svg";
 
 const Wallet = () => {
   const navigate = useNavigate();
   const [fundWalletModal, setFundWalletModal] = useState(false);
+  const [no2FAModal, setNo2FAModal] = useState(false);
   const [withdrawWalletModal, setWithdrawWalletModal] = useState(false);
   const { data: transactionHistory, isLoading: isTransactionHistoryLoading } =
     useFetchTransactionsQuery("limit=5");
@@ -41,7 +44,7 @@ const Wallet = () => {
     if (isEmail2faActive || isAuthApp2faActive) {
       setWithdrawWalletModal(true);
     } else {
-      showError("Set up 2FA to withdraw");
+      setNo2FAModal(true);
     }
   };
   // console.log(error);
@@ -177,6 +180,28 @@ const Wallet = () => {
         isOpen={withdrawWalletModal}
         onClose={() => setWithdrawWalletModal(false)}
       />
+
+      <Modal isOpen={no2FAModal} onClose={() => setNo2FAModal(false)}>
+        <div className="flexRow justifyCenter">
+          <img
+            src={Shield}
+            className="deleteIllustration"
+            style={{ height: "180px" }}
+            alt=""
+          />
+        </div>
+        <h3 className="deleteTitle">Two-Factor Authentication not enabled</h3>
+        <p className="deleteSubtitle">
+          Enable Two-Factor Authentication to withdraw
+        </p>
+        <CustomButtonII
+          variant="light"
+          text={"Enable 2FA"}
+          className={"w100 mt40"}
+          centerText={true}
+          onClick={() => navigate("/dashboard/settings/2fa")}
+        />
+      </Modal>
     </>
   );
 };

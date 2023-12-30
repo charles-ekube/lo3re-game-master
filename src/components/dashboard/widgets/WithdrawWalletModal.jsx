@@ -21,6 +21,8 @@ import {
 import OtpInput from "../../../utils/CustomOtp";
 import {
   useCheckWalletPinMutation,
+  useFetchSupportedBanksQuery,
+  useFetchSupportedCryptosQuery,
   useRequestWithdrawalMutation,
 } from "../../../redux/services/walletApi";
 import { useFetchProfileQuery } from "../../../redux/services/accountApi";
@@ -28,6 +30,8 @@ import { useFetchProfileQuery } from "../../../redux/services/accountApi";
 const WithdrawWalletModal = ({ isOpen, onClose }) => {
   const [supportedCurrencies, setSupportedCurrencies] = useState([]);
   const [requestLoading, setRequestLoading] = useState(false);
+  const { data: supportedBanks } = useFetchSupportedBanksQuery();
+  const { data: supportedCryptos } = useFetchSupportedCryptosQuery();
   const dispatch = useDispatch();
   const beneficiaryForm = useSelector(
     (state) => state.general.bankTransferBeneficiaryForm
@@ -68,29 +72,7 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
     ? user?.user?.security["2fa"]?.status === "verified"
     : false;
   const [paymentMethods, setPaymentMethods] = useState();
-  const [beneficiaries, setBeneficiaries] = useState([
-    {
-      name: "John Doe",
-      addressLabel: "Access Bank",
-      address: "2343453243",
-      icon: BankIcon,
-      isActive: false,
-    },
-    {
-      name: "Jane Doe",
-      addressLabel: "Access Bank",
-      address: "2343453243",
-      icon: BankIcon,
-      isActive: false,
-    },
-    {
-      name: "James Doe",
-      addressLabel: "Access Bank",
-      address: "2343453243",
-      icon: BankIcon,
-      isActive: false,
-    },
-  ]);
+  const [beneficiaries, setBeneficiaries] = useState([]);
 
   const closeModal = () => {
     onClose();
@@ -190,6 +172,25 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
     } else if (code === "crypto") {
       return CryptoIcon;
     }
+  };
+
+  const returnBankName = (bank_code) => {
+    const bank = supportedBanks.filter((val) => val?.code === bank_code);
+    if (bank.length) {
+      return bank[0]?.name;
+    }
+    return null;
+  };
+
+  const returnCoin = (coin_id) => {
+    const coin = supportedCryptos.filter((val) => val.id === coin_id);
+    console.log("cid", coin_id);
+    supportedCryptos.map((val) => console.log("vid", val.id));
+    if (coin.length) {
+      return coin[0];
+    }
+
+    return null;
   };
 
   const requestWithdrawal = async () => {
@@ -310,23 +311,32 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
       }
 
       // fetch beneficiaries
-      // let url = "";
-      // if (activeMethod[0].code === "bank_transfer") {
-      //   url = "wallets/withdrawals/bank-details";
-      // } else if (activeMethod[0].code === "crypto") {
-      //   url = "wallets/withdrawals/crypto";
-      // }
+      let url = "";
+      if (activeMethod[0].code === "bank_transfer") {
+        url = "wallets/withdrawals/bank-details";
+      } else if (activeMethod[0].code === "crypto") {
+        url = "wallets/withdrawals/crypto";
+      }
 
-      // setRequestLoading(true);
-      // try {
-      //   const res = await http.get(url);
-      //   setRequestLoading(false);
+      setRequestLoading(true);
+      try {
+        const res = await http.get(url);
+        const newArray = res?.data?.map((val) => ({
+          ...val,
+          isActive: false,
+          icon:
+            activeMethod[0].code === "bank_transfer"
+              ? BankIcon
+              : returnCoin(val?.coin_id)?.logo_url,
+        }));
 
-      //   console.log(res);
-      // } catch (error) {
-      //   setRequestLoading(false);
-      //   console.log(error);
-      // }
+        setBeneficiaries(newArray);
+        setRequestLoading(false);
+        console.log(res);
+      } catch (error) {
+        setRequestLoading(false);
+        console.log(error);
+      }
       setFormStep(3);
     } else if (formStep === 3) {
       const activeBen = beneficiaries.filter((val) => val.isActive === true);
@@ -344,7 +354,7 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
         currency: withdrawalFormStates.currency,
         amount: withdrawalFormStates.amountToRecieve,
         method: activeMethod[0]?.code,
-        destination_id: activeBen[0]?.address,
+        destination_id: activeBen[0]?.id,
       });
 
       requestWalletPin();
@@ -510,14 +520,27 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
         return (
           <>
             <h4 className="text-start mb-2">Select beneficiary</h4>
+            {!beneficiaries.length ? (
+              <p className="text-muted mb-2">
+                You have not added any beneficiaries yet
+              </p>
+            ) : (
+              ""
+            )}
             {beneficiaries.map((ben, index) => (
               <ThreeColumnRow
                 key={`ben-${index}`}
                 onClick={() => toggleBeneficiaryActive(ben)}
-                title={ben.name}
+                title={ben?.title || ben?.account_name || ben?.address}
                 subtitle={
                   <>
-                    <small>{ben.addressLabel}:</small> <b>{ben.address}</b>
+                    <small>
+                      {returnBankName(ben?.bank_code) ||
+                        ben?.network ||
+                        "Account number"}
+                      :
+                    </small>{" "}
+                    <b>{ben?.account_number || ben?.address}</b>
                   </>
                 }
                 icon={ben.icon}
@@ -525,7 +548,7 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
               />
             ))}
             <CustomButtonII
-              text={"Add New Beneficiary"}
+              text={"New Beneficiary"}
               variant={"light"}
               className={"w100 justifyCenter"}
               centerText={true}

@@ -328,6 +328,10 @@ button {
   border: 1px solid var(--lightGreyII) !important;
 }
 
+.dropdown-button.isDisabled {
+  background-color: #FAFAFA;
+}
+
 .formInput:focus {
   outline-color: #ccc;
 }
