@@ -183,6 +183,14 @@
     width: 50%;
 }
 
+.switchTabs.tab100 {
+    width: 100%;
+}
+
+.switchTabs.bgWhite {
+    background-color: var(--lightGreyII);
+}
+
 @media screen and (max-width: 763px) {
     .avatarStatsContainer {
         flex-direction: column;

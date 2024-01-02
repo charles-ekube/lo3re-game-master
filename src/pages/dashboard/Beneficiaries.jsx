@@ -10,7 +10,6 @@ import {
 } from "../../redux/services/beneficiariesApi";
 import Loader from "../../utils/Loader";
 import CustomButtonII from "../../utils/CustomButtonII";
-import http from "../../utils/utils";
 import CryptoBeneficiaryRow from "../../components/dashboard/Beneficiary/CryptoBeneficiaryRow";
 import CryptoBeneModal from "../../components/dashboard/Beneficiary/CryptoBeneModal";
 import BankBeneModal from "../../components/dashboard/Beneficiary/BankBeneModal";
@@ -24,8 +23,6 @@ const Beneficiaries = () => {
     useFetchBankBeneficiariesQuery();
   const { data: cryptoBeneficiaries, isLoading: isCryptoBeneLoading } =
     useFetchCryptoBeneficiariesQuery();
-  const [supportedBanks, setSupportedBanks] = useState([]);
-  const [supportedCryptos, setSupportedCryptos] = useState([]);
   const [selectedBenecficiary, setSelectedBenecficiary] = useState(null);
   const [selectedCryptoBenecficiary, setSelectedCryptoBenecficiary] =
     useState(null);
@@ -45,13 +42,6 @@ const Beneficiaries = () => {
     return activeTab[0];
   };
 
-  const returnCoin = (coin_id) => {
-    const coin = supportedCryptos.filter((val) => val.id === coin_id);
-    if (coin.length) {
-      return coin[0];
-    }
-  };
-
   const toggleTabs = (clickedItem) => {
     const updatedTabs = tabs.map((item) => ({
       ...item,
@@ -61,63 +51,8 @@ const Beneficiaries = () => {
     setTabs(updatedTabs); // Update the state with the new array
   };
 
-  // TODO: call w/rtk query
-  const fetchBanks = async () => {
-    // setRequestLoading(true);
-    try {
-      const res = await http.get(`wallets/supported-banks`);
-      const newArray = res?.data.map((cur) => ({
-        ...cur,
-        value: cur.code,
-      }));
-
-      setSupportedBanks(newArray);
-      // console.log("banks", res);
-      //   setRequestLoading(false);
-    } catch (error) {
-      console.log("fetch bank err", error);
-      //   setRequestLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchBanks();
-    //   fetchCryptos();
-  }, []);
-
   const goBack = () => {
     navigate(-1);
-  };
-
-  const fetchCryptos = async () => {
-    // setRequestLoading(true);
-    try {
-      const res = await http.get(`wallets/supported-coins`);
-      const newArray = res.map((crypto) => ({
-        ...crypto,
-        value: crypto.id,
-        name: crypto.name.toUpperCase(),
-        icon: crypto.logo_url,
-      }));
-
-      setSupportedCryptos(newArray);
-    } catch (error) {
-      console.log("fetch bank err", error);
-    }
-  };
-
-  // fetch supported banks/cryptos
-  useEffect(() => {
-    fetchCryptos();
-  }, []);
-
-  const returnBankName = (bank_code) => {
-    const bank = supportedBanks.filter((val) => val?.code === bank_code);
-    if (bank.length) {
-      return bank[0]?.name;
-    } else {
-      return "";
-    }
   };
 
   const handleAddBenModalClose = () => {
@@ -162,7 +97,6 @@ const Beneficiaries = () => {
           {cryptoBeneficiaries?.map((value) => (
             <CryptoBeneficiaryRow
               key={`ben-${value?.id}`}
-              coinInfo={returnCoin(value?.coin_id)}
               onClick={() => openEditCryptoModal(value)}
               beneficiary={value}
             />
@@ -182,7 +116,6 @@ const Beneficiaries = () => {
           {bankBeneficiaries?.map((value) => (
             <BeneficiaryRow
               key={`ben-${value?.id}`}
-              bankName={returnBankName(value?.bank_code)}
               onClick={() => openEditModal(value)}
               beneficiary={value}
             />

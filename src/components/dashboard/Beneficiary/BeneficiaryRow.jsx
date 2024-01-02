@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDeleteBankBeneficiaryMutation } from "../../../redux/services/beneficiariesApi";
 import CustomButtonII from "../../../utils/CustomButtonII";
 import Modal from "../../../utils/Modal";
@@ -7,12 +7,47 @@ import BankIcon from "../../../assets/images/icons/bank.png";
 import ThreeColumnRow from "../../../utils/ThreeColumnRow";
 import { BsTrash3 } from "react-icons/bs";
 import WasteCollection from "../../../assets/images/wastecollection.png";
+import http from "../../../utils/utils";
 
-const BeneficiaryRow = ({ beneficiary, bankName, onClick }) => {
+const BeneficiaryRow = ({ beneficiary, onClick }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [supportedBanks, setSupportedBanks] = useState([]);
 
   const [deleteBeneficiary, { isLoading: isDeleteBeneficiaryLoading }] =
     useDeleteBankBeneficiaryMutation();
+
+  // TODO: call w/rtk query
+  const fetchBanks = async () => {
+    // setRequestLoading(true);
+    try {
+      const res = await http.get(`wallets/supported-banks`);
+      const newArray = res?.data.map((cur) => ({
+        ...cur,
+        value: cur.code,
+      }));
+
+      setSupportedBanks(newArray);
+      // console.log("banks", res);
+      //   setRequestLoading(false);
+    } catch (error) {
+      console.log("fetch bank err", error);
+      //   setRequestLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBanks();
+    //   fetchCryptos();
+  }, []);
+
+  const returnBankName = (bank_code) => {
+    const bank = supportedBanks.filter((val) => val?.code === bank_code);
+    if (bank.length) {
+      return bank[0]?.name;
+    } else {
+      return null;
+    }
+  };
 
   const handleDeleteBeneficiary = async () => {
     await deleteBeneficiary(beneficiary?.id)
@@ -36,7 +71,9 @@ const BeneficiaryRow = ({ beneficiary, bankName, onClick }) => {
         title={beneficiary?.title || beneficiary?.account_name}
         subtitle={
           <>
-            <small>{bankName || "Account number"}:</small>{" "}
+            <small>
+              {returnBankName(beneficiary?.bank_code) || "Account number"}:
+            </small>{" "}
             <b>{beneficiary?.account_number}</b>
           </>
         }

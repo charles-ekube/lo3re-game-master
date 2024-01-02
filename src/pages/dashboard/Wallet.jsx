@@ -20,11 +20,23 @@ import { showError } from "../../utils/Alert";
 import { useFetchProfileQuery } from "../../redux/services/accountApi";
 import Modal from "../../utils/Modal";
 import Shield from "../../assets/images/shield-keyhole-fill.svg";
+import {
+  useFetchBankBeneficiariesQuery,
+  useFetchCryptoBeneficiariesQuery,
+} from "../../redux/services/beneficiariesApi";
+import QuickWithdraw from "../../components/dashboard/widgets/QuickWithdraw";
 
 const Wallet = () => {
   const navigate = useNavigate();
   const [fundWalletModal, setFundWalletModal] = useState(false);
   const [no2FAModal, setNo2FAModal] = useState(false);
+  const [isQuickWithdrawModalOpen, setQuickWithdrawModal] = useState(false);
+  const [quickWithdrawForm, setQuickWithdrawForm] = useState({
+    id: "",
+    title: "",
+    method: "",
+    currency: "",
+  });
   const [withdrawWalletModal, setWithdrawWalletModal] = useState(false);
   const { data: transactionHistory, isLoading: isTransactionHistoryLoading } =
     useFetchTransactionsQuery("limit=5");
@@ -34,6 +46,30 @@ const Wallet = () => {
     error: walletBalanceError,
   } = useFetchWalletBalanceQuery();
   const { data: user } = useFetchProfileQuery();
+
+  const { data: bankBeneficiaries, isLoading: isBankBeneLoading } =
+    useFetchBankBeneficiariesQuery();
+  const { data: cryptoBeneficiaries, isLoading: isCryptoBeneLoading } =
+    useFetchCryptoBeneficiariesQuery();
+  const [tabs, setTabs] = useState([
+    {
+      name: "Bank Transfers",
+      isActive: true,
+    },
+    {
+      name: "Crypto",
+      isActive: false,
+    },
+  ]);
+
+  const toggleTabs = (clickedItem) => {
+    const updatedTabs = tabs.map((item) => ({
+      ...item,
+      isActive: item === clickedItem,
+    }));
+
+    setTabs(updatedTabs);
+  };
 
   const isEmail2faActive = user?.user?.security?.email;
   const isAuthApp2faActive = user?.user?.security["2fa"]
@@ -62,6 +98,95 @@ const Wallet = () => {
 
   const toBeneficiaries = () => {
     navigate("/dashboard/settings/beneficiaries");
+  };
+
+  const returnActiveTab = () => {
+    const activeTab = tabs.filter((tab) => tab.isActive);
+    return activeTab[0];
+  };
+
+  const openQuickWithdrawModal = (beneficiary) => {
+    if (isEmail2faActive || isAuthApp2faActive) {
+      setQuickWithdrawForm({
+        ...quickWithdrawForm,
+        id: beneficiary?.id,
+        title: beneficiary?.title || beneficiary?.account_name,
+        method: beneficiary?.coin_id ? "crypto" : "bank_transfer",
+        currency: beneficiary?.currency || "usd",
+      });
+
+      setQuickWithdrawModal(true);
+    } else {
+      setNo2FAModal(true);
+    }
+  };
+
+  const closeQuickWithdrawModal = () => {
+    setQuickWithdrawForm({
+      ...quickWithdrawForm,
+      id: "",
+      title: "",
+      method: "",
+      currency: "",
+    });
+
+    setQuickWithdrawModal(false);
+  };
+
+  const renderBeneElem = () => {
+    if (returnActiveTab()?.name === "Crypto") {
+      return (
+        <>
+          {!cryptoBeneficiaries?.length && !isCryptoBeneLoading ? (
+            <p className="text-muted text-center mt40">
+              You have not added any crypto beneficiaries yet.
+            </p>
+          ) : (
+            ""
+          )}
+          {cryptoBeneficiaries?.map((value, index) => {
+            if (index > 1) {
+              return <></>;
+            }
+
+            return (
+              <BankCard
+                key={"benn-" + index}
+                beneficiary={value}
+                onClick={() => openQuickWithdrawModal(value)}
+                type={"crypto"}
+              />
+            );
+          })}
+        </>
+      );
+    } else {
+      return (
+        <>
+          {!bankBeneficiaries?.length && !isBankBeneLoading ? (
+            <p className="text-muted text-center mt40">
+              You have not added any bank transfer beneficiaries yet.
+            </p>
+          ) : (
+            ""
+          )}
+          {bankBeneficiaries?.map((value, index) => {
+            if (index > 1) {
+              return <></>;
+            }
+
+            return (
+              <BankCard
+                key={"benn-" + index}
+                beneficiary={value}
+                onClick={() => openQuickWithdrawModal(value)}
+                type={"bank"}
+              />
+            );
+          })}
+        </>
+      );
+    }
   };
 
   return (
@@ -153,9 +278,29 @@ const Wallet = () => {
         <aside className={"asideViewContainer"}>
           <div className="bankCardsContainer">
             <h3>Recent Beneficiaries</h3>
+            {/* tab switch */}
+            <div className="tabContainer">
+              <div className="switchTabs twoCols tab100 bgWhite mt-1">
+                {tabs.map((tab, index) => (
+                  <button
+                    key={"tab-" + index}
+                    className={`capitalize switchBtn ${
+                      tab.isActive ? "active" : ""
+                    }`}
+                    onClick={() => toggleTabs(tab)}
+                  >
+                    {tab.name}
+                  </button>
+                ))}
+              </div>
+            </div>
             <div className="content mt-2">
-              <BankCard name={"MasterCard"} />
-              <BankCard name={"Sterling"} />
+              <Loader
+                isLoading={isBankBeneLoading || isCryptoBeneLoading}
+                height={"100px"}
+                variety={"dark"}
+              />
+              {renderBeneElem()}
             </div>
             <button className="cardLinkBtn" onClick={toBeneficiaries}>
               Manage beneficiaries
@@ -179,6 +324,12 @@ const Wallet = () => {
       <WithdrawWalletModal
         isOpen={withdrawWalletModal}
         onClose={() => setWithdrawWalletModal(false)}
+      />
+
+      <QuickWithdraw
+        isOpen={isQuickWithdrawModalOpen}
+        onClose={closeQuickWithdrawModal}
+        beneficiary={quickWithdrawForm}
       />
 
       <Modal isOpen={no2FAModal} onClose={() => setNo2FAModal(false)}>
