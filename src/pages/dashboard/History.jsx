@@ -66,15 +66,6 @@ const History = () => {
 
         {/* aside */}
         <aside className={"asideViewContainer"}>
-          <div className="bankCardsContainer">
-            <h3>Banks and Cards</h3>
-            <div className="content mt-2">
-              <BankCard name={"MasterCard"} />
-              <BankCard name={"Sterling"} />
-            </div>
-            <button className="cardLinkBtn">Link a bank or card</button>
-          </div>
-
           {/* customer corner */}
           <div className={"contactCornerContainer"}>
             <Text tag={"p"} className={"f16 satoshi-bold-text"}>
