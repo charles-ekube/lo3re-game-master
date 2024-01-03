@@ -1,21 +1,17 @@
 import React, { useEffect, useState } from "react";
 import Logo from "../../assets/images/logo.svg";
 import Speaker from "../../assets/images/speaker.svg";
-import GoogleLogo from "../../assets/images/google.svg";
 import Text from "../../utils/CustomText";
-import Or from "../../assets/images/or.svg";
-import CustomInput from "../../utils/CustomInput";
 import Button from "../../utils/CustomButton";
 import { useLocation, useNavigate } from "react-router-dom";
-import OtpInput from "../../utils/CustomOtp";
 import { getAuth } from "firebase/auth";
 import { retrieveFlow, setToken } from "../../utils/Helpers";
 
 const ConfirmVerify = () => {
-  const [pin, setPin] = useState("");
-  const onChange = (value) => {
-    setPin(value);
-  };
+  // const [pin, setPin] = useState("");
+  // const onChange = (value) => {
+  //   setPin(value);
+  // };
   const navigate = useNavigate();
   const toDashboard = () => {
     navigate("/dashboard", {});
@@ -28,7 +24,7 @@ const ConfirmVerify = () => {
   const searchParams = new URLSearchParams(location.search);
   const apiKey = searchParams.get("apiKey");
 
-  const [apiKeyContent, setApiKeyContent] = useState("");
+  // const [apiKeyContent, setApiKeyContent] = useState("");
   const [userDetails, setUserDetails] = useState({});
   const [storeFlow, setFlow] = useState(null);
   const getFlow = () => {
@@ -46,10 +42,10 @@ const ConfirmVerify = () => {
     console.log("uaaa", user);
     if (user !== null) {
       // The user object has basic properties such as display name, email, etc.
-      const displayName = user.displayName;
-      const email = user.email;
-      const photoURL = user.photoURL;
-      const emailVerified = user.emailVerified;
+      // const displayName = user.displayName;
+      // const email = user.email;
+      // const photoURL = user.photoURL;
+      // const emailVerified = user.emailVerified;
       setUserDetails(user);
       setToken(user.accessToken);
       console.log("rrr", user);
@@ -57,7 +53,7 @@ const ConfirmVerify = () => {
       // The user's ID, unique to the Firebase project. Do NOT use
       // this value to authenticate with your backend server, if
       // you have one. Use User.getToken() instead.
-      const uid = user.uid;
+      // const uid = user.uid;
     }
   };
 
@@ -167,7 +163,7 @@ const ConfirmVerify = () => {
     if (storeFlow === "login") {
       getUser();
     }
-  }, []);
+  }, [storeFlow]);
 
   return (
     <main className={"authMainContainer"}>

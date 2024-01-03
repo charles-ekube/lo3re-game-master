@@ -10,11 +10,14 @@ import CardIcon from "../../../assets/images/icons/card.png";
 import CryptoIcon from "../../../assets/images/icons/buy-crypto.png";
 import { showError, showSuccess } from "../../../utils/Alert";
 import { handleFirebaseError } from "../../../utils/Helpers";
+import { useRequestDepositMutation } from "../../../redux/services/walletApi";
 
 const FundWalletModal = ({ isOpen, onClose }) => {
   const [supportedCurrencies, setSupportedCurrencies] = useState([]);
   const [requestLoading, setRequestLoading] = useState(false);
   const [formStep, setFormStep] = useState(1);
+  const [requestDeposit, { isLoading: isRequestDepositLoading }] =
+    useRequestDepositMutation();
   const [rate, setRate] = useState({
     rate: "1",
     symbol: "$",
@@ -129,47 +132,43 @@ const FundWalletModal = ({ isOpen, onClose }) => {
 
       // process deposit request
       const payMethod = paymentMethods.filter((val) => val.isActive === true);
-      setRequestLoading(true);
-      try {
-        const fData = {
-          ...depositFormStates,
-          method: payMethod[0]?.code,
-        };
-        const res = await http.post("wallets/deposits", fData);
-        setRequestLoading(false);
-
-        // console.log(res);
-        let checkoutUrl = "";
-        if (depositFormStates.currency === "ngn") {
-          checkoutUrl = res?.meta?.data?.authorization_url;
-        } else {
-          if (payMethod[0]?.code === "credit_card") {
-            checkoutUrl = res?.meta?.url;
-          } else if (payMethod[0]?.code === "crypto") {
-            checkoutUrl = res?.meta?.hosted_url;
+      const fData = {
+        ...depositFormStates,
+        method: payMethod[0]?.code,
+      };
+      await requestDeposit(fData)
+        .unwrap()
+        .then((resp) => {
+          let checkoutUrl = "";
+          if (depositFormStates.currency === "ngn") {
+            checkoutUrl = resp?.meta?.data?.authorization_url;
+          } else {
+            if (payMethod[0]?.code === "credit_card") {
+              checkoutUrl = resp?.meta?.url;
+            } else if (payMethod[0]?.code === "crypto") {
+              checkoutUrl = resp?.meta?.hosted_url;
+            }
           }
-        }
 
-        window.open(checkoutUrl, "_blank");
-        onClose();
-        setFormStep(1);
-        setRate({
-          rate: "1",
-          symbol: "$",
+          window.open(checkoutUrl, "_blank");
+          onClose();
+          setFormStep(1);
+          setRate({
+            rate: "1",
+            symbol: "$",
+          });
+          setDepositFormStates({
+            currency: "usd",
+            amount: "",
+          });
+          showSuccess(
+            "Request processing, you will be redirected to a checkout page"
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+          handleFirebaseError(err);
         });
-        setDepositFormStates({
-          currency: "usd",
-          amount: "",
-        });
-        showSuccess(
-          "Request processing, you will be redirected to a checkout page"
-        );
-      } catch (error) {
-        console.log(error);
-        setRequestLoading(false);
-        handleFirebaseError(error);
-        // showError("An error occurred, try again later");
-      }
     }
   };
 
@@ -250,6 +249,7 @@ const FundWalletModal = ({ isOpen, onClose }) => {
               text={formStep > 1 ? "Submit" : "Next"}
               variant={"primary"}
               onClick={processFundWallet}
+              loading={isRequestDepositLoading}
             />
           </div>
         </div>

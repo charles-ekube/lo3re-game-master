@@ -9,8 +9,8 @@ import { useNavigate } from "react-router-dom";
 import {
   createUserWithEmailAndPassword,
   updateProfile,
-  GoogleAuthProvider,
-  signInWithPopup,
+  // GoogleAuthProvider,
+  // signInWithPopup,
   signOut,
   sendEmailVerification,
 } from "firebase/auth";
@@ -78,23 +78,43 @@ const SignUp = () => {
 
   const validateCode = async () => {
     const obj = { referral_code: referralCode };
-    setState({ ...state, referralCodeError: "" });
+    setState((state) => ({ ...state, referralCodeError: "" }));
     try {
       const res = await http.post(`auth/affiliate/validate`, obj);
       console.log(res);
       return { failed: false, result: res };
     } catch (error) {
       console.log(error);
-      setState({ ...state, referralCodeError: error[1].message });
+      setState((state) => ({
+        ...state,
+        referralCodeError: error[1].message,
+      }));
       return { failed: true, error: error };
     }
   };
 
   useEffect(() => {
+    const validateCode = async () => {
+      const obj = { referral_code: referralCode };
+      setState((state) => ({ ...state, referralCodeError: "" }));
+      try {
+        const res = await http.post(`auth/affiliate/validate`, obj);
+        console.log(res);
+        return { failed: false, result: res };
+      } catch (error) {
+        console.log(error);
+        setState((state) => ({
+          ...state,
+          referralCodeError: error[1].message,
+        }));
+        return { failed: true, error: error };
+      }
+    };
+
     if (referralCode !== "") {
       validateCode();
     }
-  }, []);
+  }, [referralCode]);
 
   const register = async () => {
     if (
@@ -167,43 +187,43 @@ const SignUp = () => {
     }
   };
 
-  const signInWithGoogle = async () => {
-    try {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
+  // const signInWithGoogle = async () => {
+  //   try {
+  //     const provider = new GoogleAuthProvider();
+  //     const result = await signInWithPopup(auth, provider);
 
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
+  //     // This gives you a Google Access Token. You can use it to access the Google API.
+  //     const credential = GoogleAuthProvider.credentialFromResult(result);
+  //     const token = credential.accessToken;
 
-      // The signed-in user info.
-      const user = result.user;
+  //     // The signed-in user info.
+  //     const user = result.user;
 
-      // IdP data available using getAdditionalUserInfo(result)
-      // ...
+  //     // IdP data available using getAdditionalUserInfo(result)
+  //     // ...
 
-      console.log("Google Sign-In successful:", user);
-    } catch (error) {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
+  //     console.log("Google Sign-In successful:", user);
+  //   } catch (error) {
+  //     // Handle Errors here.
+  //     const errorCode = error.code;
+  //     const errorMessage = error.message;
 
-      // The email of the user's account used.
-      const email = error.customData?.email;
+  //     // The email of the user's account used.
+  //     const email = error.customData?.email;
 
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
+  //     // The AuthCredential type that was used.
+  //     const credential = GoogleAuthProvider.credentialFromError(error);
 
-      console.error(
-        "Google Sign-In error:",
-        errorCode,
-        errorMessage,
-        email,
-        credential
-      );
-      handleFirebaseError(error);
-    }
-  };
+  //     console.error(
+  //       "Google Sign-In error:",
+  //       errorCode,
+  //       errorMessage,
+  //       email,
+  //       credential
+  //     );
+  //     handleFirebaseError(error);
+  //   }
+  // };
 
   return (
     <main className={"authMainContainer"}>

@@ -1,19 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Text from "../../utils/CustomText";
 import ContactCard from "../../components/dashboard/cards/ContactCard";
 import TransactionHistory from "../../components/dashboard/wallet/TransactionHistory";
-import BankCard from "../../components/dashboard/wallet/BankCard";
 import "../../assets/styles/history.css";
 import { useFetchTransactionsQuery } from "../../redux/services/walletApi";
 import Loader from "../../utils/Loader";
 import { showError } from "../../utils/Alert";
+import Pagination from "../../utils/Pagination";
 
 const History = () => {
+  const [currentPage, setCurrentPage] = useState(1);
   const {
     data: transactionHistory,
-    isLoading: isTransactionHistoryLoading,
+    isFetching: isTransactionHistoryLoading,
     error: transactionHistoryError,
-  } = useFetchTransactionsQuery();
+  } = useFetchTransactionsQuery(`page=${currentPage}`);
 
   useEffect(() => {
     if (transactionHistoryError) {
@@ -35,11 +36,6 @@ const History = () => {
               <h3>Transactions history</h3>
             </div>
             <div className="historyContent">
-              <Loader
-                isLoading={isTransactionHistoryLoading}
-                variety="dark"
-                height="100px"
-              />
               {!transactionHistory?.data?.length &&
               !isTransactionHistoryLoading ? (
                 <p className="text-muted text-center mt40">
@@ -48,18 +44,44 @@ const History = () => {
               ) : (
                 ""
               )}
-              {transactionHistory?.data?.map((value) => (
-                <TransactionHistory
-                  key={"tnx-" + value?.id}
-                  txnId={value?.id}
-                  type={value?.type}
-                  amount={value?.amount}
-                  currency={value?.currency}
-                  date={value?.createdAt?._seconds}
-                  status={value?.status}
-                  method={value?.method}
-                />
-              ))}
+              {!isTransactionHistoryLoading &&
+                transactionHistory?.data?.map((value) => {
+                  let checkoutUrl = "";
+
+                  if (value?.currency === "ngn") {
+                    checkoutUrl = value?.meta?.data?.authorization_url;
+                  } else {
+                    if (value?.method === "credit_card") {
+                      checkoutUrl = value?.meta?.url;
+                    } else if (value?.method === "crypto") {
+                      checkoutUrl = value?.meta?.hosted_url;
+                    }
+                  }
+                  return (
+                    <TransactionHistory
+                      key={"tnx-" + value?.id}
+                      txnId={value?.id}
+                      type={value?.type}
+                      amount={value?.amount}
+                      currency={value?.currency}
+                      date={value?.createdAt?._seconds}
+                      status={value?.status}
+                      method={value?.method}
+                      checkoutUrl={checkoutUrl}
+                    />
+                  );
+                })}
+              <Loader
+                isLoading={isTransactionHistoryLoading}
+                variety="dark"
+                height="50px"
+              />
+              <Pagination
+                limit={transactionHistory?.limit}
+                curPage={transactionHistory?.page}
+                totalItems={transactionHistory?.total}
+                paginate={(num) => setCurrentPage(num)}
+              />
             </div>
           </div>
         </div>

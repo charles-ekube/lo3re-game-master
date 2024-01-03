@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import CardSlider from "../../components/dashboard/overview/CardSlider";
 import Text from "../../utils/CustomText";
 import ContactCard from "../../components/dashboard/cards/ContactCard";

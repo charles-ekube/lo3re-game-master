@@ -5,6 +5,7 @@ import Modal from "../../../utils/Modal";
 import useCopyToClipBoard from "../../../hooks/useCopyToClipboard";
 import { LuCopy } from "react-icons/lu";
 import { AiOutlineCheck } from "react-icons/ai";
+import CustomButtonII from "../../../utils/CustomButtonII";
 
 const TransactionHistory = ({
   type,
@@ -14,6 +15,7 @@ const TransactionHistory = ({
   method,
   txnId,
   status,
+  checkoutUrl = "",
 }) => {
   const [showTxnModal, setShowTxnModal] = useState(false);
   const { handleCopyClick, isCopied } = useCopyToClipBoard();
@@ -34,6 +36,10 @@ const TransactionHistory = ({
     }
 
     return txt;
+  };
+
+  const redirectToCheckout = () => {
+    window.open(checkoutUrl, "_blank");
   };
 
   return (
@@ -117,6 +123,17 @@ const TransactionHistory = ({
               </div>
             </div>
           </div>
+          {status?.toLowerCase() === "pending" && (
+            <div>
+              <CustomButtonII
+                text={"Checkout"}
+                variant={"light"}
+                className={"w100 mt35"}
+                onClick={redirectToCheckout}
+                centerText
+              />
+            </div>
+          )}
         </div>
       </Modal>
     </>

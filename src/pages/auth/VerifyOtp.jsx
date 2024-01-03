@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import Logo from "../../assets/images/logo.svg";
-import GoogleLogo from "../../assets/images/google.svg";
 import Text from "../../utils/CustomText";
-import Or from "../../assets/images/or.svg";
-import CustomInput from "../../utils/CustomInput";
 import Button from "../../utils/CustomButton";
 import { useNavigate } from "react-router-dom";
 import OtpInput from "../../utils/CustomOtp";

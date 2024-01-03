@@ -40,9 +40,9 @@ const AddLottery = () => {
 
   useEffect(() => {
     if (fromPreview) {
-      setFormState({ ...formState, ...reduxFormState });
+      setFormState((state) => ({ ...state, ...reduxFormState }));
     }
-  }, [fromPreview]);
+  }, [fromPreview, reduxFormState]);
 
   const handleFile = (e) => {
     let images = e.target.files;

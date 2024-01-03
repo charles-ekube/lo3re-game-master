@@ -146,7 +146,7 @@ const Wallet = () => {
           )}
           {cryptoBeneficiaries?.map((value, index) => {
             if (index > 1) {
-              return <></>;
+              return null;
             }
 
             return (
@@ -172,7 +172,7 @@ const Wallet = () => {
           )}
           {bankBeneficiaries?.map((value, index) => {
             if (index > 1) {
-              return <></>;
+              return null;
             }
 
             return (
@@ -294,7 +294,7 @@ const Wallet = () => {
                 ))}
               </div>
             </div>
-            <div className="content mt-2">
+            <div className="content">
               <Loader
                 isLoading={isBankBeneLoading || isCryptoBeneLoading}
                 height={"100px"}

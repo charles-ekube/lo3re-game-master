@@ -1,6 +1,5 @@
 import React from "react";
 import Text from "../../../utils/CustomText";
-import Button from "../../../utils/CustomButton";
 import CustomButtonII from "../../../utils/CustomButtonII";
 
 const SliderCard = ({ src, title, subTitle, btnText }) => {

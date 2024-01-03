@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import OverviewEmptyState from "../../components/dashboard/overview/EmptyState";
-import { getAuth } from "firebase/auth";
 import CardSlider from "../../components/dashboard/overview/CardSlider";
-import TopNav from "../../components/dashboard/widgets/TopNav";
 import Text from "../../utils/CustomText";
 import ContactCard from "../../components/dashboard/cards/ContactCard";
 import { useSelector } from "react-redux";
 
 const Overview = () => {
-  const [lotteries, setLotteries] = useState([]);
+  const [lotteries] = useState([]);
   const userDetails = useSelector((state) => state.general.userDetail);
 
   return (

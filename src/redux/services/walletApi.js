@@ -43,6 +43,15 @@ export const walletApi = createApi({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["transactions"],
+    }),
+    requestDeposit: builder.mutation({
+      query: (data) => ({
+        url: `wallets/deposits`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["transactions"],
     }),
     fetchSupportedBanks: builder.query({
       query: () => `/wallets/supported-banks`,
@@ -64,4 +73,5 @@ export const {
   useFetchTransactionsQuery,
   useFetchSupportedBanksQuery,
   useFetchSupportedCryptosQuery,
+  useRequestDepositMutation,
 } = walletApi;

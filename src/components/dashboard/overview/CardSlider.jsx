@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -28,19 +28,44 @@ export default function CardSlider() {
         className="mySwiper"
       >
         <SwiperSlide>
-          <SliderCard src={ArtWork} title={"Win 30% EVERYTIME!"} subTitle={"Consilio difficultates superare potest esse, immo"} btnText={"Visit blog"} />
+          <SliderCard
+            src={ArtWork}
+            title={"Win 30% EVERYTIME!"}
+            subTitle={"Consilio difficultates superare potest esse, immo"}
+            btnText={"Visit blog"}
+          />
         </SwiperSlide>
         <SwiperSlide>
-          <SliderCard src={ArtWork} title={"Win 30% EVERYTIME!"} subTitle={"Consilio difficultates superare potest esse, immo"} btnText={"Visit blog"} />
+          <SliderCard
+            src={ArtWork}
+            title={"Win 30% EVERYTIME!"}
+            subTitle={"Consilio difficultates superare potest esse, immo"}
+            btnText={"Visit blog"}
+          />
         </SwiperSlide>
         <SwiperSlide>
-          <SliderCard src={ArtWork} title={"Win 30% EVERYTIME!"} subTitle={"Consilio difficultates superare potest esse, immo"} btnText={"Visit blog"} />
+          <SliderCard
+            src={ArtWork}
+            title={"Win 30% EVERYTIME!"}
+            subTitle={"Consilio difficultates superare potest esse, immo"}
+            btnText={"Visit blog"}
+          />
         </SwiperSlide>
         <SwiperSlide>
-          <SliderCard src={ArtWork} title={"Win 30% EVERYTIME!"} subTitle={"Consilio difficultates superare potest esse, immo"} btnText={"Visit blog"} />
+          <SliderCard
+            src={ArtWork}
+            title={"Win 30% EVERYTIME!"}
+            subTitle={"Consilio difficultates superare potest esse, immo"}
+            btnText={"Visit blog"}
+          />
         </SwiperSlide>
         <SwiperSlide>
-          <SliderCard src={ArtWork} title={"Win 30% EVERYTIME!"} subTitle={"Consilio difficultates superare potest esse, immo"} btnText={"Visit blog"} />
+          <SliderCard
+            src={ArtWork}
+            title={"Win 30% EVERYTIME!"}
+            subTitle={"Consilio difficultates superare potest esse, immo"}
+            btnText={"Visit blog"}
+          />
         </SwiperSlide>
       </Swiper>
     </>

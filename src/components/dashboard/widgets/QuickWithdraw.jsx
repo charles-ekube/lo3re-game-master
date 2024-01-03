@@ -83,7 +83,7 @@ const QuickWithdraw = ({ isOpen, onClose, beneficiary }) => {
         symbol: getRate[0].symbol,
       });
     }
-  }, [formState.currency]);
+  }, [formState.currency, supportedCurrencies]);
 
   // fetch currencies
   useEffect(() => {

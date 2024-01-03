@@ -228,6 +228,11 @@ button {
 
 .btn-ghost {
   background-color: transparent;
+  border: none;
+}
+
+.btn-ghost:hover {
+  background-color: var(--lightGrey);
 }
 
 .bgGrey {

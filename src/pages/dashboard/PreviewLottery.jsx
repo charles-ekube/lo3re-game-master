@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Modal from "../../utils/Modal";
 import { updateAddLotteryForm } from "../../redux/features/generalSlice";
+import { useCreateLotteryMutation } from "../../redux/services/lotteryApi";
+import { showError } from "../../utils/Alert";
 
 function b64toBlob(b64Data, contentType, sliceSize) {
   contentType = contentType || "";
@@ -36,10 +38,12 @@ function b64toBlob(b64Data, contentType, sliceSize) {
 
 const PreviewLottery = () => {
   const navigate = useNavigate();
-  const [file, setFile] = useState();
+  // const [file, setFile] = useState();
   const dispatch = useDispatch();
   const [successModal, setSuccessModal] = useState(false);
   const lotteryForm = useSelector((state) => state.general.addLotteryForm);
+  const [createLottery, { isLoading: isCreateLotteryLoading }] =
+    useCreateLotteryMutation();
   const localImg = localStorage["lotteryPhoto"];
 
   const getPhoto = () => {
@@ -62,13 +66,41 @@ const PreviewLottery = () => {
       return;
     }
 
-    setFile(photo);
+    // setFile(photo);
   }, []);
 
-  const submitForm = () => {
-    //   onSuccess open modal and empty reduxLotteryForm
-    setSuccessModal(true);
-    dispatch(updateAddLotteryForm({}));
+  const submitForm = async () => {
+    const fData = new FormData();
+
+    fData.append("title", lotteryForm.lotteryName);
+    fData.append("description", lotteryForm.description);
+    fData.append("cause", "");
+    fData.append("ticket_price", lotteryForm.ticketPrice);
+    fData.append("jackpot", lotteryForm.jackpotPrize);
+    fData.append("ticket_goal", lotteryForm.ticketCapacity);
+    fData.append("starts_on", lotteryForm.lotteryStarts);
+    fData.append("ends_on", lotteryForm.lotteryEnds);
+    fData.append(
+      "socials",
+      JSON.stringify({
+        facebook: lotteryForm.facebookLink,
+        telegram: lotteryForm.telegramLink,
+        whatsapp: lotteryForm.whatsapp,
+        others: lotteryForm.others,
+      })
+    );
+
+    await createLottery(fData)
+      .unwrap()
+      .then(() => {
+        //   onSuccess open modal and empty reduxLotteryForm
+        setSuccessModal(true);
+        console.log(lotteryForm);
+        dispatch(updateAddLotteryForm({}));
+      })
+      .catch((err) => {
+        showError(err?.message || err?.data?.message || "An error occurred");
+      });
   };
 
   return (
@@ -230,6 +262,7 @@ const PreviewLottery = () => {
                   text={"Publish"}
                   className="btnLg"
                   type="button"
+                  loading={isCreateLotteryLoading}
                   onClick={submitForm}
                 />
               </div>

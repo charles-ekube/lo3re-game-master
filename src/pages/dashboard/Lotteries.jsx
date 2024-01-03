@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Text from "../../utils/CustomText";
 import ContactCard from "../../components/dashboard/cards/ContactCard";
 import BalanceCard from "../../components/dashboard/wallet/BalanceCard";
-import { IoChevronForward } from "react-icons/io5";
 import CardSlider from "../../components/dashboard/overview/CardSlider";
 import { FaEllipsis } from "react-icons/fa6";
 import { MdVerified } from "react-icons/md";

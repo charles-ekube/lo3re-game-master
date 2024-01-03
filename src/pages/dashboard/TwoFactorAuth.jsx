@@ -302,6 +302,7 @@ const TFaModal = ({ isOpen, onClose, is2faActive }) => {
           console.log(resp);
           showSuccess("Token deactivation successful");
           dispatch(accountApi.util.invalidateTags(["profile"]));
+          localStorage.removeItem("TFAVerified")
           onClose();
         })
         .catch((err) => {
@@ -314,6 +315,7 @@ const TFaModal = ({ isOpen, onClose, is2faActive }) => {
         .then((resp) => {
           console.log(resp);
           showSuccess("Token activation successful");
+          localStorage.setItem("TFAVerified", JSON.stringify(true));
           dispatch(accountApi.util.invalidateTags(["profile"]));
           onClose();
         })
