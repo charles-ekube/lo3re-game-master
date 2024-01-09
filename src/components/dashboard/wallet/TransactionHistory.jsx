@@ -29,9 +29,15 @@ const TransactionHistory = ({
 
   const statusClass = () => {
     let txt = "textWarning";
-    if (status?.toLowerCase() === "success") {
+    if (
+      status?.toLowerCase() === "success" ||
+      status?.toLowerCase() === "completed"
+    ) {
       txt = "textSuccess";
-    } else if (status?.toLowerCase() === "failed") {
+    } else if (
+      status?.toLowerCase() === "failed" ||
+      status?.toLowerCase() === "expired"
+    ) {
       txt = "textDanger";
     }
 
