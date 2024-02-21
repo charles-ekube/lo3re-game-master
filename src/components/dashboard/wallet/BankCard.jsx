@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import BankIcon from "../../../assets/images/icons/bank.png";
 import http from "../../../utils/utils";
+import cardStyles from "../../../assets/styles/cardStyles.module.css";
 
 function shortenText(text, maxLength) {
   if (text && text.length > maxLength) {
@@ -92,16 +93,19 @@ const BankCard = ({ beneficiary, type, onClick }) => {
 
   return (
     <>
-      <div className="flexRow justifyBetween bankCard" onClick={onClick}>
+      <div
+        className={`flexRow justifyBetween ${cardStyles.bankCard}`}
+        onClick={onClick}
+      >
         <div className="flexRow gap-1">
-          <div className="icon">
+          <div className={cardStyles.icon}>
             <img src={icon} alt="" />
           </div>
           <div className="FlexColumn justifyCenter">
-            <p className="title" title={titleRaw}>
+            <p className={cardStyles.title} title={titleRaw}>
               {title}
             </p>
-            <p className="subtitle">
+            <p className={cardStyles.subtitle}>
               <>
                 <small>{subLabel}:</small> {subtitle}
               </>

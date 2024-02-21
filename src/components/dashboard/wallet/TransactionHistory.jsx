@@ -6,6 +6,7 @@ import useCopyToClipBoard from "../../../hooks/useCopyToClipboard";
 import { LuCopy } from "react-icons/lu";
 import { AiOutlineCheck } from "react-icons/ai";
 import CustomButtonII from "../../../utils/CustomButtonII";
+import historyStyles from "../../../assets/styles/history.module.css";
 
 const TransactionHistory = ({
   type,
@@ -76,40 +77,46 @@ const TransactionHistory = ({
       </div>
 
       <Modal isOpen={showTxnModal} onClose={() => setShowTxnModal(false)}>
-        <h2 className="modal-amount satoshi-text">
+        <h2 className={`${historyStyles.modalAmount} satoshi-text`}>
           {isCreditTxn ? "+" + amount : "-" + amount} {currency.toUpperCase()}
         </h2>
         <div
-          className={`pill ${isCreditTxn ? "iconBg-success" : "iconBg-danger"}`}
+          className={`${historyStyles.pill} ${
+            isCreditTxn ? "iconBg-success" : "iconBg-danger"
+          }`}
         >
-          <div className="pill-icon">
+          <div className={historyStyles.pillIcon}>
             <img src={isCreditTxn ? WalletAdd : WalletMinus} alt="" />
           </div>
           <p>
             <span className="capitalize">{type}</span> | {newDate}
           </p>
         </div>
-        <div className="modal-body">
-          <div className="flexRow justifyBetween modalItemRow">
+        <div className={historyStyles.modalBody}>
+          <div
+            className={`flexRow justifyBetween ${historyStyles.modalItemRow}`}
+          >
             <p className="text-muted">Transaction method</p>
             <p className="capitalize">{method.replace(/_/g, " ")}</p>
           </div>
 
-          <div className="flexRow justifyBetween modalItemRow">
+          <div
+            className={`flexRow justifyBetween ${historyStyles.modalItemRow}`}
+          >
             <p className="text-muted">Status</p>
             <p className={"capitalize " + statusClass()}>{status}</p>
           </div>
-          {/* <div className="flexRow justifyBetween modalItemRow">
+          {/* <div className={`flexRow justifyBetween ${historyStyles.modalItemRow}`}>
             <p className="text-muted">From</p>
             <p>-</p>
           </div>
 
-          <div className="flexRow justifyBetween modalItemRow">
+          <div className={`flexRow justifyBetween ${historyStyles.modalItemRow}`}>
             <p className="text-muted">Account name</p>
             <p>-</p>
           </div>
 
-          <div className="flexRow justifyBetween modalItemRow">
+          <div className={`flexRow justifyBetween ${historyStyles.modalItemRow}`}>
             <p className="text-muted">Bank details</p>
             <div>
               <p className="mb-1">-</p>
@@ -117,7 +124,9 @@ const TransactionHistory = ({
             </div>
           </div> */}
 
-          <div className="flexRow justifyBetween modalItemRow">
+          <div
+            className={`flexRow justifyBetween ${historyStyles.modalItemRow}`}
+          >
             <p className="text-muted">Transaction ID</p>
             <div className="flexRow alignCenter gap-1">
               <p className="text-muted">{txnId}</p>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { PiEyeSlash, PiEyeLight } from "react-icons/pi";
+import cardStyles from "../../../assets/styles/cardStyles.module.css";
 
 const BalanceCard = ({ title, figure, subtitle, isBalanceLoading }) => {
   const [hideBalance, setHideBalance] = useState(false);
@@ -14,23 +15,25 @@ const BalanceCard = ({ title, figure, subtitle, isBalanceLoading }) => {
 
   return (
     <>
-      <div className="balanceCard">
+      <div className={cardStyles.balanceCard}>
         <div className="flexRow alignCenter">
-          <p className="cardTitle">{title}</p>
+          <p className={cardStyles.cardTitle}>{title}</p>
           {hideBalance ? (
             <PiEyeLight
-              className="hideIcon"
+              className={cardStyles.hideIcon}
               onClick={() => setHideBalance(!hideBalance)}
             />
           ) : (
             <PiEyeSlash
-              className="hideIcon"
+              className={cardStyles.hideIcon}
               onClick={() => setHideBalance(!hideBalance)}
             />
           )}
         </div>
-        <p className="balance my-1">{hideBalance ? "***" : `$${figure}`}</p>
-        <p className="subtitle">{subtitle}</p>
+        <p className={`${cardStyles.balance} my-1`}>
+          {hideBalance ? "***" : `$${figure}`}
+        </p>
+        <p className={cardStyles.cardTitle}>{subtitle}</p>
       </div>
     </>
   );

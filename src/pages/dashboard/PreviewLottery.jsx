@@ -4,7 +4,7 @@ import ContactCard from "../../components/dashboard/cards/ContactCard";
 import CardSlider from "../../components/dashboard/overview/CardSlider";
 import Camera from "../../assets/images/camera.png";
 import HHG from "../../assets/images/hand-holding-gift.png";
-import "../../assets/styles/lotteries.css";
+import lotteryStyles from "../../assets/styles/lotteries.module.css";
 import CustomButtonII from "../../utils/CustomButtonII";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -106,11 +106,11 @@ const PreviewLottery = () => {
   return (
     <>
       <section className="mainContainer">
-        <div className="mainContent addLottery">
+        <div className={`mainContent ${lotteryStyles.addLottery}`}>
           <p>
             Lotteries<b>/Create Lottery</b>
           </p>
-          <header className="addLotteryHeader">
+          <header className={lotteryStyles.addLotteryHeader}>
             <h2>Confirm Details</h2>
             <p>
               Please check and confirm that all hte information you've added
@@ -118,11 +118,15 @@ const PreviewLottery = () => {
             </p>
           </header>
           <div className="flexRow alignCenter avatarProfileContainer">
-            <div className="avatar">
+            <div className={lotteryStyles.avatar}>
               {localImg ? (
-                <img src={localImg || ""} alt="" className="fileImg" />
+                <img
+                  src={localImg || ""}
+                  alt=""
+                  className={lotteryStyles.fileImg}
+                />
               ) : (
-                <img src={Camera} alt="" className="cameraImg" />
+                <img src={Camera} alt="" className={lotteryStyles.cameraImg} />
               )}
             </div>
             <div>
@@ -150,9 +154,9 @@ const PreviewLottery = () => {
               </div>
             </div>
           </div>
-          <form className="lotteryForm">
-            <div className="flexRow justifyBetween col2">
-              <div className="inputContainer">
+          <form className={lotteryStyles.lotteryForm}>
+            <div className={`flexRow justifyBetween ${lotteryStyles.col2}`}>
+              <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
                 <label>Ticket price</label>
                 <input
                   type="text"
@@ -162,7 +166,7 @@ const PreviewLottery = () => {
                   name="ticketPrice"
                 />
               </div>
-              <div className="inputContainer">
+              <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
                 <label>Ticket capacity</label>
                 <input
                   type="number"
@@ -174,8 +178,8 @@ const PreviewLottery = () => {
               </div>
             </div>
 
-            <div className="formDesc">
-              <div className="inputContainer">
+            <div className={lotteryStyles.formDesc}>
+              <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
                 <label>Description</label>
                 <textarea
                   className="formInput"
@@ -188,8 +192,10 @@ const PreviewLottery = () => {
               </div>
             </div>
 
-            <div className="flexRow justifyBetween col3">
-              <div className="inputContainer">
+            <div
+              className={`flexRow justifyBetween ${lotteryStyles.col3} ${lotteryStyles.flexRow}`}
+            >
+              <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
                 <label>Telegram link</label>
                 <input
                   type="text"
@@ -200,7 +206,7 @@ const PreviewLottery = () => {
                   disabled
                 />
               </div>
-              <div className="inputContainer">
+              <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
                 <label>Facebook link</label>
                 <input
                   type="text"
@@ -211,7 +217,7 @@ const PreviewLottery = () => {
                   disabled
                 />
               </div>
-              <div className="inputContainer">
+              <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
                 <label>WhatsApp</label>
                 <input
                   type="text"
@@ -222,7 +228,7 @@ const PreviewLottery = () => {
                   disabled
                 />
               </div>
-              <div className="inputContainer">
+              <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
                 <label>Others</label>
                 <input
                   type="text"
@@ -235,8 +241,10 @@ const PreviewLottery = () => {
               </div>
             </div>
 
-            <div className="formButtonContainer col3 gap-1">
-              <div className="btnGroup">
+            <div
+              className={`${lotteryStyles.formButtonContainer} ${lotteryStyles.col3} gap-1`}
+            >
+              <div className={lotteryStyles.btnGroup}>
                 <CustomButtonII
                   variant={"light"}
                   text={"Back"}
@@ -249,7 +257,7 @@ const PreviewLottery = () => {
                   }
                 />
               </div>
-              <div className="btnGroup">
+              <div className={lotteryStyles.btnGroup}>
                 <CustomButtonII
                   variant={"light"}
                   text={"Save to Drafts"}
@@ -283,10 +291,10 @@ const PreviewLottery = () => {
       </section>
 
       <Modal isOpen={successModal} hideCloseBtn={true} onClose={() => null}>
-        <div className="packageImg">
+        <div className={lotteryStyles.packageImg}>
           <img src={HHG} alt="" />
         </div>
-        <div className="text">
+        <div className={lotteryStyles.modalText}>
           <h2 className="satoshi-text">Package Secured</h2>
           <p>
             Your lottery has been set up and is now awaiting approval. Our team

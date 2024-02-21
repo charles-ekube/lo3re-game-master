@@ -3,7 +3,7 @@ import Text from "../../utils/CustomText";
 import ContactCard from "../../components/dashboard/cards/ContactCard";
 import CardSlider from "../../components/dashboard/overview/CardSlider";
 import Camera from "../../assets/images/camera.png";
-import "../../assets/styles/lotteries.css";
+import lotteryStyles from "../../assets/styles/lotteries.module.css";
 import CustomButtonII from "../../utils/CustomButtonII";
 import DatePicker from "react-datepicker";
 import { showError } from "../../utils/Alert";
@@ -118,24 +118,24 @@ const AddLottery = () => {
   return (
     <>
       <section className="mainContainer">
-        <div className="mainContent addLottery">
+        <div className={`mainContent ${lotteryStyles.addLottery}`}>
           <p>
             Lotteries<b>/Create Lottery</b>
           </p>
-          <header className="addLotteryHeader">
+          <header className={lotteryStyles.addLotteryHeader}>
             <h2>Lottery Details</h2>
             <p>Add the basic details about your lottery</p>
           </header>
           <div className="flexRow alignCenter avatarProfileContainer">
-            <div className="avatar">
+            <div className={lotteryStyles.avatar}>
               {preview || localImg ? (
                 <img
                   src={preview || localImg || ""}
                   alt=""
-                  className="fileImg"
+                  className={lotteryStyles.fileImg}
                 />
               ) : (
-                <img src={Camera} alt="" className="cameraImg" />
+                <img src={Camera} alt="" className={lotteryStyles.cameraImg} />
               )}
             </div>
             <div>
@@ -155,9 +155,9 @@ const AddLottery = () => {
               </p>
             </div>
           </div>
-          <form className="lotteryForm">
-            <div className="flexRow justifyBetween col3">
-              <div className="inputContainer">
+          <form className={lotteryStyles.lotteryForm}>
+            <div className={`flexRow justifyBetween ${lotteryStyles.col3}`}>
+              <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
                 <label>Lottery Name</label>
                 <input
                   type="text"
@@ -167,7 +167,7 @@ const AddLottery = () => {
                   name="lotteryName"
                 />
               </div>
-              <div className="inputContainer">
+              <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
                 <label>Ticket price</label>
                 <input
                   type="number"
@@ -177,7 +177,7 @@ const AddLottery = () => {
                   name="ticketPrice"
                 />
               </div>
-              <div className="inputContainer">
+              <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
                 <label>Jackpot prize</label>
                 <input
                   type="number"
@@ -189,8 +189,8 @@ const AddLottery = () => {
               </div>
             </div>
 
-            <div className="flexRow justifyBetween col3">
-              <div className="inputContainer">
+            <div className={`flexRow justifyBetween ${lotteryStyles.col3}`}>
+              <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
                 <label>Ticket capacity</label>
                 <input
                   type="number"
@@ -200,7 +200,7 @@ const AddLottery = () => {
                   name="ticketCapacity"
                 />
               </div>
-              <div className="inputContainer">
+              <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
                 <label>Lottery starts</label>
                 <DatePicker
                   selected={formState.lotteryStarts}
@@ -210,7 +210,7 @@ const AddLottery = () => {
                   className="formInput"
                 />
               </div>
-              <div className="inputContainer">
+              <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
                 <label>Lottery ends</label>
                 <DatePicker
                   selected={formState.lotteryEnds}
@@ -222,8 +222,8 @@ const AddLottery = () => {
               </div>
             </div>
 
-            <div className="formDesc">
-              <div className="inputContainer">
+            <div className={lotteryStyles.formDesc}>
+              <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
                 <label>Description</label>
                 <textarea
                   className="formInput"
@@ -236,8 +236,10 @@ const AddLottery = () => {
               </div>
             </div>
 
-            <div className="flexRow justifyBetween col3">
-              <div className="inputContainer">
+            <div
+              className={`flexRow justifyBetween ${lotteryStyles.col3} ${lotteryStyles.flexRow}`}
+            >
+              <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
                 <label>Telegram link</label>
                 <input
                   type="text"
@@ -248,7 +250,7 @@ const AddLottery = () => {
                   name="telegramLink"
                 />
               </div>
-              <div className="inputContainer">
+              <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
                 <label>Facebook link</label>
                 <input
                   type="text"
@@ -259,7 +261,7 @@ const AddLottery = () => {
                   name="facebookLink"
                 />
               </div>
-              <div className="inputContainer">
+              <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
                 <label>WhatsApp</label>
                 <input
                   type="text"
@@ -270,7 +272,7 @@ const AddLottery = () => {
                   name="whatsapp"
                 />
               </div>
-              <div className="inputContainer">
+              <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
                 <label>Others</label>
                 <input
                   type="text"
@@ -283,7 +285,7 @@ const AddLottery = () => {
               </div>
             </div>
 
-            <div className="formButtonContainer">
+            <div className={lotteryStyles.formButtonContainer}>
               <CustomButtonII
                 variant={"light"}
                 text={"Exit"}

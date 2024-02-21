@@ -67,6 +67,12 @@
   color: #727272;
 }
 
+.balanceCard {
+  width: calc(50% - 10px);
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
 
 
 /* bank card */
@@ -101,3 +107,10 @@
 }
 
 
+
+
+@media (max-width: 480px) {
+ .balanceCard {
+    width: 100%;
+  }
+}

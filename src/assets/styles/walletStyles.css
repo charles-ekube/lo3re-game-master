@@ -9,12 +9,6 @@
     justify-content: space-between;
 }
 
-.cardContainer .balanceCard {
-    width: calc(50% - 10px);
-    margin-bottom: 20px;
-    box-sizing: border-box;
-}
-
 .walletButton {
     background-color: #232A44;
     color: #FFF;

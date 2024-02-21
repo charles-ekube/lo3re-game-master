@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Text from "../../utils/CustomText";
 import ContactCard from "../../components/dashboard/cards/ContactCard";
 import TransactionHistory from "../../components/dashboard/wallet/TransactionHistory";
-import "../../assets/styles/history.css";
 import { useFetchTransactionsQuery } from "../../redux/services/walletApi";
 import Loader from "../../utils/Loader";
 import { showError } from "../../utils/Alert";

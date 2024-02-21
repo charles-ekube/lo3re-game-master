@@ -117,6 +117,12 @@
     background-color: var(--lightGreyII);
     margin-right: 27px;
     overflow: hidden;
+    width: 115px;
+    height: 115px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .addLottery .avatar > .cameraImg {
@@ -160,12 +166,12 @@
     margin-bottom: 16px;
 }
 
-.modal .packageImg > img {
+.packageImg > img {
     width: 160px;
     height: 160px;
 }
 
-.modal .text > p {
+.modalText > p {
     margin-top: 8px;
     margin-bottom: 40px;
 }
