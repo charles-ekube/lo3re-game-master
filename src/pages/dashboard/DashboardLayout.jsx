@@ -20,6 +20,7 @@ import WalletPin from "./WalletPin";
 import Logo from "../../assets/images/logo.svg";
 import Text from "../../utils/CustomText";
 import Beneficiaries from "./Beneficiaries";
+import Affiliate from "./Affiliate";
 
 const DashboardLayout = () => {
   const dispatch = useDispatch();
@@ -50,18 +51,7 @@ const DashboardLayout = () => {
 
   return (
     <>
-      {isUserLoading && (
-        <div className="fullScreenloader">
-          <div>
-            <img src={Logo} className={"animateLogo"} alt="logo" />
-            <div className={"verifyHeaderText"}>
-              <Text tag={"h2"} className={"f26 boldText"}>
-                Unlock Your Lucky Streak🍀✨
-              </Text>
-            </div>
-          </div>
-        </div>
-      )}
+      {isUserLoading && <FullScreenloader />}
       <main className={"dashboardLayoutContainer"}>
         {showSidebar && (
           <div
@@ -92,6 +82,7 @@ const DashboardLayout = () => {
               <Route path="2fa" element={<TwoFactorAuth />} />
               <Route path="wallet-pin" element={<WalletPin />} />
               <Route path="beneficiaries" element={<Beneficiaries />} />
+              <Route path="affiliate" element={<Affiliate />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
@@ -99,6 +90,21 @@ const DashboardLayout = () => {
         </section>
       </main>
     </>
+  );
+};
+
+const FullScreenloader = () => {
+  return (
+    <div className="fullScreenloader">
+      <div>
+        <img src={Logo} className={"animateLogo"} alt="logo" />
+        <div className={"verifyHeaderText"}>
+          <Text tag={"h2"} className={"f26 boldText"}>
+            Unlock Your Lucky Streak🍀✨
+          </Text>
+        </div>
+      </div>
+    </div>
   );
 };
 

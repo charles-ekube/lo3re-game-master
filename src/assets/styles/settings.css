@@ -86,6 +86,88 @@
     cursor: pointer;
 }
 
+.settingContent {
+    text-align: center;
+    width: 343px;
+    margin: auto;
+}
+
+.settingContent .sub-head {
+    font-size: 21px;
+    font-weight: 500;
+}
+
+.settingContent > p {
+    margin-top: 8px;
+    margin-bottom: 16px;
+    font-size: 17px;
+}
+
+.ref-code-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--lightGreyII);
+    border-radius: 8px;
+    padding: 10px 8px;
+    font-size: 14px;
+    color: #727272;
+}
+
+.ref-box {
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0px 5px 10px 0px #0000000F;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 36px;
+}
+
+.ref-box .stat {
+    background-color: #f3f3f3;
+    border: 1px solid #E8E8E8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px 25px;
+    border-radius: 100px;
+    width: max-content;
+}
+
+.ref-box .stat > .figure {
+    font-size: 27px;
+    font-weight: 700;
+    /* padding: 1px 12px; */
+    padding-right: 12px;
+    border-right: 2px solid #A6A6A6;
+}
+
+.ref-box .stat > .text {
+    font-size: 14px;
+    padding-left: 12px;
+}
+
+.ref-box > button {
+    border-radius: 8px;
+    padding-inline: 30px;
+    font-weight: 400;
+}
+
+.ref-list {
+    padding-left: 20px;
+}
+
+.ref-list li {
+    list-style: unset;
+    text-align: left;
+    font-size: 17px;
+    font-weight: 500;
+    padding: 16px 23px;
+    padding-left: 10px;
+    font-family: 'Satoshi', sans-serif;
+}
 
 .uploadBtn {
     padding: 14px 16px;
@@ -216,6 +298,7 @@
     .userStats > .stats {
         padding: 16px 18px;
     }
+    
 }
 
 
@@ -238,5 +321,17 @@
 
     .switchTabs {
         width: 80%;
+    }
+
+    .settingContent {
+        width: 90%;
+    }
+
+    .ref-box .stat {
+        padding: 16px 20px;
+    }
+
+    .ref-box .stat > .figure {
+        font-size: 20px;
     }
 }
