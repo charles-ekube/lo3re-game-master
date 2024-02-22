@@ -33,7 +33,7 @@ const Affiliate = () => {
             </div>
           </div>
 
-          <div className="settingContent">
+          <div className="affiliateContent">
             <h3 className="sub-head">Refer a friend bonus🎉</h3>
             <p>
               Introduce your friends to Lo3re and get bonuses and exclusive

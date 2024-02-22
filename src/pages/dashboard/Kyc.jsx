@@ -4,6 +4,7 @@ import Text from "../../utils/CustomText";
 import ContactCard from "../../components/dashboard/cards/ContactCard";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import { GoChevronRight } from "react-icons/go";
 
 const Kyc = () => {
   const navigate = useNavigate();
@@ -24,6 +25,12 @@ const Kyc = () => {
             />
             <div className="headerTitle text-center">KYC Verification</div>
           </div>
+
+          <div className="flexColumn" style={{ gap: "21px" }}>
+            <KycLevel />
+            <KycLevel />
+            <KycLevel />
+          </div>
         </div>
 
         {/* aside */}
@@ -38,6 +45,21 @@ const Kyc = () => {
         </aside>
       </section>
     </>
+  );
+};
+
+const KycLevel = () => {
+  return (
+    <div className="kyc-level">
+      <div>
+        <p className="kyc-title">Level 1</p>
+        <p className="kyc-type">BVN Verification</p>
+      </div>
+      <div>
+        <div className="status-pill pill-warning btnSm">Action required</div>
+        <GoChevronRight fontSize={"30px"} fontWeight={400} />
+      </div>
+    </div>
   );
 };
 

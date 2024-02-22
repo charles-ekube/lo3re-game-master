@@ -261,6 +261,10 @@ button {
   border-radius: 99px;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 .overlay, .fullScreenloader {
   width: 100%;
   height: 100%;
@@ -308,6 +312,11 @@ button {
 .pill-invalid {
   background-color: var(--lightGrey);
   color: var(--black);
+}
+
+.pill-warning {
+  background-color: #FDF2DC;
+  color: #F6BC2F;
 }
 
 .pill-success {

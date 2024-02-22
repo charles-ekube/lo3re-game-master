@@ -67,6 +67,7 @@
 
 .settings .link {
     color: #000;
+    cursor: pointer;
 }
 
 .headerTitle {
@@ -86,18 +87,18 @@
     cursor: pointer;
 }
 
-.settingContent {
+.affiliateContent {
     text-align: center;
     width: 343px;
     margin: auto;
 }
 
-.settingContent .sub-head {
+.affiliateContent .sub-head {
     font-size: 21px;
     font-weight: 500;
 }
 
-.settingContent > p {
+.affiliateContent > p {
     margin-top: 8px;
     margin-bottom: 16px;
     font-size: 17px;
@@ -195,6 +196,18 @@
     gap: 15px;
 }
 
+.follower-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.followerSearchContainer {
+    width: 100% !important;
+    margin-bottom: 16px;
+    gap: 8px;
+}
+
 
 
 /* 2FA */
@@ -215,6 +228,33 @@
     /* object-fit: contain; */
 }
 
+
+/* kyc */
+.kyc-level {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.kyc-level div {
+    display: flex;
+    gap: 50px;
+}
+
+.kyc-level div:nth-child(2) {
+    align-items: center;
+    gap: 10px;
+}
+
+.kyc-title {
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.kyc-type {
+    font-size: 17px;
+    color: #868686;
+}
 
 
 /* beneficiaries */
@@ -323,7 +363,7 @@
         width: 80%;
     }
 
-    .settingContent {
+    .affiliateContent {
         width: 90%;
     }
 
@@ -333,5 +373,19 @@
 
     .ref-box .stat > .figure {
         font-size: 20px;
+    }
+
+    
+    .kyc-level div:nth-child(1) {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .kyc-type {
+        font-size: 14px;
+    }
+
+    .kyc-level div:nth-child(2) {
+        gap: 5px;
     }
 }
