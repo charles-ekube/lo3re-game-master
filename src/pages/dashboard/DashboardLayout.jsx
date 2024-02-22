@@ -21,6 +21,7 @@ import Logo from "../../assets/images/logo.svg";
 import Text from "../../utils/CustomText";
 import Beneficiaries from "./Beneficiaries";
 import Affiliate from "./Affiliate";
+import PasswordReset from "./PasswordReset";
 
 const DashboardLayout = () => {
   const dispatch = useDispatch();
@@ -83,6 +84,7 @@ const DashboardLayout = () => {
               <Route path="wallet-pin" element={<WalletPin />} />
               <Route path="beneficiaries" element={<Beneficiaries />} />
               <Route path="affiliate" element={<Affiliate />} />
+              <Route path="password-reset" element={<PasswordReset />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

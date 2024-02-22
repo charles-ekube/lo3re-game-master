@@ -256,6 +256,11 @@
     color: #868686;
 }
 
+/* password reset */
+.password-reset-content {
+    width: 600px;
+    margin: auto;
+}
 
 /* beneficiaries */
 .deleteTitle {
