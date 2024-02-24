@@ -172,7 +172,8 @@
 
 .uploadBtn {
     padding: 14px 16px;
-    border: 2px solid #E8E8E8;
+    border: 2px solid var(--secondary);
+    color: var(--secondary);
     border-radius: 8px;
     margin: 15px 0;
     background-color: transparent;

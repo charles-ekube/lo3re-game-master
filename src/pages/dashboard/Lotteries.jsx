@@ -73,7 +73,7 @@ const Lotteries = () => {
               </div>
             </div>
             <div className="flexRow">
-              <LotteryGameCard />
+              <LotteryGameCard gameId={1} />
             </div>
           </div>
         </div>

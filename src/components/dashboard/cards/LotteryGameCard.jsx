@@ -2,11 +2,17 @@ import React from "react";
 import { FaEllipsis } from "react-icons/fa6";
 import { MdVerified } from "react-icons/md";
 import { TiGroup } from "react-icons/ti";
+import { useNavigate } from "react-router-dom";
 import lotteryStyles from "../../../assets/styles/lotteries.module.css";
 
-const LotteryGameCard = () => {
+const LotteryGameCard = ({ gameId }) => {
+  const navigate = useNavigate();
+
   return (
-    <div className={lotteryStyles.jackpotBox}>
+    <div
+      className={lotteryStyles.jackpotBox}
+      onClick={() => navigate(`/dashboard/lotteries/view-game/${gameId}`)}
+    >
       <div className={lotteryStyles.box}>
         <div className="flexRow justifyBetween alignCenter">
           <span className={lotteryStyles.timer}>11h 00m</span>

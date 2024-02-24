@@ -152,7 +152,6 @@
 * Add lottery
 ***********************************/
 .addLotteryHeader {
-    margin-top: 32px;
     margin-bottom: 16px;
 }
 
@@ -172,6 +171,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-shrink: 0;
 }
 
 .addLottery .avatar > .cameraImg {
@@ -274,9 +274,7 @@
 
 .step::after {
     content: '';
-    /* display: block; */
     background-color: #E1E2E5;
-    /* background-color: red; */
     width: 2px;
     height: 70px;
     position: absolute;
@@ -284,6 +282,258 @@
     left: 17px;
     z-index: 0;
 }
+
+.asideViewContainer {
+    display: block !important;
+}
+
+.step.active::after {
+    background-color: var(--secondary);
+}
+
+.viewGameAvatarContainer {
+    background-color: #F7F8FA;
+    border-radius: 16px;
+    padding: 16px;
+    border-bottom: none;
+    margin-bottom: 24px;
+}
+
+.viewGameAvatarContainer .subtitle {
+    margin-block: 8px;
+}
+
+.viewGameAvatarContainer > .avatar {
+    margin-right: 8px;
+}
+
+.liveUserStatFlex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.timerLg {
+    background-color: #E9E9EC;
+    padding: 8px 16px;
+    border-radius: 100px;
+}
+
+.asideViewContainer {
+    padding-inline: 20px;
+}
+
+.asideCardContainer {
+    margin-top: 48px;
+}
+
+.ticketMessageFlex {
+    display: flex;
+    gap: 24px;
+    justify-content: space-between;
+    margin-block: 24px;
+}
+
+.ticketMessageFlex .ticket, .ticketMessageFlex .message {
+    width: 50%;
+}
+
+.ticket .box, .message .box {
+    box-sizing: border-box;
+    width: var(--chakra-sizes-full);
+    background: rgb(255, 255, 255);
+    border-radius: 16px;
+    box-shadow: rgba(0, 0, 0, 0.06) 0px 4px 16px 0px;
+    padding: 24px;
+    height: 216px;
+    overflow-y: auto;
+    margin-top: 16px;
+    border: 1px solid #E1E2E5;
+}
+
+.box .ticketContainer {
+    display: block;
+    white-space: nowrap;
+    overflow: auto hidden;
+    max-width: 100%;
+}
+
+.ticketContainer table {
+    font-variant-numeric: lining-nums tabular-nums;
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12px;
+}
+
+.ticket table thead td {
+    text-align: start;
+    padding-inline-start: 1.5rem;
+    padding-inline-end: 1.5rem;
+    line-height: 1.25rem;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgb(120, 122, 128);
+    border-color: rgba(255, 255, 255, 0.06);
+    padding: 0px 8px 8px;
+}
+
+.st1 {
+    text-align: start;
+    padding-inline-start: 1.5rem;
+    padding-inline-end: 1.5rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    border-color: rgba(255, 255, 255, 0.06);
+    padding: 8px;
+}
+
+.st2 {
+    text-align: start;
+    padding-inline-start: 1.5rem;
+    padding-inline-end: 1.5rem;
+    line-height: 1.25rem;
+    display: flex;
+    -webkit-box-pack: start;
+    justify-content: flex-start;
+    border-color: rgba(255, 255, 255, 0.06);
+    padding: 8px;
+}
+
+.st3 {
+    text-align: start;
+    padding-inline-start: 1.5rem;
+    padding-inline-end: 1.5rem;
+    line-height: 1.25rem;
+    color: rgb(72, 73, 77);
+    border-color: rgba(255, 255, 255, 0.06);
+    padding: 8px;
+}
+
+.st1.mid {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    background: rgb(247, 248, 250);
+}
+
+.st2.mid {
+    background: rgb(247, 248, 250);
+
+}
+
+.st3.mid {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    background: rgb(247, 248, 250);
+}
+
+.tablePill {
+    text-align: center;
+    width: fit-content;
+    background: rgb(255, 239, 153);
+    border-radius: 50px;
+    padding: 4px 8px;
+}
+
+.msgIcon {
+    height: 24px;
+    width: 24px;
+}
+
+.asideTitle {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.mb12 {
+    margin-bottom: 12px;
+}
+
+.leaderboardContainer {
+    padding: 14px;
+    padding-block: 20px;
+    background-color: #1A1A1A;
+    color: #fff;
+    border-radius: 16px;
+    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.06);
+}
+
+.tableResponsive {
+    display: block;
+    white-space: nowrap;
+    overflow: auto hidden;
+    max-width: 100%;
+}
+
+.leaderboardContainer table {
+    font-size: 12px;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.leaderboardContainer thead td {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 0 8px 16px;
+    color: #787A80;
+}
+
+.leaderboardContainer tbody {
+    margin-top: 16px;
+}
+
+.leaderboardContainer tbody tr {
+    color: #FCFDFF;
+}
+
+.leaderboardContainer tbody td {
+    padding: 8px;
+}
+
+.leaderboardContainer tbody tr td:nth-child(1) {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.leaderboardContainer tbody tr td:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.activeUser {
+    background-color: #272727;
+}
+
+.tableAvatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    padding: 14px 15px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    font-size: 20px;
+    font-weight: 700;
+    color: #101010;
+}
+
+.leaderName {
+    text-transform: capitalize;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.leaderLottoNumber {
+    background-color: #FFEF99;
+    border-radius: 50px;
+    text-align: center;
+    width: fit-content;
+    padding: 4px 8px;
+    color: #101010;
+}
+
 
 @media screen and (max-width: 763px) {
 
@@ -314,7 +564,7 @@
         width: 100%;
     }
 
-    .formButtonContainer.col3 .btnGroup:nth-child(2) button {
+    .formButtonContainer button {
         width: 50%;
         padding-inline: 12px !important;
     }
@@ -411,5 +661,18 @@
 
     .jackpotBox .ticketStat {
         font-size: 14px;
+    }
+
+    .liveUserStatFlex {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .ticketMessageFlex {
+        flex-direction: column;
+    }
+
+    .ticketMessageFlex .ticket, .ticketMessageFlex .message {
+        width: 100%;
     }
 }

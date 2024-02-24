@@ -115,13 +115,10 @@ const AddLottery = () => {
 
   return (
     <>
-      <section className="mainContainer">
+      <section className="mainContainer w75-25">
         <div className={`mainContent ${lotteryStyles.addLottery}`}>
-          <p>
-            Lotteries<b>/Create Lottery</b>
-          </p>
           <header className={lotteryStyles.addLotteryHeader}>
-            <h2>Lottery Details</h2>
+            <h2>Create Lottery</h2>
             <p>Add the basic details about your lottery</p>
           </header>
           <div
@@ -325,8 +322,8 @@ const AddLottery = () => {
               className={`${lotteryStyles.formButtonContainer} ${lotteryStyles.addGame}`}
             >
               <CustomButtonII
-                variant={"light"}
-                text={"Exit"}
+                variant={"ghost"}
+                text={"Back"}
                 className="btnLg me10"
                 type="button"
                 onClick={() =>
@@ -350,7 +347,7 @@ const AddLottery = () => {
 
         {/* aside */}
         <aside className={"asideViewContainer"}>
-          <h3 className="fs17 mediumText">Create Lottery</h3>
+          <h3 className="fs17 boldText">Create Lottery</h3>
           <div className={lotteryStyles.lotterySteps}>
             <div
               className={`cursor-pointer ${lotteryStyles.step} ${lotteryStyles.active}`}

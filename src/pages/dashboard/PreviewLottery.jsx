@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Modal from "../../utils/Modal";
 import { updateAddLotteryForm } from "../../redux/features/generalSlice";
+import { FaCheck } from "react-icons/fa6";
+import { IoIosArrowRoundBack } from "react-icons/io";
 // import { useCreateLotteryMutation } from "../../redux/services/lotteryApi";
 // import { showError } from "../../utils/Alert";
 
@@ -105,11 +107,18 @@ const PreviewLottery = () => {
 
   return (
     <>
-      <section className="mainContainer">
+      <section className="mainContainer w75-25">
         <div className={`mainContent ${lotteryStyles.addLottery}`}>
-          <p>
-            Lotteries<b>/Create Lottery</b>
-          </p>
+          <IoIosArrowRoundBack
+            size={34}
+            className={"cursor-pointer"}
+            onClick={() =>
+              navigate("/dashboard/lotteries/add?fromPreview=true", {
+                replace: true,
+              })
+            }
+            style={{ marginBottom: "16px" }}
+          />
           <header className={lotteryStyles.addLotteryHeader}>
             <h2>Confirm Details</h2>
             <p>
@@ -246,58 +255,44 @@ const PreviewLottery = () => {
             </div>
 
             <div
-              className={`${lotteryStyles.formButtonContainer} ${lotteryStyles.col3} gap-1`}
+              className={`${lotteryStyles.formButtonContainer} ${lotteryStyles.addGame}`}
             >
-              <div className={lotteryStyles.btnGroup}>
-                <CustomButtonII
-                  variant={"light"}
-                  text={"Back"}
-                  className={`btnLg ${lotteryStyles.backBtn}`}
-                  type="button"
-                  centerText={true}
-                  onClick={() =>
-                    navigate("/dashboard/lotteries/add?fromPreview=true", {
-                      replace: true,
-                    })
-                  }
-                />
-              </div>
-              <div className={lotteryStyles.btnGroup}>
-                <CustomButtonII
-                  variant={"light"}
-                  text={"Save to Drafts"}
-                  className="btnLg"
-                  type="button"
-                  readOnly={true}
-                  centerText={true}
-                />
-                <CustomButtonII
-                  variant={"primary"}
-                  text={"Publish"}
-                  className="btnLg"
-                  type="button"
-                  centerText={true}
-                  // loading={isCreateLotteryLoading}
-                  onClick={submitForm}
-                />
-              </div>
+              <CustomButtonII
+                variant={"ghost"}
+                text={"Save to Drafts"}
+                className="btnLg me10"
+                type="button"
+                readOnly={true}
+                centerText={true}
+              />
+              <CustomButtonII
+                variant={"primary"}
+                text={"Publish"}
+                className="btnLg"
+                type="button"
+                centerText={true}
+                // loading={isCreateLotteryLoading}
+                onClick={submitForm}
+              />
             </div>
           </form>
         </div>
 
         {/* aside */}
         <aside className={"asideViewContainer"}>
-          <h3 className="fs17 mediumText">Create Lottery</h3>
+          <h3 className="fs17 boldText">Create Lottery</h3>
           <div className={lotteryStyles.lotterySteps}>
             <div
-              className={`cursor-pointer ${lotteryStyles.step}`}
+              className={`cursor-pointer ${lotteryStyles.step} ${lotteryStyles.active}`}
               onClick={() =>
                 navigate("/dashboard/lotteries/add?fromPreview=true", {
                   replace: true,
                 })
               }
             >
-              <div className={lotteryStyles.num}>1</div>
+              <div className={lotteryStyles.num}>
+                <FaCheck fontSize={"14px"} />
+              </div>
               <p>Lottery details</p>
             </div>
             <div

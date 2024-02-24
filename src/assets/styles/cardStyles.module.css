@@ -45,14 +45,19 @@
 }
 
 .balanceCard .cardTitle {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 500;
   margin-right: 10px;
+  color: #48494D;
 }
 
 .balanceCard .hideIcon {
   font-size: 20px;
   cursor: pointer;
+}
+
+.balanceCard .hideIcon.hide {
+  display: none;
 }
 
 .balanceCard .balance {

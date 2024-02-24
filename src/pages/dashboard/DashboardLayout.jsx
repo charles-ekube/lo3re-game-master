@@ -22,6 +22,7 @@ import Text from "../../utils/CustomText";
 import Beneficiaries from "./Beneficiaries";
 import Affiliate from "./Affiliate";
 import PasswordReset from "./PasswordReset";
+import ViewGame from "./ViewGame";
 
 const DashboardLayout = () => {
   const dispatch = useDispatch();
@@ -73,6 +74,7 @@ const DashboardLayout = () => {
               <Route path="" element={<Lotteries />} />
               <Route path="add" element={<AddLottery />} />
               <Route path="preview" element={<PreviewLottery />} />
+              <Route path="view-game/:id" element={<ViewGame />} />
             </Route>
             <Route path="/account" element={<Wallet />} />
             <Route path="/history" element={<History />} />

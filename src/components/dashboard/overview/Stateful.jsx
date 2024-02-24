@@ -44,12 +44,12 @@ const Stateful = () => {
         <div className="cardContainer">
           <BalanceCard
             title={"Total Earned"}
-            figure={"0.00"}
+            figure={"$0.00"}
             subtitle={"Lotteries deployed: 0"}
           />
           <BalanceCard
             title={"Wallet Balance"}
-            figure={"0.00"}
+            figure={"$0.00"}
             subtitle={"Total gains 0%"}
           />
         </div>

@@ -196,24 +196,24 @@ const Wallet = () => {
           <div className="cardContainer">
             <BalanceCard
               title={"Wallet Balance"}
-              figure={walletBalance?.balance}
+              figure={"$" + walletBalance?.balance}
               isBalanceLoading={isWalletBalanceLoading}
               subtitle={"Total gains 0%"}
             />
             <BalanceCard
               title={"Locked Balance"}
-              figure={walletBalance?.locked_balance}
+              figure={"$" + walletBalance?.locked_balance}
               isBalanceLoading={isWalletBalanceLoading}
               subtitle={"To be credited on 20/10/23"}
             />
             <BalanceCard
               title={"Total Deposit"}
-              figure={"0.00"}
+              figure={"$0.00"}
               subtitle={"Updated 36mins ago"}
             />
             <BalanceCard
               title={"Total Withdrawal"}
-              figure={"0.00"}
+              figure={"$0.00"}
               subtitle={"Updated 36mins ago"}
             />
           </div>

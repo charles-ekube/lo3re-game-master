@@ -18,6 +18,7 @@ import PreLogin from "../pages/auth/PreLogin";
 import CompleteProfile from "../pages/auth/CompleteProfile";
 import ActivateWalletPin from "../pages/auth/ActivateWalletPin";
 import Verify2FA from "../pages/auth/Verify2FA";
+import ErrorPage from "../pages/ErrorPage";
 
 const RoutesContainer = () => {
   return (
@@ -43,6 +44,7 @@ const RoutesContainer = () => {
           path="/dashboard/*"
           element={<RoutesAuth children={<DashboardLayout />} />}
         />
+        <Route Component={ErrorPage} />
       </Routes>
     </>
   );
