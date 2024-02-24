@@ -1,6 +1,7 @@
 
-.lotteryContainer {
-    margin-top: 24px;
+.lotteryContainer .headerTitle {
+    font-size: 24px;
+    font-weight: 700;
 }
 
 /* 👇🏽👇🏽the correct way that shld show a scroll on smaller screens */
@@ -73,30 +74,78 @@
 }
  
 
-
+/* jackpot box */
 .jackpotBox {
+    width: 164px;
+    cursor: pointer;
+}
+
+.jackpotBox:hover .box {
+    transform: translateY(-3px);
+    box-shadow: "0px 5px 10px 0px rgba(0, 0, 0, 0.06)";
+}
+
+.jackpotBox > .box {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     background: #9EBCCA;
-    padding: 24px;
-    width: 164px;
+    padding: 16px;
     height: 164px;
     border-radius: 16px;
     color: var(--white);
+    margin-bottom: 10px;
+    background-image: url("../images/Image.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.jackpotBox .timer {
+    background-color: #E9E9EC;
+    color: #000;
+    padding: 4px 8px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    align-self: center;
 }
 
 .jackpotBox .title {
-    font-size: 17px;
+    font-size: 20px;
     font-weight: 700;
 }
 
 .jackpotBox .subtitle {
-    font-size: 14px;
-    font-weight: 500;
-    margin-top: 5px;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
+.jackpotBox .subtitle > p {
+    font-weight: 500;
+    color: #48494D;
+}
+
+.jackpotBox .subtitle > span {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px;
+    background-color: #FFF7CC;
+    border-radius: 100px;
+}
+
+.jackpotBox .ellipse {
+    font-size: 24px;
+}
+
+.jackpotBox .verified {
+    font-size: 32px;
+}
+
+.jackpotBox .userGroup {
+    font-size: 18px;
+}
 
 
 /**********************************
@@ -191,6 +240,51 @@
     gap: 10px;
 }
 
+.lotterySteps {
+    position: relative;
+    margin-top: 8px;
+}
+
+.lotterySteps .step {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px;
+    padding-left: 0;
+}
+
+.step .num {
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+    background-color: #E1E2E5;
+    color: #787A80;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.step.active .num {
+    background-color: var(--secondary);
+    color: var(--white);
+}
+
+.step::after {
+    content: '';
+    /* display: block; */
+    background-color: #E1E2E5;
+    /* background-color: red; */
+    width: 2px;
+    height: 70px;
+    position: absolute;
+    top: 36px;
+    left: 17px;
+    z-index: 0;
+}
+
 @media screen and (max-width: 763px) {
 
     .tab > button {
@@ -198,11 +292,17 @@
         font-size: 12px;
     }
 
-    /***************
-    * add lottery
-    ****************/
+    .lotteryForm .col3, .lotteryForm .col2 {
+        flex-direction: column;
+    }
+
+    /* add lottery */
     .formButtonContainer {
         justify-content: center;
+    }
+
+    .formButtonContainer.addGame > button {
+        width: 50%;
     }
 
     .formButtonContainer.col3 {
@@ -216,16 +316,49 @@
 
     .formButtonContainer.col3 .btnGroup:nth-child(2) button {
         width: 50%;
+        padding-inline: 12px !important;
     }
 
     .formButtonContainer.col3 .backBtn {
         width: 100%;
         text-align: center;
+        background-color: transparent;
+        border: none;
     }
 
     .formButtonContainer.col3 .backBtn > span.flexRow {
         justify-content: center;
     }
+
+    .formButtonContainer.col3 {
+        flex-direction: column-reverse;
+    }
+
+    .avatarProfileContainer {
+        flex-direction: column !important;
+        gap: 15px;
+        min-height: 100px;
+    }
+
+    .avatarProfileContainer .uploadBtn {
+        margin-top: 0;
+    }
+
+    .avatarProfileContainer .avatar {
+        margin-right: 0;
+    }
+
+    .avatarProfileContainer .content {
+        text-align: center;
+    }
+
+    .avatarProfileContainer .formDates {
+        margin-top: 8px;
+    }
+
+    .formButtonContainer {
+        margin-top: 20px;
+    }   
 }
 
 
@@ -234,10 +367,49 @@
         padding: 8px 5px;
         font-size: 10px;
     }
-
+    
     .tab > button > .badge {
         font-size: 10px;
         width: 20px;
         height: 20px;
+    }
+
+    /* jackpot box */
+    .jackpotBox {
+        width: 130px;
+    }
+
+    .jackpotBox > .box {
+        height: 130px;
+        margin-bottom: 5px;
+    }
+
+    .jackpotBox .title {
+        font-size: 18px;
+    }
+
+    .jackpotBox .subtitle > p {
+        font-size: 14px;
+    }
+
+    .jackpotBox .timer {
+        font-size: 10px;
+        padding: 2px 4px;
+    }
+
+    .jackpotBox .ellipse {
+        font-size: 18px;
+    }
+
+    .jackpotBox .verified {
+        font-size: 24px;
+    }
+    
+    .jackpotBox .userGroup {
+        font-size: 16px;
+    }
+
+    .jackpotBox .ticketStat {
+        font-size: 14px;
     }
 }

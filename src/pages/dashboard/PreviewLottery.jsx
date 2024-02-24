@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Text from "../../utils/CustomText";
-import ContactCard from "../../components/dashboard/cards/ContactCard";
-import CardSlider from "../../components/dashboard/overview/CardSlider";
 import Camera from "../../assets/images/camera.png";
 import HHG from "../../assets/images/hand-holding-gift.png";
 import lotteryStyles from "../../assets/styles/lotteries.module.css";
@@ -10,8 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Modal from "../../utils/Modal";
 import { updateAddLotteryForm } from "../../redux/features/generalSlice";
-import { useCreateLotteryMutation } from "../../redux/services/lotteryApi";
-import { showError } from "../../utils/Alert";
+// import { useCreateLotteryMutation } from "../../redux/services/lotteryApi";
+// import { showError } from "../../utils/Alert";
 
 function b64toBlob(b64Data, contentType, sliceSize) {
   contentType = contentType || "";
@@ -42,8 +39,8 @@ const PreviewLottery = () => {
   const dispatch = useDispatch();
   const [successModal, setSuccessModal] = useState(false);
   const lotteryForm = useSelector((state) => state.general.addLotteryForm);
-  const [createLottery, { isLoading: isCreateLotteryLoading }] =
-    useCreateLotteryMutation();
+  // const [createLottery, { isLoading: isCreateLotteryLoading }] =
+  //   useCreateLotteryMutation();
   const localImg = localStorage["lotteryPhoto"];
 
   const getPhoto = () => {
@@ -90,17 +87,20 @@ const PreviewLottery = () => {
       })
     );
 
-    await createLottery(fData)
-      .unwrap()
-      .then(() => {
-        //   onSuccess open modal and empty reduxLotteryForm
-        setSuccessModal(true);
-        console.log(lotteryForm);
-        dispatch(updateAddLotteryForm({}));
-      })
-      .catch((err) => {
-        showError(err?.message || err?.data?.message || "An error occurred");
-      });
+    setSuccessModal(true);
+    dispatch(updateAddLotteryForm({}));
+
+    // await createLottery(fData)
+    //   .unwrap()
+    //   .then(() => {
+    //     //   onSuccess open modal and empty reduxLotteryForm
+    //     setSuccessModal(true);
+    //     console.log(lotteryForm);
+    //     dispatch(updateAddLotteryForm({}));
+    //   })
+    //   .catch((err) => {
+    //     showError(err?.message || err?.data?.message || "An error occurred");
+    //   });
   };
 
   return (
@@ -117,7 +117,9 @@ const PreviewLottery = () => {
               about this lottery is correct
             </p>
           </header>
-          <div className="flexRow alignCenter avatarProfileContainer">
+          <div
+            className={`flexRow alignCenter avatarProfileContainer ${lotteryStyles.avatarProfileContainer}`}
+          >
             <div className={lotteryStyles.avatar}>
               {localImg ? (
                 <img
@@ -129,12 +131,14 @@ const PreviewLottery = () => {
                 <img src={Camera} alt="" className={lotteryStyles.cameraImg} />
               )}
             </div>
-            <div>
+            <div className={lotteryStyles.content}>
               <h3 className="title capitalize">{lotteryForm.lotteryName}</h3>
               <p className="subtitle">
                 Jackpot prize: <b>${lotteryForm.jackpotPrize}</b>
               </p>
-              <div className="flexRow text-muted mt-2">
+              <div
+                className={`flexRow text-muted mt-2 ${lotteryStyles.formDates}`}
+              >
                 <p className="me10 f14">
                   Start date:{" "}
                   {lotteryForm.lotteryStarts?.toLocaleString(undefined, {
@@ -162,7 +166,7 @@ const PreviewLottery = () => {
                   type="text"
                   className="formInput"
                   value={"$" + lotteryForm.ticketPrice}
-                  disabled
+                  readOnly
                   name="ticketPrice"
                 />
               </div>
@@ -172,7 +176,7 @@ const PreviewLottery = () => {
                   type="number"
                   className="formInput"
                   value={lotteryForm.ticketCapacity}
-                  disabled
+                  readOnly
                   name="ticketCapacity"
                 />
               </div>
@@ -187,7 +191,7 @@ const PreviewLottery = () => {
                   name="description"
                   cols="30"
                   rows="5"
-                  disabled
+                  readOnly
                 ></textarea>
               </div>
             </div>
@@ -203,7 +207,7 @@ const PreviewLottery = () => {
                   value={lotteryForm.telegramLink}
                   placeholder="Optional"
                   name="telegramLink"
-                  disabled
+                  readOnly
                 />
               </div>
               <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
@@ -214,7 +218,7 @@ const PreviewLottery = () => {
                   value={lotteryForm.facebookLink}
                   placeholder="Optional"
                   name="facebookLink"
-                  disabled
+                  readOnly
                 />
               </div>
               <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
@@ -225,7 +229,7 @@ const PreviewLottery = () => {
                   value={lotteryForm.whatsapp}
                   placeholder="Optional"
                   name="whatsapp"
-                  disabled
+                  readOnly
                 />
               </div>
               <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
@@ -236,7 +240,7 @@ const PreviewLottery = () => {
                   value={lotteryForm.others}
                   placeholder="Optional"
                   name="others"
-                  disabled
+                  readOnly
                 />
               </div>
             </div>
@@ -248,8 +252,9 @@ const PreviewLottery = () => {
                 <CustomButtonII
                   variant={"light"}
                   text={"Back"}
-                  className="btnLg backBtn"
+                  className={`btnLg ${lotteryStyles.backBtn}`}
                   type="button"
+                  centerText={true}
                   onClick={() =>
                     navigate("/dashboard/lotteries/add?fromPreview=true", {
                       replace: true,
@@ -263,14 +268,16 @@ const PreviewLottery = () => {
                   text={"Save to Drafts"}
                   className="btnLg"
                   type="button"
-                  disabled={true}
+                  readOnly={true}
+                  centerText={true}
                 />
                 <CustomButtonII
                   variant={"primary"}
                   text={"Publish"}
                   className="btnLg"
                   type="button"
-                  loading={isCreateLotteryLoading}
+                  centerText={true}
+                  // loading={isCreateLotteryLoading}
                   onClick={submitForm}
                 />
               </div>
@@ -280,12 +287,25 @@ const PreviewLottery = () => {
 
         {/* aside */}
         <aside className={"asideViewContainer"}>
-          <CardSlider />
-          <div className={"contactCornerContainer"}>
-            <Text tag={"p"} className={"f16 satoshi-bold-text"}>
-              Customer corner
-            </Text>
-            <ContactCard />
+          <h3 className="fs17 mediumText">Create Lottery</h3>
+          <div className={lotteryStyles.lotterySteps}>
+            <div
+              className={`cursor-pointer ${lotteryStyles.step}`}
+              onClick={() =>
+                navigate("/dashboard/lotteries/add?fromPreview=true", {
+                  replace: true,
+                })
+              }
+            >
+              <div className={lotteryStyles.num}>1</div>
+              <p>Lottery details</p>
+            </div>
+            <div
+              className={`cursor-pointer ${lotteryStyles.step} ${lotteryStyles.active}`}
+            >
+              <div className={lotteryStyles.num}>2</div>
+              <p>Preview</p>
+            </div>
           </div>
         </aside>
       </section>

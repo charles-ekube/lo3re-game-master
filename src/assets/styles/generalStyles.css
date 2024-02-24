@@ -91,6 +91,10 @@ button {
   margin-top: 10px;
 }
 
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+
 .mb-1 {
   margin-bottom: 10px;
 }
@@ -235,6 +239,10 @@ button {
   background-color: var(--lightGrey);
 }
 
+.btn-ghost.no-hover:hover {
+  background-color: transparent;
+}
+
 .bgGrey {
   background-color: var(--lightGrey);
 }
@@ -338,6 +346,10 @@ button {
   padding: 10px 8px;
 }
 
+.formInput:disabled {
+  color: #1A1A1A;
+}
+
 .dropdown-button {
   border: 1px solid var(--lightGreyII) !important;
 }
@@ -348,6 +360,7 @@ button {
 
 .formInput:focus {
   outline-color: #ccc;
+  transition: none;
 }
 
 
@@ -377,6 +390,47 @@ button {
 .fullScreenloader > div {
   text-align: center;
 }
+
+
+/* tooltip */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  height: 16px;
+}
+
+.tooltip:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  min-width: 200px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 4px;
+  font-size: 12px;
+  word-wrap: break-word;
+  z-index: 1;
+}
+
+/* Optional: Style for tooltip arrow */
+.tooltip:hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+}
+
+
+
+
 
 /* media queries  */
 @media screen and (max-width: 768px) {

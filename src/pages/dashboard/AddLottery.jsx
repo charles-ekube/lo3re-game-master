@@ -1,7 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import Text from "../../utils/CustomText";
-import ContactCard from "../../components/dashboard/cards/ContactCard";
-import CardSlider from "../../components/dashboard/overview/CardSlider";
 import Camera from "../../assets/images/camera.png";
 import lotteryStyles from "../../assets/styles/lotteries.module.css";
 import CustomButtonII from "../../utils/CustomButtonII";
@@ -10,6 +7,7 @@ import { showError } from "../../utils/Alert";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { updateAddLotteryForm } from "../../redux/features/generalSlice";
+import { IoIosInformationCircleOutline } from "react-icons/io";
 
 const AddLottery = () => {
   const dispatch = useDispatch();
@@ -126,7 +124,9 @@ const AddLottery = () => {
             <h2>Lottery Details</h2>
             <p>Add the basic details about your lottery</p>
           </header>
-          <div className="flexRow alignCenter avatarProfileContainer">
+          <div
+            className={`flexRow alignCenter avatarProfileContainer ${lotteryStyles.avatarProfileContainer}`}
+          >
             <div className={lotteryStyles.avatar}>
               {preview || localImg ? (
                 <img
@@ -138,8 +138,11 @@ const AddLottery = () => {
                 <img src={Camera} alt="" className={lotteryStyles.cameraImg} />
               )}
             </div>
-            <div>
-              <button className="uploadBtn" onClick={clickFileElem}>
+            <div className={lotteryStyles.content}>
+              <button
+                className={`uploadBtn ${lotteryStyles.uploadBtn}`}
+                onClick={clickFileElem}
+              >
                 Upload cover photo
               </button>
               <input
@@ -191,7 +194,18 @@ const AddLottery = () => {
 
             <div className={`flexRow justifyBetween ${lotteryStyles.col3}`}>
               <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
-                <label>Ticket capacity</label>
+                <div
+                  className="flexRow alignCenter"
+                  style={{ gap: "5px", marginBottom: "8px" }}
+                >
+                  <label className="mb-0">Ticket capacity</label>
+                  <div
+                    className="tooltip"
+                    data-tooltip="Minimum number of tickets that need to be sold for the lottery game to be considered valid. If the minimum ticket sale is not reached by the end date, the game may be canceled or extended."
+                  >
+                    <IoIosInformationCircleOutline color="#888" />
+                  </div>
+                </div>
                 <input
                   type="number"
                   className="formInput"
@@ -201,7 +215,18 @@ const AddLottery = () => {
                 />
               </div>
               <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
-                <label>Lottery starts</label>
+                <div
+                  className="flexRow alignCenter"
+                  style={{ gap: "5px", marginBottom: "8px" }}
+                >
+                  <label className="mb-0">Lottery starts</label>
+                  <span
+                    className="tooltip"
+                    data-tooltip="Date when the lottery game officially begins. Participants can buy tickets and enter the game once it has started."
+                  >
+                    <IoIosInformationCircleOutline color="#888" />
+                  </span>
+                </div>
                 <DatePicker
                   selected={formState.lotteryStarts}
                   onChange={(date) =>
@@ -211,7 +236,18 @@ const AddLottery = () => {
                 />
               </div>
               <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
-                <label>Lottery ends</label>
+                <div
+                  className="flexRow alignCenter"
+                  style={{ gap: "5px", marginBottom: "8px" }}
+                >
+                  <label className="mb-0">Lottery ends</label>
+                  <span
+                    className="tooltip"
+                    data-tooltip="Date when the lottery game concludes. After this deadline, no more tickets can be purchased, and the winners will be determined based on the game's rules."
+                  >
+                    <IoIosInformationCircleOutline color="#888" />
+                  </span>
+                </div>
                 <DatePicker
                   selected={formState.lotteryEnds}
                   onChange={(date) =>
@@ -285,13 +321,20 @@ const AddLottery = () => {
               </div>
             </div>
 
-            <div className={lotteryStyles.formButtonContainer}>
+            <div
+              className={`${lotteryStyles.formButtonContainer} ${lotteryStyles.addGame}`}
+            >
               <CustomButtonII
                 variant={"light"}
                 text={"Exit"}
                 className="btnLg me10"
                 type="button"
-                disabled={true}
+                onClick={() =>
+                  navigate("/dashboard/lotteries", {
+                    replace: true,
+                  })
+                }
+                centerText={true}
               />
               <CustomButtonII
                 variant={"primary"}
@@ -299,6 +342,7 @@ const AddLottery = () => {
                 className="btnLg"
                 type="button"
                 onClick={submitForm}
+                centerText={true}
               />
             </div>
           </form>
@@ -306,12 +350,21 @@ const AddLottery = () => {
 
         {/* aside */}
         <aside className={"asideViewContainer"}>
-          <CardSlider />
-          <div className={"contactCornerContainer"}>
-            <Text tag={"p"} className={"f16 satoshi-bold-text"}>
-              Customer corner
-            </Text>
-            <ContactCard />
+          <h3 className="fs17 mediumText">Create Lottery</h3>
+          <div className={lotteryStyles.lotterySteps}>
+            <div
+              className={`cursor-pointer ${lotteryStyles.step} ${lotteryStyles.active}`}
+            >
+              <div className={lotteryStyles.num}>1</div>
+              <p>Lottery details</p>
+            </div>
+            <div
+              className={`cursor-pointer ${lotteryStyles.step}`}
+              onClick={submitForm}
+            >
+              <div className={lotteryStyles.num}>2</div>
+              <p>Preview</p>
+            </div>
           </div>
         </aside>
       </section>

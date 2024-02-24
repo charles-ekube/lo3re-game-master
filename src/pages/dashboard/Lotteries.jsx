@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import Text from "../../utils/CustomText";
 import ContactCard from "../../components/dashboard/cards/ContactCard";
-import BalanceCard from "../../components/dashboard/wallet/BalanceCard";
 import CardSlider from "../../components/dashboard/overview/CardSlider";
-import { FaEllipsis } from "react-icons/fa6";
-import { MdVerified } from "react-icons/md";
 import lotteryStyles from "../../assets/styles/lotteries.module.css";
 import { Link } from "react-router-dom";
+import LotteryGameCard from "../../components/dashboard/cards/LotteryGameCard";
 
 const Lotteries = () => {
   const [tabs, setTabs] = useState([
@@ -45,21 +43,11 @@ const Lotteries = () => {
     <>
       <section className="mainContainer walletContainer">
         <div className="mainContent">
-          <div className="cardContainer">
-            <BalanceCard
-              title={"Total Earned"}
-              figure={"0.00"}
-              subtitle={"Lotteries deployed: 0"}
-            />
-            <BalanceCard
-              title={"Wallet Balance"}
-              figure={"0.00"}
-              subtitle={"Total gains 0%"}
-            />
-          </div>
           <div className={lotteryStyles.lotteryContainer}>
-            <div className="flexRow justifyBetween">
-              <h3 className="satoshi-text">Your Lotteries</h3>
+            <div className="flexRow justifyBetween alignCenter">
+              <h3 className={`satoshi-text ${lotteryStyles.headerTitle}`}>
+                Lotteries
+              </h3>
               <p className="flexRow alignCenter">
                 <Link to={"/dashboard/lotteries/add"} className="blackText">
                   Create a Lottery
@@ -85,21 +73,7 @@ const Lotteries = () => {
               </div>
             </div>
             <div className="flexRow">
-              {/* TODO: add bg img, and tab responsiveness */}
-              <div className={lotteryStyles.jackpotBox}>
-                <div className="flexRow justifyEnd">
-                  <button className="btn btn-ghost p0">
-                    <FaEllipsis color={"var(--white)"} fontSize="24px" />
-                  </button>
-                </div>
-                <div>
-                  <div className="flexRow justifyBetween alignCenter">
-                    <p className={lotteryStyles.title}>Jackpot 1</p>
-                    <MdVerified color="var(--primary)" fontSize="20px" />
-                  </div>
-                  <p className={lotteryStyles.subtitle}>Tickets sold: 0</p>
-                </div>
-              </div>
+              <LotteryGameCard />
             </div>
           </div>
         </div>

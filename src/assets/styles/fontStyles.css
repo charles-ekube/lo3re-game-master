@@ -144,6 +144,22 @@
   font-size: 4rem;
 }
 
+.fs14 {
+  font-size: 14px;
+}
+
+.fs16 {
+  font-size: 16px;
+}
+
+.fs17 {
+  font-size: 17px;
+}
+
+.fs18 {
+  font-size: 18px;
+}
+
 /* Text alignment */
 .textCenter {
   text-align: center;
