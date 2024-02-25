@@ -80,7 +80,7 @@ const Stateful = () => {
           </div>
           <div className="flexRow">
             {/* TODO: add bg img, and tab responsiveness */}
-            <LotteryGameCard />
+            <LotteryGameCard gameId={1} />
           </div>
         </div>
       </div>

@@ -13,9 +13,17 @@ import { FaEllipsisH } from "react-icons/fa";
 import MsgAdd from "../../assets/images/icons/message-add.png";
 import { IoLogoWhatsapp } from "react-icons/io";
 import BalanceCard from "../../components/dashboard/wallet/BalanceCard";
+import Modal from "../../utils/Modal";
+import WasteCollection from "../../assets/images/wastecollection.png";
+import Text from "../../utils/CustomText";
+import Avatar from "../../utils/Avatar";
+import Pagination from "../../utils/Pagination";
 
 const ViewGame = () => {
   const navigate = useNavigate();
+  const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const [formState] = useState({
     lotteryName: "Jackpot 1",
     ticketPrice: "20",
@@ -157,6 +165,7 @@ const ViewGame = () => {
                 text={"Delete"}
                 className="btnLg me10"
                 type="button"
+                onClick={() => setShowDeleteModal(true)}
                 centerText={true}
               />
               <CustomButtonII
@@ -196,7 +205,10 @@ const ViewGame = () => {
             <div className={lotteryStyles.ticket}>
               <div className="flexRow justifyBetween">
                 <p className={lotteryStyles.asideTitle}>Ticket sales</p>
-                <p className={`flexRow alignCenter cursor-pointer fs14`}>
+                <p
+                  className={`flexRow alignCenter cursor-pointer fs14`}
+                  onClick={() => setIsTicketModalOpen(true)}
+                >
                   View all <IoChevronForward fontSize={"20px"} />
                 </p>
               </div>
@@ -327,8 +339,95 @@ const ViewGame = () => {
             </div>
           </div>
         </aside>
+
+        <Modal
+          isOpen={showDeleteModal}
+          onClose={() => setShowDeleteModal(false)}
+        >
+          <div className="flexRow justifyCenter">
+            <img src={WasteCollection} className="deleteIllustration" alt="" />
+          </div>
+          <h3 className="deleteTitle">Delete Lottery</h3>
+          <p className="deleteSubtitle">
+            Are you sure you want to delete this active lottery?
+          </p>
+          <div className="flexRow gap-1 mt35">
+            <CustomButtonII
+              variant="light"
+              text={"Don't delete"}
+              className={"w50"}
+              centerText={true}
+              onClick={() => setShowDeleteModal(false)}
+            />
+            <CustomButtonII
+              variant="ghost-danger"
+              text={"Yes, delete"}
+              className={"w50"}
+              centerText={true}
+              // loading={isDeleteBeneficiaryLoading}
+              // onClick={handleDeleteBeneficiary}
+            />
+          </div>
+        </Modal>
+
+        <Modal
+          title={"Ticket sales"}
+          isOpen={isTicketModalOpen}
+          onClose={() => setIsTicketModalOpen(false)}
+        >
+          <div className={`${lotteryStyles.ticketList}`}>
+            <TicketRows />
+            <TicketRows />
+            <TicketRows />
+            <TicketRows />
+            <TicketRows />
+          </div>
+          <Pagination
+            limit={1}
+            curPage={currentPage}
+            totalItems={2}
+            paginate={(num) => setCurrentPage(num)}
+          />
+        </Modal>
       </section>
     </>
+  );
+};
+
+const TicketRows = () => {
+  return (
+    <div
+      className={`flexRow justifyBetween alignCenter ${lotteryStyles.ticketRow}`}
+    >
+      <div className="flexRow alignCenter" style={{ gap: "8px" }}>
+        <Avatar
+          name={"R"}
+          className={lotteryStyles.ticketSaleAvatar}
+          boxSize={"48px"}
+        />
+        <Text
+          className={`satoshi-text mediumText capitalize ${lotteryStyles.modalTextResp}`}
+          style={{ color: "rgba(16, 16, 16, 1)" }}
+        >
+          Raynera
+        </Text>
+      </div>
+      <div>
+        <div
+          className={`status-pill pill-invalid mediumText btnSm ${lotteryStyles.modalTextResp} ${lotteryStyles.statusPill}`}
+          style={{ color: "#727272" }}
+        >
+          #01234567
+        </div>
+      </div>
+      <div
+        className={`flexColumn textRight ${lotteryStyles.modalTextResp}`}
+        style={{ color: "#A6A6A6", gap: "4px" }}
+      >
+        <p>3 mins ago</p>
+        <p className="mediumText">25 November, 2023</p>
+      </div>
+    </div>
   );
 };
 

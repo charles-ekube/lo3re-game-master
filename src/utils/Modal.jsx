@@ -1,5 +1,5 @@
 import React from "react";
-import { LiaTimesSolid } from "react-icons/lia";
+import { FaTimes } from "react-icons/fa";
 
 const Modal = ({
   isOpen,
@@ -18,14 +18,14 @@ const Modal = ({
           <div className={`overlay z500 ${zClass}`} onClick={onClose}></div>
           <div className={`modal ${zClass}`}>
             <div className={`flexRow justifyBetween alignCenter posRelative`}>
-              <h3 className="capitalize">{title}</h3>
+              <h3 className="modalTitle">{title}</h3>
               <button
-                className={`btn btn-ghost text-danger f20 closeBtn ${
+                className={`btn btn-ghost no-hover textDanger closeBtn ${
                   hideCloseBtn ? "dNone" : ""
                 }`}
                 onClick={onClose}
               >
-                <LiaTimesSolid size={24} />
+                <FaTimes size={16} />
               </button>
             </div>
             <div className="modalContent">{children}</div>

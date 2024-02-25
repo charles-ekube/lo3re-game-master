@@ -285,6 +285,7 @@
 
 .asideViewContainer {
     display: block !important;
+    padding-inline: 20px !important;
 }
 
 .step.active::after {
@@ -320,17 +321,13 @@
     border-radius: 100px;
 }
 
-.asideViewContainer {
-    padding-inline: 20px;
-}
-
 .asideCardContainer {
     margin-top: 48px;
 }
 
 .ticketMessageFlex {
     display: flex;
-    gap: 24px;
+    gap: 20px;
     justify-content: space-between;
     margin-block: 24px;
 }
@@ -535,6 +532,27 @@
     color: #101010;
 }
 
+.ticketRow {
+    border-bottom: 1px solid #E8E8E8;
+    padding-block: 10px;
+}
+
+.ticketRow:last-child {
+    border-bottom: none;
+}
+
+.modalTextResp {
+    font-size: 14px;
+}
+
+.ticketSaleAvatar {
+    width: 48px;
+    height: 48px;
+}
+
+.ticketSaleAvatar > span {
+    font-size: 20px !important;
+}
 
 @media screen and (max-width: 850px) {
     .asideCardContainer {
@@ -686,4 +704,22 @@
     .leaderboard {
         display: none;
     }
+
+    .modalTextResp {
+        font-size: 10px !important;
+    }
+    
+    .ticketSaleAvatar {
+        width: 36px;
+        height: 36px;
+    }
+
+    .ticketSaleAvatar > span {
+        font-size: 16px !important;
+    }
+
+    .statusPill {
+        padding: 5px 6px !important;
+    }
+
 }

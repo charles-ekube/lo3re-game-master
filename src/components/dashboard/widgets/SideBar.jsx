@@ -3,7 +3,7 @@ import Logo from "../../../assets/images/logo.svg";
 import { NavLink, useLocation } from "react-router-dom/dist";
 import Text from "../../../utils/CustomText";
 import {
-  CiBellOn,
+  // CiBellOn,
   CiClock2,
   CiGrid41,
   CiLogout,
@@ -113,24 +113,7 @@ const SideBar = () => {
                 )}
               </NavLink>
             </li>
-            <li style={{ marginTop: "20px" }}>
-              <NavLink
-                className={`flexRow alignCenter  satoshi-text ${
-                  ActivePath === "notification" && "sideBarActiveLink"
-                }`}
-                to={"notification"}
-                style={{ gap: "8px" }}
-              >
-                <CiBellOn size={22} />
-                <Text tag={"p"} className={"satoshi-text f16"}>
-                  Notification
-                </Text>
-                {ActivePath === "settings" && (
-                  <div className={"activeIndicator"} />
-                )}
-              </NavLink>
-            </li>
-            <li onClick={closeSidebar}>
+            <li onClick={closeSidebar} style={{ marginTop: "20px" }}>
               <NavLink
                 className={`flexRow alignCenter  satoshi-text ${
                   ActivePath === "history" && "sideBarActiveLink"
