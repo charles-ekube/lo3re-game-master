@@ -295,7 +295,7 @@
     background-color: #F7F8FA;
     border-radius: 16px;
     padding: 16px;
-    border-bottom: none;
+    border-bottom: none !important;
     margin-bottom: 24px;
 }
 
@@ -341,7 +341,7 @@
 
 .ticket .box, .message .box {
     box-sizing: border-box;
-    width: var(--chakra-sizes-full);
+    width: 100%;
     background: rgb(255, 255, 255);
     border-radius: 16px;
     box-shadow: rgba(0, 0, 0, 0.06) 0px 4px 16px 0px;
@@ -466,9 +466,10 @@
 }
 
 .leaderboardContainer table {
-    font-size: 12px;
+    font-variant-numeric: lining-nums tabular-nums;
     border-collapse: collapse;
     width: 100%;
+    font-size: 12px;
 }
 
 .leaderboardContainer thead td {
@@ -534,6 +535,12 @@
     color: #101010;
 }
 
+
+@media screen and (max-width: 850px) {
+    .asideCardContainer {
+        margin-top: 0;
+    }
+}
 
 @media screen and (max-width: 763px) {
 
@@ -674,5 +681,9 @@
 
     .ticketMessageFlex .ticket, .ticketMessageFlex .message {
         width: 100%;
+    }
+
+    .leaderboard {
+        display: none;
     }
 }

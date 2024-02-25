@@ -144,6 +144,10 @@
   font-size: 4rem;
 }
 
+.fs12 {
+  font-size: 12px !important;
+}
+
 .fs14 {
   font-size: 14px;
 }

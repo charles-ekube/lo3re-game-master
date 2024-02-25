@@ -24,7 +24,7 @@ const ViewGame = () => {
     lotteryStarts: "",
     lotteryEnds: "",
     description:
-      "sjdfniewnfiuadsfhiuaesfhasjbfjkasdbkjadbaskjdbsakjdbakjsdbajskdbkasjdbkncmz",
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia provident, quasi praesentium odio assumenda laudantium error. Iusto blanditiis fugiat dolores exercitationem maxime incidunt omnis, ullam assumenda vel sit! Placeat, doloribus!",
     telegramLink: "",
     facebookLink: "",
     whatsapp: "",
@@ -196,13 +196,11 @@ const ViewGame = () => {
             <div className={lotteryStyles.ticket}>
               <div className="flexRow justifyBetween">
                 <p className={lotteryStyles.asideTitle}>Ticket sales</p>
-                <p
-                  className={`flexRow alignCenter cursor-pointer ${lotteryStyles.asideTitle}`}
-                >
+                <p className={`flexRow alignCenter cursor-pointer fs14`}>
                   View all <IoChevronForward fontSize={"20px"} />
                 </p>
               </div>
-              <div className={lotteryStyles.box}>
+              <div className={`${lotteryStyles.box}`}>
                 <div className={lotteryStyles.ticketContainer}>
                   <table>
                     <thead>
@@ -252,7 +250,7 @@ const ViewGame = () => {
             {/* messages */}
             <div className={lotteryStyles.message}>
               <p className={lotteryStyles.asideTitle}>Messages</p>
-              <div className={lotteryStyles.box}>
+              <div className={`vScroll ${lotteryStyles.box}`}>
                 <div
                   className="flexRow justifyEnd alignCenter"
                   style={{ gap: "15px" }}
@@ -264,13 +262,13 @@ const ViewGame = () => {
                   className="flexColumn"
                   style={{ gap: "16px", marginTop: "16px" }}
                 >
-                  <p className="textCenter fs14">
+                  <p className="textCenter fs14" style={{ color: "#48494D" }}>
                     Sorry you don’t have any active conversations with the game
                     master at the moment.
                   </p>
                   <CustomButtonII
                     text={"Start conversation"}
-                    className={"fs14 btnSm"}
+                    className={"btnSm fs12"}
                     centerText={true}
                   />
                 </div>
@@ -278,11 +276,12 @@ const ViewGame = () => {
             </div>
           </div>
 
+          {/* TODO: fix leader overflow */}
           {/* leaderborad */}
           <div className={lotteryStyles.leaderboard}>
             <div className={`flexRow justifyBetween ${lotteryStyles.mb12}`}>
               <p className={lotteryStyles.asideTitle}>Leaderboard</p>
-              <p className="flexRow alignCenter cursor-pointer">
+              <p className="flexRow alignCenter cursor-pointer fs14">
                 View all <IoChevronForward fontSize={"20px"} />
               </p>
             </div>
