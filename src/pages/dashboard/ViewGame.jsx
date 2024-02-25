@@ -29,8 +29,8 @@ const ViewGame = () => {
     ticketPrice: "20",
     jackpotPrize: "20,000",
     ticketCapacity: "212",
-    lotteryStarts: "",
-    lotteryEnds: "",
+    lotteryStarts: "2/12/2024",
+    lotteryEnds: "2/12/2024",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia provident, quasi praesentium odio assumenda laudantium error. Iusto blanditiis fugiat dolores exercitationem maxime incidunt omnis, ullam assumenda vel sit! Placeat, doloribus!",
     telegramLink: "",
@@ -173,7 +173,7 @@ const ViewGame = () => {
                 text={"Update"}
                 className="btnLg"
                 type="button"
-                // onClick={submitForm}
+                onClick={() => navigate("/dashboard/lotteries/update-game/1")}
                 centerText={true}
               />
             </div>
@@ -340,6 +340,7 @@ const ViewGame = () => {
           </div>
         </aside>
 
+        {/* modals */}
         <Modal
           isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}

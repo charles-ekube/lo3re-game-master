@@ -12,6 +12,10 @@
   grid-template-columns: 55% 45%;
 }
 
+.mainContainer.no-aside {
+  grid-template-columns: 1fr;
+}
+
 /* side bar  */
 .sideBarContainer {
   background: rgba(35, 42, 68, 1);
