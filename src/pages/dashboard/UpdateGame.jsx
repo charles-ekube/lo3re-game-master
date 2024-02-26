@@ -4,14 +4,12 @@ import lotteryStyles from "../../assets/styles/lotteries.module.css";
 import CustomButtonII from "../../utils/CustomButtonII";
 import DatePicker from "react-datepicker";
 import { showError } from "../../utils/Alert";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { updateAddLotteryForm } from "../../redux/features/generalSlice";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import { IoIosArrowRoundBack } from "react-icons/io";
 
 const UpdateGame = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
