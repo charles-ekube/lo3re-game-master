@@ -6,9 +6,13 @@ import {
   toggleSidebar,
 } from "../../../redux/features/generalSlice";
 import { FiMenu } from "react-icons/fi";
+import { FaTimes } from "react-icons/fa";
+import TransactionHistory from "../../../components/dashboard/wallet/TransactionHistory";
+import TicketPurchaseNotification from "./TicketPurchaseNotification";
 
 const TopNav = () => {
   const [isScreenWidth1150, setIsScreenWidth1150] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const showSidebar = useSelector((state) => state.general.showSidebar);
   const userDetails = useSelector((state) => state.general.userDetail);
   const dispatch = useDispatch();
@@ -47,7 +51,6 @@ const TopNav = () => {
     lastLetter = userDetails?.displayName[userDetails?.displayName.length - 1];
   }
 
-
   return (
     <>
       <nav className="topNavContainer">
@@ -85,9 +88,75 @@ const TopNav = () => {
               {userDetails?.displayName ? userDetails?.displayName : "User"}
             </Text>
           </div>
-          <CiBellOn size={22} />
+          <div className="bell-icon" onClick={() => setShowNotification(true)}>
+            <CiBellOn />
+          </div>
         </section>
       </nav>
+
+      {showNotification ? (
+        <>
+          <div className={`notification-dropdown`}>
+            <div className="flexRow justifyBetween alignCenter">
+              <h3 className="header-title">Notifications</h3>
+              <FaTimes
+                size={16}
+                className="textDanger cursor-pointer"
+                onClick={() => setShowNotification(false)}
+              />
+            </div>
+            <div className="content">
+              <TransactionHistory
+                txnId={"09232kjdsfbns"}
+                type={"deposit"}
+                amount={"30.00"}
+                currency={"NGN"}
+                date={"239837834"}
+                status={"success"}
+                method={"bank_transfer"}
+                className="list-divider"
+              />
+              <TicketPurchaseNotification
+                message={"Raynera sent a message"}
+                chatMsg={"I'll book another sessio..."}
+                date={239837834}
+                status={"3 mins ago"}
+              />
+              <TransactionHistory
+                txnId={"09232kjdsfbns"}
+                type={"deposit"}
+                amount={"30.00"}
+                currency={"NGN"}
+                date={"239837834"}
+                status={"failed"}
+                method={"bank_transfer"}
+                className="list-divider"
+              />
+              <TransactionHistory
+                txnId={"09232kjdsfbns"}
+                type={"withdrawal"}
+                amount={"30.00"}
+                currency={"NGN"}
+                date={"239837834"}
+                status={"success"}
+                method={"bank_transfer"}
+                className="list-divider"
+              />
+              <TicketPurchaseNotification
+                message={"Raynera bought a lottery ticket"}
+                date={239837834}
+                status={"3 mins ago"}
+              />
+            </div>
+          </div>
+          <div
+            className="notification-overlay"
+            onClick={() => setShowNotification(false)}
+          ></div>
+        </>
+      ) : (
+        ""
+      )}
     </>
   );
 };;

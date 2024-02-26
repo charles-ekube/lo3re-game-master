@@ -79,6 +79,10 @@
     background-color: rgba(255, 225, 222, 0.3);
 }
 
+.iconBg-secondary {
+    background-color: var(--primary);
+}
+
 .cardLinkBtn {
     padding: 14px 16px;
     border: 2px solid #E8E8E8;

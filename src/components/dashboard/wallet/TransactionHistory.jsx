@@ -16,6 +16,7 @@ const TransactionHistory = ({
   method,
   txnId,
   status,
+  className = "",
   checkoutUrl = "",
 }) => {
   const [showTxnModal, setShowTxnModal] = useState(false);
@@ -52,7 +53,7 @@ const TransactionHistory = ({
   return (
     <>
       <div
-        className="flexRow justifyBetween historyRow"
+        className={`flexRow justifyBetween historyRow ${className}`}
         onClick={() => setShowTxnModal(true)}
       >
         <div className="flexRow alignCenter">

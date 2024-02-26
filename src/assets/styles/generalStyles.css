@@ -10,6 +10,13 @@
   --lightGrey: #F3F3F3;
   --lightGreyII: #E8E8E8;
   --black: #101010;
+  --zI: 1;
+  --zII: 2;
+  --zIII: 3;
+  --zIV: 4;
+  --zV: 5;
+  --zX: 10;
+  --zMax: 11;
 }
 
 
@@ -135,6 +142,10 @@ button {
   margin-top: 40px;
 }
 
+.my4 {
+  margin-block: 4px;
+}
+
 .mb-2 {
   margin-bottom: 15px;
 }
@@ -183,6 +194,15 @@ button {
 
 .w100 {
   width: 100%;
+}
+
+.list-divider {
+  border-bottom: 1px solid #E8E8E8;
+  padding-block: 10px;
+}
+
+.list-divider:last-child {
+  border-bottom: none;
 }
 
 .btn {
@@ -494,5 +514,17 @@ button {
 
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeInSlideUp {
+  from {
+      opacity: 0;
+      transform: translateY(3px);
+  }
+
+  to {
+      opacity: 1;
+      transform: translateY(0);
   }
 }
