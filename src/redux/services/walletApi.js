@@ -43,7 +43,7 @@ export const walletApi = createApi({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["transactions"],
+      invalidatesTags: ["transactions", "balance"],
     }),
     requestDeposit: builder.mutation({
       query: (data) => ({

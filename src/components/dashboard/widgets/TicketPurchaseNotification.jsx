@@ -16,25 +16,26 @@ const TicketPurchaseNotification = ({
 
   return (
     <>
-      <div className="flexRow justifyBetween historyRow ticket-notification-row list-divider">
-        <div className="flexRow alignCenter">
-          <div className={`icon iconBg-secondary`}>
-            <img src={NotiIcon} alt="" />
-          </div>
-          <div className="flexColumn justifyCenter" style={{ gap: "4px" }}>
-            <p className="title">{message}</p>
-            {chatMsg ? (
-              <div className="ref-code-box">
-                <p>{chatMsg}</p>
-              </div>
-            ) : (
-              ""
-            )}
+      <div className="flexRow alignCenter historyRow ticket-notification-row list-divider">
+        <div className={`icon iconBg-secondary`}>
+          <img src={NotiIcon} alt="" />
+        </div>
+        <div
+          className="flexColumn justifyCenter"
+          style={{ gap: "4px", width: "calc(100% - 58px)" }}
+        >
+          <p className="title">{message}</p>
+          {chatMsg ? (
+            <div className="ref-code-box msg-box">
+              <p>{chatMsg}</p>
+            </div>
+          ) : (
+            ""
+          )}
+          <div className="flexRow justifyBetween text-muted">
+            <p className={"status-text"}>{status}</p>
             <p className="date">{newDate}</p>
           </div>
-        </div>
-        <div className="flexColumn justifyEnd text-end text-muted">
-          <p className={"status-text"}>{status}</p>
         </div>
       </div>
     </>

@@ -288,7 +288,7 @@ const ViewGame = () => {
             </div>
           </div>
 
-          {/* TODO: fix leader overflow */}
+          {/* FIXME: fix leader overflow */}
           {/* leaderborad */}
           <div className={lotteryStyles.leaderboard}>
             <div className={`flexRow justifyBetween ${lotteryStyles.mb12}`}>
@@ -299,38 +299,44 @@ const ViewGame = () => {
             </div>
             <div className={lotteryStyles.leaderboardContainer}>
               <div className={`${lotteryStyles.tableResponsive} hScroll`}>
-                <table class="chakra-table css-188ecbe">
-                  <thead class="css-0">
-                    <tr class="css-kiemwp">
-                      <td class="css-odbtz1">Player name</td>
-                      <td class="css-odbtz1">Rank</td>
-                      <td class="css-odbtz1">Lottery no</td>
-                      <td class="css-odbtz1">Jackpot win</td>
-                      <td class="css-odbtz1"></td>
+                <table>
+                  <thead>
+                    <tr>
+                      <td>Player name</td>
+                      <td>Rank</td>
+                      <td>Lottery no</td>
+                      <td>Jackpot win</td>
+                      <td></td>
                     </tr>
                   </thead>
-                  <tbody class="css-1yuhvjn">
+                  <tbody>
                     {Winners.map((val, idx) => (
                       <tr
-                        class={`${idx === 2 ? lotteryStyles.activeUser : ""}`}
+                        className={`${
+                          idx === 2 ? lotteryStyles.activeUser : ""
+                        }`}
                         key={`ld-${idx}`}
                       >
-                        <td class="css-1cbprck">
-                          <div class={`flexRow alignCenter`}>
-                            <div class={lotteryStyles.tableAvatar}>
+                        <td>
+                          <div className={`flexRow alignCenter`}>
+                            <div className={lotteryStyles.tableAvatar}>
                               <p>R</p>
                             </div>
-                            <div class="css-zupw4a">
-                              <p class={lotteryStyles.leaderName}>{val.name}</p>
+                            <div>
+                              <p className={lotteryStyles.leaderName}>
+                                {val.name}
+                              </p>
                             </div>
                           </div>
                         </td>
-                        <td class="css-1k0yhhj">{val.rank}</td>
-                        <td class="css-1k0yhhj">
-                          <p class={lotteryStyles.leaderLottoNumber}>012345</p>
+                        <td>{val.rank}</td>
+                        <td>
+                          <p className={lotteryStyles.leaderLottoNumber}>
+                            012345
+                          </p>
                         </td>
-                        <td class="css-1k0yhhj">{val.win}</td>
-                        <td class="css-16ixpl9">3 mins ago</td>
+                        <td>{val.win}</td>
+                        <td>3 mins ago</td>
                       </tr>
                     ))}
                   </tbody>

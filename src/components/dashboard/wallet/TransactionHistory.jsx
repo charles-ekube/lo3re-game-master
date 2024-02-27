@@ -16,7 +16,7 @@ const TransactionHistory = ({
   method,
   txnId,
   status,
-  className = "",
+  disableModal = false,
   checkoutUrl = "",
 }) => {
   const [showTxnModal, setShowTxnModal] = useState(false);
@@ -53,8 +53,8 @@ const TransactionHistory = ({
   return (
     <>
       <div
-        className={`flexRow justifyBetween historyRow ${className}`}
-        onClick={() => setShowTxnModal(true)}
+        className={`flexRow justifyBetween historyRow list-divider`}
+        onClick={() => setShowTxnModal(!disableModal)}
       >
         <div className="flexRow alignCenter">
           <div
@@ -139,7 +139,7 @@ const TransactionHistory = ({
               </div>
             </div>
           </div>
-          {status?.toLowerCase() === "pending" && (
+          {status?.toLowerCase() === "pending" && isCreditTxn ? (
             <div>
               <CustomButtonII
                 text={"Checkout"}
@@ -149,6 +149,8 @@ const TransactionHistory = ({
                 centerText
               />
             </div>
+          ) : (
+            ""
           )}
         </div>
       </Modal>

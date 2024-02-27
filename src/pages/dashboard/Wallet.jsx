@@ -38,13 +38,13 @@ const Wallet = () => {
     currency: "",
   });
   const [withdrawWalletModal, setWithdrawWalletModal] = useState(false);
-  const { data: transactionHistory, isLoading: isTransactionHistoryLoading } =
-    useFetchTransactionsQuery("limit=5");
   const {
     data: walletBalance,
     isLoading: isWalletBalanceLoading,
     error: walletBalanceError,
   } = useFetchWalletBalanceQuery();
+  const { data: transactionHistory, isLoading: isTransactionHistoryLoading } =
+    useFetchTransactionsQuery("limit=5");
   const { data: user } = useFetchProfileQuery();
 
   const { data: bankBeneficiaries, isLoading: isBankBeneLoading } =

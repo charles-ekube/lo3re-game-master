@@ -20,13 +20,22 @@ const LotteryGameCard = ({ gameId }) => {
       <div className={lotteryStyles.jackpotBox}>
         <div className={lotteryStyles.box}>
           <div className="flexRow justifyBetween alignCenter">
-            <span className={lotteryStyles.timer}>11h 00m</span>
+            <span
+              className={lotteryStyles.timer}
+              onClick={() =>
+                navigate(`/dashboard/lotteries/view-game/${gameId}`)
+              }
+            >
+              11h 00m
+            </span>
             <button
               className="btn btn-ghost no-hover p0"
+              id="ellipse-btn"
               onClick={() => setShowOptions(true)}
             >
               <FaEllipsis
                 color={"var(--white)"}
+                id="ellipse"
                 className={lotteryStyles.ellipse}
               />
             </button>
@@ -55,7 +64,9 @@ const LotteryGameCard = ({ gameId }) => {
           ) : (
             ""
           )}
-          <div>
+          <div
+            onClick={() => navigate(`/dashboard/lotteries/view-game/${gameId}`)}
+          >
             <div className="flexRow justifyEnd alignCenter">
               <MdVerified
                 color="var(--primary)"

@@ -44,8 +44,8 @@ const TopNav = () => {
     typeof userDetails?.displayName !== "string" ||
     userDetails?.displayName.length === 0
   ) {
-    firstLetter = "u";
-    lastLetter = "s";
+    firstLetter = "X";
+    lastLetter = "X";
   } else {
     firstLetter = userDetails?.displayName[0];
     lastLetter = userDetails?.displayName[userDetails?.displayName.length - 1];
@@ -114,7 +114,7 @@ const TopNav = () => {
                 date={"239837834"}
                 status={"success"}
                 method={"bank_transfer"}
-                className="list-divider"
+                disableModal={true}
               />
               <TicketPurchaseNotification
                 message={"Raynera sent a message"}
@@ -130,7 +130,7 @@ const TopNav = () => {
                 date={"239837834"}
                 status={"failed"}
                 method={"bank_transfer"}
-                className="list-divider"
+                disableModal={true}
               />
               <TransactionHistory
                 txnId={"09232kjdsfbns"}
@@ -140,7 +140,7 @@ const TopNav = () => {
                 date={"239837834"}
                 status={"success"}
                 method={"bank_transfer"}
-                className="list-divider"
+                disableModal={true}
               />
               <TicketPurchaseNotification
                 message={"Raynera bought a lottery ticket"}

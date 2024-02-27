@@ -182,8 +182,8 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
 
   const returnCoin = (coin_id) => {
     const coin = supportedCryptos.filter((val) => val.id === coin_id);
-    console.log("cid", coin_id);
-    supportedCryptos.map((val) => console.log("vid", val.id));
+    // console.log("cid", coin_id);
+    // supportedCryptos.map((val) => console.log("vid", val.id));
     if (coin.length) {
       return coin[0];
     }

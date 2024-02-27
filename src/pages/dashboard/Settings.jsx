@@ -24,8 +24,8 @@ const Settings = () => {
   let firstLetter = "";
   let lastLetter = "";
   if (typeof user?.name !== "string" || user?.name.length === 0) {
-    firstLetter = "u";
-    lastLetter = "s";
+    firstLetter = "X";
+    lastLetter = "X";
   } else {
     firstLetter = user?.name[0];
     lastLetter = user?.name[user?.name.length - 1];
