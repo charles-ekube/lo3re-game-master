@@ -5,13 +5,13 @@
 }
 
 /* 👇🏽👇🏽the correct way that shld show a scroll on smaller screens */
-/* .tab {
+.tab {
     margin: 12px 0 24px 0;
     overflow-x: auto;
     display: flex;
-} */
+}
 
-/* .tab button {
+.tab button {
     background-color: inherit;
     color: #bbb;
     border: none;
@@ -24,14 +24,14 @@
     display: flex;
     align-items: center;
     border-bottom: 2px solid var(--lightGreyII);
-} */
-
-.tab {
-    margin: 12px 0 24px 0;
-    overflow-x: auto;
 }
 
-.tab button {
+/* .tab {
+    margin: 12px 0 24px 0;
+    overflow-x: auto;
+} */
+
+/* .tab button {
     background-color: inherit;
     float: left;
     color: #bbb;
@@ -45,7 +45,7 @@
     display: flex;
     align-items: center;
     border-bottom: 2px solid var(--lightGreyII);
-}
+} */
 
 .tab button > .badge {
     background-color: #bbb;
@@ -501,7 +501,8 @@
 }
 
 .activeUser {
-    background-color: #272727;
+    background-color: rgba(39, 39, 39, 1);
+    animation: activePlayerAnime 2s linear infinite;
 }
 
 .tableAvatar {
@@ -593,9 +594,14 @@
     width: 100%;
     height: 100%;
     z-index: 2;
-} 
+}
 
 @media screen and (max-width: 850px) {
+
+    .mainContainer {
+        display: block !important;
+    }
+
     .asideCardContainer {
         margin-top: 0;
     }
@@ -759,10 +765,6 @@
         width: 100%;
     }
 
-    .leaderboard {
-        display: none;
-    }
-
     .modalTextResp {
         font-size: 10px !important;
     }
@@ -792,5 +794,15 @@
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes activePlayerAnime {
+    from {
+        background-color: rgba(50, 50, 50, 1);
+    }
+    
+    to {
+        background-color: rgba(50, 50, 50, 0.5);
     }
 }

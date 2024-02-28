@@ -41,7 +41,9 @@ const ViewGame = () => {
 
   return (
     <>
-      <section className="mainContainer w65-45">
+      <section
+        className={`mainContainer w65-45 ${lotteryStyles.mainContainer}`}
+      >
         <div className={`mainContent ${lotteryStyles.addLottery}`}>
           <IoIosArrowRoundBack
             size={34}
@@ -288,7 +290,6 @@ const ViewGame = () => {
             </div>
           </div>
 
-          {/* FIXME: fix leader overflow */}
           {/* leaderborad */}
           <div className={lotteryStyles.leaderboard}>
             <div className={`flexRow justifyBetween ${lotteryStyles.mb12}`}>

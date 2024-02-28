@@ -14,6 +14,11 @@ const Lotteries = () => {
       isActive: true,
     },
     {
+      name: "draft",
+      badgeCount: "0",
+      isActive: false,
+    },
+    {
       name: "pending",
       badgeCount: "0",
       isActive: false,
@@ -41,7 +46,9 @@ const Lotteries = () => {
 
   return (
     <>
-      <section className="mainContainer walletContainer">
+      <section
+        className={`mainContainer walletContainer ${lotteryStyles.mainContainer}`}
+      >
         <div className="mainContent">
           <div className={lotteryStyles.lotteryContainer}>
             <div className="flexRow justifyBetween alignCenter">

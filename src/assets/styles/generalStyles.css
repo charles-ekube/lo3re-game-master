@@ -517,14 +517,14 @@ button {
   }
 }
 
-@keyframes fadeInSlideUp {
+@keyframes notificationSlideUp {
   from {
-    opacity: 0.7;
+    /* opacity: 0.7; */
     transform: translateY(10px);
   }
 
   to {
-      opacity: 1;
+      /* opacity: 1; */
       transform: translateY(0);
   }
 }
