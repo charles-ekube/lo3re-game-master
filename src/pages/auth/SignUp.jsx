@@ -118,11 +118,17 @@ const SignUp = () => {
 
   const register = async () => {
     if (
-      email !== "" ||
-      password !== "" ||
-      confirmPassword !== "" ||
+      email !== "" &&
+      password !== "" &&
+      confirmPassword !== "" &&
       displayName !== ""
     ) {
+      let usernameRegex = RegExp(/\s/);
+      if (usernameRegex.test(displayName)) {
+        showError("Username cannot contain whitespace");
+        return;
+      }
+
       //implement strong password for account security reasons
       if (password === confirmPassword) {
         setState({ ...state, loading: true });

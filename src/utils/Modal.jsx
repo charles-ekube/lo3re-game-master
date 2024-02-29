@@ -7,6 +7,7 @@ const Modal = ({
   hideCloseBtn = false,
   title = null,
   zClass = "",
+  modalClass = "",
   glassOverlay = false,
   children,
 }) => {
@@ -16,7 +17,7 @@ const Modal = ({
         <>
           {glassOverlay && <div className="glassMorph"></div>}
           <div className={`overlay z500 ${zClass}`} onClick={onClose}></div>
-          <div className={`modal ${zClass}`}>
+          <div className={`modal ${zClass} ${modalClass}`}>
             <div className={`flexRow justifyBetween alignCenter posRelative`}>
               <h3 className="modalTitle">{title}</h3>
               <button

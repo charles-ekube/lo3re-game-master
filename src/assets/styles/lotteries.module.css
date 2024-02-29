@@ -448,6 +448,10 @@
     margin-bottom: 12px;
 }
 
+.ticketSalesModal {
+    width: 700px;
+}
+
 .leaderboardContainer {
     padding: 14px;
     padding-block: 20px;
@@ -680,7 +684,12 @@
 
     .formButtonContainer {
         margin-top: 20px;
-    }   
+    }
+
+    .ticketSalesModal {
+        width: 90%;
+    }
+    
 }
 
 
@@ -798,11 +807,15 @@
 }
 
 @keyframes activePlayerAnime {
-    from {
+    10% {
+        background-color: rgba(50, 50, 50, 0.5);
+    }
+    
+    50% {
         background-color: rgba(50, 50, 50, 1);
     }
     
-    to {
+    100% {
         background-color: rgba(50, 50, 50, 0.5);
     }
 }

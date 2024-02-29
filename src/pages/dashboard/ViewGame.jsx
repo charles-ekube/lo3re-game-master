@@ -382,6 +382,7 @@ const ViewGame = () => {
           title={"Ticket sales"}
           isOpen={isTicketModalOpen}
           onClose={() => setIsTicketModalOpen(false)}
+          modalClass={lotteryStyles.ticketSalesModal}
         >
           <div className={`${lotteryStyles.ticketList}`}>
             <TicketRows />

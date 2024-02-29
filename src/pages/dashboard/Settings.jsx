@@ -8,11 +8,13 @@ import { useFetchProfileQuery } from "../../redux/services/accountApi";
 import Modal from "../../utils/Modal";
 import Avatar from "../../utils/Avatar";
 import { CiSearch } from "react-icons/ci";
+import Pagination from "../../utils/Pagination";
 
 const Settings = () => {
   const { data: user } = useFetchProfileQuery();
 
   const [isFollowerModalOpen, setIsFollowerModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const [isUniquePlayersModalOpen, setIsUniquePlayersModalOpen] =
     useState(false);
   const isEmail2faActive = user?.user?.security?.email;
@@ -44,7 +46,7 @@ const Settings = () => {
               </p>
             </div>
             <div className="userStats">
-              <h3 className="userName capitalize">{user?.name}</h3>
+              <h3 className="userName capitalize">@{user?.name}</h3>
               <div className="stats">
                 <div
                   className="text-center cursor-pointer"
@@ -193,6 +195,12 @@ const Settings = () => {
           <NameTagContainer />
           <NameTagContainer />
         </div>
+        <Pagination
+          limit={1}
+          curPage={currentPage}
+          totalItems={2}
+          paginate={(num) => setCurrentPage(num)}
+        />
       </Modal>
 
       <Modal
@@ -210,6 +218,12 @@ const Settings = () => {
           <NameTagContainer />
           <NameTagContainer />
         </div>
+        <Pagination
+          limit={1}
+          curPage={currentPage}
+          totalItems={2}
+          paginate={(num) => setCurrentPage(num)}
+        />
       </Modal>
     </>
   );
