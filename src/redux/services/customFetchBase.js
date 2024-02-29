@@ -25,7 +25,7 @@ const baseQuery = async (args, api, extraOptions) => {
   ) {
     showError("Session expired");
 
-    // api.dispatch(logOutUser({}));
+    api.dispatch(logOutUser({}));
   }
   return result;
 };
