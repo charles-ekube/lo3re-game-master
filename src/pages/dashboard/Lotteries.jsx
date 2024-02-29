@@ -14,7 +14,7 @@ const Lotteries = () => {
       isActive: true,
     },
     {
-      name: "draft",
+      name: "drafts",
       badgeCount: "0",
       isActive: false,
     },

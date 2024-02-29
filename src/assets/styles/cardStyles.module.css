@@ -11,9 +11,10 @@
   padding: 16px;
   /* border-radius: 0 0 16px 16px; */
 }
-/* .sliderCardContainer > img {
-  border-radius: 16px 16px 0 0 !important;
-} */
+.sliderCardContainer > img {
+  /* border-radius: 16px 16px 0 0 !important; */
+  width: 100%;
+}
 
 .contactCard {
   display: flex;

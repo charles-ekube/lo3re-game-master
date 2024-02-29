@@ -4,7 +4,6 @@
     font-weight: 700;
 }
 
-/* 👇🏽👇🏽the correct way that shld show a scroll on smaller screens */
 .tab {
     margin: 12px 0 24px 0;
     overflow-x: auto;
@@ -286,7 +285,6 @@
 }
 
 .asideViewContainer {
-    display: block !important;
     padding-inline: 20px !important;
 }
 
@@ -613,11 +611,6 @@
 
 @media screen and (max-width: 763px) {
 
-    .tab > button {
-        padding: 12px 14px;
-        font-size: 12px;
-    }
-
     .lotteryForm .col3, .lotteryForm .col2 {
         flex-direction: column;
     }
@@ -694,16 +687,6 @@
 
 
 @media screen and (max-width: 500px) {
-    .tab > button {
-        padding: 8px 5px;
-        font-size: 10px;
-    }
-    
-    .tab > button > .badge {
-        font-size: 10px;
-        width: 20px;
-        height: 20px;
-    }
 
     /* jackpot box */
     .jackpotBox {

@@ -200,16 +200,21 @@
 
 /* media queries  */
 @media screen and (max-width: 850px) {
-  .mainContainer, .mainContainer.w75-25, .mainContainer.w65-45 {
-    grid-template-columns: 1fr;
+
+  .mainContainer {
+    display: block;
   }
 
-  /* .asideViewContainer.hideOnMobile {
-    display: none;
+  /* .mainContainer, .mainContainer.w75-25, .mainContainer.w65-45 {
+    grid-template-columns: 1fr;
   } */
 
-  .asideViewContainer {
+  .asideViewContainer.hideOnMobile {
     display: none;
+  }
+
+  .asideViewContainer {
+    padding-inline: 22px;
   }
 
   .topNavSearchContainer {

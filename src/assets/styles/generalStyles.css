@@ -51,6 +51,11 @@ button {
 }
 
 
+.fullscreen-loader-text {
+  font-size: 26px;
+}
+
+
 .flexRow {
   display: flex;
   flex-direction: row;
@@ -479,6 +484,10 @@ button {
 
   .flexRow .inputContainer {
     width: 100% !important;
+  }
+
+  .fullscreen-loader-text {
+    font-size: 20px;
   }
 }
 

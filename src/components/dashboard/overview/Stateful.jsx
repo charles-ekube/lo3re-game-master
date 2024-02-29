@@ -13,6 +13,11 @@ const Stateful = () => {
       isActive: true,
     },
     {
+      name: "drafts",
+      badgeCount: "0",
+      isActive: false,
+    },
+    {
       name: "pending",
       badgeCount: "0",
       isActive: false,

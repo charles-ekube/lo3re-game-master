@@ -279,7 +279,7 @@ const PreviewLottery = () => {
         </div>
 
         {/* aside */}
-        <aside className={"asideViewContainer"}>
+        <aside className={"asideViewContainer hideOnMobile"}>
           <h3 className="fs17 boldText">Create Lottery</h3>
           <div className={lotteryStyles.lotterySteps}>
             <div

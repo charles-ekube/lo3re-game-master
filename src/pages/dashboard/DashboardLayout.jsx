@@ -105,7 +105,7 @@ const FullScreenloader = () => {
       <div>
         <img src={Logo} className={"animateLogo"} alt="logo" />
         <div className={"verifyHeaderText"}>
-          <Text tag={"h2"} className={"f26 boldText"}>
+          <Text tag={"h2"} className={"fullscreen-loader-text boldText"}>
             Unlock Your Lucky Streak🍀✨
           </Text>
         </div>

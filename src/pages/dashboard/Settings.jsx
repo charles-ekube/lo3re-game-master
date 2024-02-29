@@ -168,7 +168,7 @@ const Settings = () => {
         </div>
 
         {/* aside */}
-        <aside className={"asideViewContainer"}>
+        <aside className={"asideViewContainer hideOnMobile"}>
           <CardSlider />
           <div className={"contactCornerContainer"}>
             <Text tag={"p"} className={"f16 satoshi-bold-text"}>
