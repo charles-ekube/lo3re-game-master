@@ -16,7 +16,7 @@ const TicketPurchaseNotification = ({
 
   return (
     <>
-      <div className="flexRow alignCenter historyRow ticket-notification-row list-divider">
+      <div className="flexRow alignCenter historyRow ticket-notification-row py-1 list-divider">
         <div className={`icon iconBg-secondary`}>
           <img src={NotiIcon} alt="" />
         </div>

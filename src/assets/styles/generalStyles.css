@@ -203,7 +203,10 @@ button {
 
 .list-divider {
   border-bottom: 1px solid #E8E8E8;
-  padding-block: 10px;
+}
+
+.list-divider.wallet-container-spacing {
+  padding-block: 15px;
 }
 
 .list-divider:last-child {

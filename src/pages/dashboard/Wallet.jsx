@@ -29,6 +29,7 @@ import QuickWithdraw from "../../components/dashboard/widgets/QuickWithdraw";
 const Wallet = () => {
   const navigate = useNavigate();
   const [fundWalletModal, setFundWalletModal] = useState(false);
+  const [mainWallet, setMainWallet] = useState(null);
   const [no2FAModal, setNo2FAModal] = useState(false);
   const [isQuickWithdrawModalOpen, setQuickWithdrawModal] = useState(false);
   const [quickWithdrawForm, setQuickWithdrawForm] = useState({
@@ -41,8 +42,10 @@ const Wallet = () => {
   const {
     data: walletBalance,
     isLoading: isWalletBalanceLoading,
+    isSuccess: isWalletBalanceSuccess,
     error: walletBalanceError,
   } = useFetchWalletBalanceQuery();
+  console.log("wallet", walletBalance);
   const { data: transactionHistory, isLoading: isTransactionHistoryLoading } =
     useFetchTransactionsQuery("limit=5");
   const { data: user } = useFetchProfileQuery();
@@ -95,6 +98,14 @@ const Wallet = () => {
       );
     }
   }, [walletBalanceError]);
+
+  useEffect(() => {
+    if (isWalletBalanceSuccess) {
+      if (walletBalance?.length >= 1) {
+        setMainWallet(walletBalance[0]);
+      }
+    }
+  }, [isWalletBalanceSuccess, walletBalance]);
 
   const toBeneficiaries = () => {
     navigate("/dashboard/settings/beneficiaries");
@@ -193,29 +204,57 @@ const Wallet = () => {
     <>
       <section className="mainContainer walletContainer">
         <div className="walletContent">
-          <div className="cardContainer">
-            <BalanceCard
-              title={"Wallet Balance"}
-              figure={"$" + walletBalance?.balance}
-              isBalanceLoading={isWalletBalanceLoading}
-              subtitle={"Total gains 0%"}
-            />
-            <BalanceCard
-              title={"Locked Balance"}
-              figure={"$" + walletBalance?.locked_balance}
-              isBalanceLoading={isWalletBalanceLoading}
-              subtitle={"To be credited on 20/10/23"}
-            />
-            <BalanceCard
-              title={"Total Deposit"}
-              figure={"$0.00"}
-              subtitle={"Updated 36mins ago"}
-            />
-            <BalanceCard
-              title={"Total Withdrawal"}
-              figure={"$0.00"}
-              subtitle={"Updated 36mins ago"}
-            />
+          <div>
+            <div className="cardContainer list-divider wallet-container-spacing">
+              <BalanceCard
+                title={"Wallet Balance"}
+                figure={"$" + (mainWallet?.balance || 0)}
+                isBalanceLoading={isWalletBalanceLoading}
+                subtitle={"Total gains 0%"}
+              />
+              <BalanceCard
+                title={"Locked Balance"}
+                figure={"$" + mainWallet?.locked_balance}
+                isBalanceLoading={isWalletBalanceLoading}
+                subtitle={"To be credited on 20/10/23"}
+              />
+            </div>
+            <div className="cardContainer list-divider wallet-container-spacing">
+              <BalanceCard
+                title={"Referral balance"}
+                figure={"$0"}
+                subtitle={"Total gains 0%"}
+              />
+              <BalanceCard
+                title={"Locked referral balance"}
+                figure={"$0"}
+                subtitle={"To be credited on 20/10/23"}
+              />
+            </div>
+            <div className="cardContainer list-divider wallet-container-spacing">
+              <BalanceCard
+                title={"Bonus balance"}
+                figure={"$0"}
+                subtitle={"Total gains 0%"}
+              />
+              <BalanceCard
+                title={"Locked bonus balance"}
+                figure={"$0"}
+                subtitle={"To be credited on 20/10/23"}
+              />
+            </div>
+            <div className="cardContainer list-divider wallet-container-spacing">
+              <BalanceCard
+                title={"Total Deposit"}
+                figure={"$0.00"}
+                subtitle={"Updated 36mins ago"}
+              />
+              <BalanceCard
+                title={"Total Withdrawal"}
+                figure={"$0.00"}
+                subtitle={"Updated 36mins ago"}
+              />
+            </div>
           </div>
           <div className="flexRow justifyCenter gap-1">
             <CustomButtonII

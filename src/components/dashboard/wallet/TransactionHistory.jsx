@@ -53,7 +53,7 @@ const TransactionHistory = ({
   return (
     <>
       <div
-        className={`flexRow justifyBetween historyRow list-divider`}
+        className={`flexRow justifyBetween historyRow py-1 list-divider`}
         onClick={() => setShowTxnModal(!disableModal)}
       >
         <div className="flexRow alignCenter">

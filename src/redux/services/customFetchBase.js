@@ -27,7 +27,6 @@ const base = fetchBaseQuery({
   prepareHeaders: (headers, { getState }) => {
     // const token = localStorage.getItem("accessToken");
     const token = getState().auth.accessToken;
-    console.log("xcg", token);
 
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);
