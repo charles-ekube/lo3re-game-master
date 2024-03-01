@@ -13,7 +13,7 @@ const OverviewEmptyState = ({ userDetails }) => {
   return (
     <section className={"overviewEmptyContainer"}>
       <Text tag={"h2"} className={"f26 capitalize"} style={{ color: "#000" }}>
-        Welcome, {userDetails?.displayName} 🎲🎲
+        Welcome, {userDetails?.name} 🎲🎲
       </Text>
       <Text tag={"p"} className={"satoshi-text f16 textCenter"}>
         It seems there are no active lotteries at the moment. But don't worry,

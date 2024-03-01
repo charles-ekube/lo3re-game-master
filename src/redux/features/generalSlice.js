@@ -1,8 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// TODO: persist user detail
-
-
 
 const localLotteryForm = JSON.parse(localStorage.getItem("lotteryForm") || "{}");
 
@@ -10,7 +7,6 @@ export const general = createSlice({
   name: "general",
   initialState: {
     showSidebar: false,
-    userDetail: {},
     addLotteryForm: Object.keys(localLotteryForm).length
       ? localLotteryForm
       : {},
@@ -37,9 +33,6 @@ export const general = createSlice({
   reducers: {
     toggleSidebar: (state, action) => {
       state.showSidebar = action.payload;
-    },
-    updateUserDetail: (state, action) => {
-      state.userDetail = action.payload;
     },
     updateAddLotteryForm: (state, action) => {
       state.addLotteryForm = action.payload;
@@ -73,24 +66,15 @@ export const general = createSlice({
         tag_id: "",
       };
     },
-    logOutUser: (state) => {
-      // log user out
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("TFAVerified");
-      state.userDetail = {};
-      window.location.replace("/");
-    },
   },
 });
 
 export const {
   toggleSidebar,
-  updateUserDetail,
   updateAddLotteryForm,
   setBankTransferBeneficiaryForm,
   resetBankTransferBeneficiaryForm,
   setCryptoBeneficiaryForm,
   resetCryptoBeneficiaryForm,
-  logOutUser,
 } = general.actions;
 export default general.reducer;

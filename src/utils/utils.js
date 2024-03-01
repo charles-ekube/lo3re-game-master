@@ -1,5 +1,5 @@
 import axios from "axios";
-import { logOutUser } from "../redux/features/generalSlice";
+import { logOutUser } from "../redux/features/authSlice";
 import { store } from "../redux/store";
 
 const apiRootUrl = "https://us-central1-lo3re-ee26a.cloudfunctions.net/api/";

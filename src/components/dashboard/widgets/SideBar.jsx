@@ -13,10 +13,8 @@ import {
 import { signOut } from "firebase/auth";
 import { PiGearSixLight } from "react-icons/pi";
 import { useDispatch } from "react-redux";
-import {
-  logOutUser,
-  toggleSidebar,
-} from "../../../redux/features/generalSlice";
+import { toggleSidebar } from "../../../redux/features/generalSlice";
+import { logOutUser } from "../../../redux/features/authSlice";
 import { auth } from "../../../firebase";
 
 const SideBar = () => {

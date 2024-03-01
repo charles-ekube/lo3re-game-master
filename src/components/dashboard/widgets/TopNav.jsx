@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { CiBellOn, CiSearch, CiUser } from "react-icons/ci";
+import { CiBellOn, CiSearch } from "react-icons/ci";
 import Text from "../../../utils/CustomText";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  toggleSidebar,
-} from "../../../redux/features/generalSlice";
+import { toggleSidebar } from "../../../redux/features/generalSlice";
 import { FiMenu } from "react-icons/fi";
 import { FaTimes } from "react-icons/fa";
 import TransactionHistory from "../../../components/dashboard/wallet/TransactionHistory";
 import TicketPurchaseNotification from "./TicketPurchaseNotification";
+import { useFetchProfileQuery } from "../../../redux/services/accountApi";
+import { FaUser } from "react-icons/fa6";
 
 const TopNav = () => {
   const [isScreenWidth1150, setIsScreenWidth1150] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const showSidebar = useSelector((state) => state.general.showSidebar);
-  const userDetails = useSelector((state) => state.general.userDetail);
+  const { data: user } = useFetchProfileQuery();
   const dispatch = useDispatch();
 
   const handleResize = () => {
@@ -40,15 +40,12 @@ const TopNav = () => {
   // Check if displayName is a string and not empty
   let firstLetter = "";
   let lastLetter = "";
-  if (
-    typeof userDetails?.displayName !== "string" ||
-    userDetails?.displayName.length === 0
-  ) {
+  if (typeof user?.name !== "string" || user?.name.length === 0) {
     firstLetter = "X";
     lastLetter = "X";
   } else {
-    firstLetter = userDetails?.displayName[0];
-    lastLetter = userDetails?.displayName[userDetails?.displayName.length - 1];
+    firstLetter = user?.name[0];
+    lastLetter = user?.name[user?.name.length - 1];
   }
 
   return (
@@ -77,7 +74,7 @@ const TopNav = () => {
                 className={"satoshi-text f14 upper"}
                 style={{ color: "rgba(16, 16, 16, 1)" }}
               >
-                {firstLetter ? firstLetter : <CiUser size={18} />}
+                {firstLetter ? firstLetter : <FaUser size={18} />}
                 {lastLetter ? lastLetter : ""}
               </Text>
             </div>
@@ -85,7 +82,7 @@ const TopNav = () => {
               className={"satoshi-text f14 capitalize d-none-md"}
               style={{ color: "rgba(16, 16, 16, 1)" }}
             >
-              {userDetails?.displayName ? userDetails?.displayName : "User"}
+              {user?.name ? user?.name : "User"}
             </Text>
           </div>
           <div className="bell-icon" onClick={() => setShowNotification(true)}>

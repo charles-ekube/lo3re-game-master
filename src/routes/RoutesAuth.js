@@ -1,13 +1,14 @@
 import { onAuthStateChanged } from "firebase/auth";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, Navigate, useLocation } from "react-router-dom";
 import { auth } from "../firebase";
-import { logOutUser, updateUserDetail } from "../redux/features/generalSlice";
+import { logOutUser } from "../redux/features/authSlice";
 
 function RequireAuth({ children }) {
   let location = useLocation();
-  const token = localStorage.getItem("accessToken");
+  const token = useSelector((state) => state.auth.accessToken);
+  const isTokenRequested = useSelector((state) => state.auth.isTokenRequested);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -26,12 +27,12 @@ function RequireAuth({ children }) {
           // log user out
           dispatch(logOutUser());
         } else {
-          dispatch(updateUserDetail(user));
           console.log("Token valid");
         }
       } else {
         // The user is signed out
         console.log("User signed out");
+        // dispatch(setIsTokenLoading(false));
       }
     });
 
@@ -39,8 +40,10 @@ function RequireAuth({ children }) {
     return () => unsubscribe();
   }, [dispatch, navigate]);
 
-  if (!token) {
-    return <Navigate to="/" state={{ from: location }} replace />;
+  if (isTokenRequested) {
+    if (!token) {
+      return <Navigate to="/" state={{ from: location }} replace />;
+    }
   }
 
   return <>{children}</>;
