@@ -46,7 +46,7 @@ const Stateful = () => {
   return (
     <>
       <div className="mainContent">
-        <div className="cardContainer">
+        <div className="cardContainer mb-2">
           <BalanceCard
             title={"Total Earned"}
             figure={"$0.00"}

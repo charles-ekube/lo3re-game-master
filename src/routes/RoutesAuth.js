@@ -8,7 +8,7 @@ import { logOutUser } from "../redux/features/authSlice";
 function RequireAuth({ children }) {
   let location = useLocation();
   const token = useSelector((state) => state.auth.accessToken);
-  const isTokenRequested = useSelector((state) => state.auth.isTokenRequested);
+  const iv = localStorage.getItem("iv");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -40,10 +40,11 @@ function RequireAuth({ children }) {
     return () => unsubscribe();
   }, [dispatch, navigate]);
 
-  if (isTokenRequested) {
-    if (!token) {
+  if (!token) {
+    if (!iv) {
       return <Navigate to="/" state={{ from: location }} replace />;
     }
+    return <Navigate to="/sleep-screen" state={{ from: location }} />;
   }
 
   return <>{children}</>;

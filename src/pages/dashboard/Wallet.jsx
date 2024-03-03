@@ -45,7 +45,6 @@ const Wallet = () => {
     isSuccess: isWalletBalanceSuccess,
     error: walletBalanceError,
   } = useFetchWalletBalanceQuery();
-  console.log("wallet", walletBalance);
   const { data: transactionHistory, isLoading: isTransactionHistoryLoading } =
     useFetchTransactionsQuery("limit=5");
   const { data: user } = useFetchProfileQuery();
@@ -214,7 +213,7 @@ const Wallet = () => {
               />
               <BalanceCard
                 title={"Locked Balance"}
-                figure={"$" + mainWallet?.locked_balance}
+                figure={"$" + (mainWallet?.locked_balance || 0)}
                 isBalanceLoading={isWalletBalanceLoading}
                 subtitle={"To be credited on 20/10/23"}
               />

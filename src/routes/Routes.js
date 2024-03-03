@@ -19,6 +19,7 @@ import CompleteProfile from "../pages/auth/CompleteProfile";
 import ActivateWalletPin from "../pages/auth/ActivateWalletPin";
 import Verify2FA from "../pages/auth/Verify2FA";
 import ErrorPage from "../pages/ErrorPage";
+import SleepScreen from "../pages/auth/SleepScreen";
 
 const RoutesContainer = () => {
   return (
@@ -26,6 +27,7 @@ const RoutesContainer = () => {
       <Routes>
         <Route path="/" element={<PreLogin />} />
         <Route path="/signUp" element={<SignUp />} />
+        <Route path="/sleep-screen" element={<SleepScreen />} />
         <Route path="/verification" element={<VerifyOtp />} />
         <Route path="/verify-email" element={<ConfirmVerify />} />
         <Route path="/loginVerification" element={<LoginOtp />} />
