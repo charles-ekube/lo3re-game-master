@@ -42,7 +42,6 @@ const HandleEmailActions = () => {
   useEffect(() => {
     // Extracting query parameters from the URL
     const searchParams = new URLSearchParams(location.search);
-    console.log(searchParams);
     // Get the action to complete.
     const mode = searchParams.get("mode");
     // Get the one-time code from the query parameter.
