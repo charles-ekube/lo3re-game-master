@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import NotificationStyles from "../../assets/styles/notification.module.css";
 import TimelineItem from "../../components/dashboard/widgets/TimelineItem";
 import ChatIcon from "../../assets/images/icons/messages-2.png";
+import Pagination from "../../utils/Pagination";
 
 export const Notification = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+
   return (
     <>
       <section className="mainContainer no-aside">
@@ -60,12 +63,12 @@ export const Notification = () => {
                 </div>
               </div>
 
-              {/* <Pagination
-              limit={transactionHistory?.limit}
-              curPage={transactionHistory?.page}
-              totalItems={transactionHistory?.total}
-              paginate={(num) => setCurrentPage(num)}
-            /> */}
+              <Pagination
+                limit={1}
+                curPage={currentPage}
+                totalItems={3}
+                paginate={(num) => setCurrentPage(num)}
+              />
             </div>
           </div>
         </div>
