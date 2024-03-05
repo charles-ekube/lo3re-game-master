@@ -25,6 +25,7 @@ import Affiliate from "./Affiliate";
 import PasswordReset from "./PasswordReset";
 import ViewGame from "./ViewGame";
 import UpdateGame from "./UpdateGame";
+import { Notification } from "./Notification";
 
 const DashboardLayout = () => {
   const dispatch = useDispatch();
@@ -80,6 +81,7 @@ const DashboardLayout = () => {
               <Route path="update-game/:id" element={<UpdateGame />} />
             </Route>
             <Route path="/account" element={<Wallet />} />
+            <Route path="/notification" element={<Notification />} />
             <Route path="/history" element={<History />} />
             <Route path="/settings">
               <Route path="" element={<Settings />} />
