@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Logo from "../../assets/images/logo.svg";
 import Text from "../../utils/CustomText";
 import CustomInput from "../../utils/CustomInput";
@@ -47,6 +47,8 @@ const SleepScreen = () => {
   const dispatch = useDispatch();
   const genIv = localStorage.getItem("iv");
   const cipher = localStorage.getItem("accessToken");
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/dashboard";
   const [formState, setFormState] = useState({
     password: "",
     loading: false,
@@ -91,7 +93,7 @@ const SleepScreen = () => {
       const key = await generateKeyFromString(formState.password, 256);
       const txt = await decrypt(cipher, genIv, key);
       dispatch(updateAccessToken(txt));
-      navigate(-1, { replace: true });
+      navigate(from, { replace: true });
       //   console.log("decr", txt);
     } catch (error) {
       showError("Incorrect password");
