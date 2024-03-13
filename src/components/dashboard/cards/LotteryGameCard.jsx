@@ -10,12 +10,29 @@ import Modal from "../../../utils/Modal";
 import CustomButtonII from "../../../utils/CustomButtonII";
 import { BiEditAlt } from "react-icons/bi";
 import useTimeFormatter from "../../../hooks/useTimeFormatter";
+import { useDeleteGameMutation } from "../../../redux/services/gameApi";
+import { showError, showSuccess } from "../../../utils/Alert";
 
 const LotteryGameCard = ({ game }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { formatDuration } = useTimeFormatter();
   const navigate = useNavigate();
+  const [deleteGame, { isLoading: isDeleteGameLoading }] =
+    useDeleteGameMutation();
+
+  const handleDeleteGame = async () => {
+    await deleteGame(game?.id)
+      .unwrap()
+      .then(() => {
+        showSuccess("Game deleted");
+        navigate(-1);
+      })
+      .catch((err) => {
+        showError("An error occurred, try again later");
+        console.log(err);
+      });
+  };
 
   const viewGame = () => {
     navigate("/dashboard/lotteries/view-game", {
@@ -127,8 +144,8 @@ const LotteryGameCard = ({ game }) => {
             text={"Yes, delete"}
             className={"w50"}
             centerText={true}
-            // loading={isDeleteBeneficiaryLoading}
-            // onClick={handleDeleteBeneficiary}
+            loading={isDeleteGameLoading}
+            onClick={handleDeleteGame}
           />
         </div>
       </Modal>

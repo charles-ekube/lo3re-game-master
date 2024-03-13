@@ -29,8 +29,8 @@ const AddLottery = () => {
     ticketPrice: "",
     jackpot: "",
     ticketGoal: "",
-    startOn: new Date(),
-    endOn: new Date(),
+    startOn: "",
+    endOn: "",
     telegram: "",
     facebook: "",
     whatsapp: "",
@@ -99,8 +99,8 @@ const AddLottery = () => {
       formState.ticketPrice !== "" &&
       formState.jackpot !== "" &&
       formState.ticketGoal !== "" &&
-      formState.startOn !== null &&
-      formState.endOn !== null &&
+      formState.startOn !== "" &&
+      formState.endOn !== "" &&
       formState.description !== ""
     ) {
       if (!file && !localImg) {
@@ -112,12 +112,6 @@ const AddLottery = () => {
         showError("Ticket goal must exceed jackpot");
         return;
       }
-
-      // TODO: fix ticket goal validation
-      // console.log(formState.ticketGoal <= formState.jackpot);
-      // console.log(formState.ticketGoal);
-      // console.log(formState.jackpot);
-      // return;
 
       dispatch(updateAddLotteryForm(formState));
       navigate("/dashboard/lotteries/preview");
@@ -242,7 +236,7 @@ const AddLottery = () => {
                   onChange={(date) =>
                     setFormState({ ...formState, startOn: date })
                   }
-                  minDate={formState.startOn}
+                  minDate={new Date()}
                   className="formInput"
                 />
               </div>
@@ -264,7 +258,7 @@ const AddLottery = () => {
                   onChange={(date) =>
                     setFormState({ ...formState, endOn: date })
                   }
-                  minDate={formState.endOn}
+                  minDate={new Date()}
                   className="formInput"
                 />
               </div>

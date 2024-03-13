@@ -15,7 +15,7 @@ const Lotteries = () => {
     isSuccess: isGameSuccess,
   } = useFetchGamesQuery();
   const [gamesArr, setGamesArr] = useState([]);
-  // console.log(games);
+  console.log(games);
 
   const [tabs, setTabs] = useState([
     {

@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import LotteryGameCard from "../cards/LotteryGameCard";
 import { useFetchGamesQuery } from "../../../redux/services/gameApi";
 import Loader from "../../../utils/Loader";
-import { IoArrowForwardCircleOutline } from "react-icons/io5";
 
 const Stateful = () => {
   const {
@@ -52,25 +51,19 @@ const Stateful = () => {
     if (isGameSuccess) {
       let activeGame = [];
       if (returnActiveTab()[0].name === "active") {
-        activeGame = games?.games
-          ?.filter((game) => game?.status === "active")
-          ?.slice(0, 5);
+        activeGame = games?.games?.filter((game) => game?.status === "active");
       } else if (returnActiveTab()[0].name === "drafts") {
-        activeGame = games?.games
-          ?.filter((game) => game?.status === "drafts")
-          ?.slice(0, 5);
+        activeGame = games?.games?.filter((game) => game?.status === "drafts");
       } else if (returnActiveTab()[0].name === "pending") {
-        activeGame = games?.games
-          ?.filter((game) => game?.status === "pending")
-          ?.slice(0, 5);
+        activeGame = games?.games?.filter((game) => game?.status === "pending");
       } else if (returnActiveTab()[0].name === "completed") {
-        activeGame = games?.games
-          ?.filter((game) => game?.status === "completed")
-          ?.slice(0, 5);
+        activeGame = games?.games?.filter(
+          (game) => game?.status === "completed"
+        );
       } else if (returnActiveTab()[0].name === "declined") {
-        activeGame = games?.games
-          ?.filter((game) => game?.status === "declined")
-          ?.slice(0, 5);
+        activeGame = games?.games?.filter(
+          (game) => game?.status === "declined"
+        );
       }
 
       setGamesArr(activeGame);

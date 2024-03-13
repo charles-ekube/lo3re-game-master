@@ -17,8 +17,29 @@ export const gameApi = createApi({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["games"],
+    }),
+    updateGame: builder.mutation({
+      query: (data) => ({
+        url: `/games/${data.gid}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["games"],
+    }),
+    deleteGame: builder.mutation({
+      query: (gid) => ({
+        url: `/games/${gid}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["games"],
     }),
   }),
 });
 
-export const { useFetchGamesQuery, useCreateGameMutation } = gameApi;
+export const {
+  useFetchGamesQuery,
+  useCreateGameMutation,
+  useUpdateGameMutation,
+  useDeleteGameMutation,
+} = gameApi;

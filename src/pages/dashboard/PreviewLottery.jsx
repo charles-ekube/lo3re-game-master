@@ -13,6 +13,9 @@ import { useCreateGameMutation } from "../../redux/services/gameApi";
 import { showError } from "../../utils/Alert";
 import { useFetchWalletBalanceQuery } from "../../redux/services/walletApi";
 import useTimeFormatter from "../../hooks/useTimeFormatter";
+import { imageDb } from "../../firebase";
+import { v4 } from "uuid";
+import { ref, uploadBytes } from "firebase/storage";
 
 function b64toBlob(b64Data, contentType, sliceSize) {
   contentType = contentType || "";
@@ -39,11 +42,12 @@ function b64toBlob(b64Data, contentType, sliceSize) {
 
 const PreviewLottery = () => {
   const navigate = useNavigate();
-  // const [file, setFile] = useState();
+  const [file, setFile] = useState();
   const dispatch = useDispatch();
   const [successModal, setSuccessModal] = useState(false);
   const lotteryForm = useSelector((state) => state.general.addLotteryForm);
   const { dateSubmitFormat } = useTimeFormatter();
+  const [uploadLoading, setUploadLoading] = useState(false);
   const { data: walletBalance, isLoading: isWalletBalanceLoading } =
     useFetchWalletBalanceQuery();
   const [createGame, { isLoading: isCreateGameLoading }] =
@@ -70,8 +74,10 @@ const PreviewLottery = () => {
       return;
     }
 
-    // setFile(photo);
+    setFile(photo);
   }, []);
+
+  const storageRef = ref(imageDb, `uploads/${v4()}`);
 
   const submitForm = async () => {
     const {
@@ -89,8 +95,6 @@ const PreviewLottery = () => {
       description,
       startOn: dateSubmitFormat(startOn),
       endOn: dateSubmitFormat(endOn),
-      // startOn,
-      // endOn,
       jackpot: Number(jackpot),
       ticketGoal: Number(ticketGoal),
       ticketPrice: Number(ticketPrice),
@@ -113,36 +117,17 @@ const PreviewLottery = () => {
       }
     }
 
-    // const fData = new FormData();
-    // fData.append("title", lotteryForm.title);
-    // fData.append(
-    //   "walletId",
-    //   walletBalance.length ? walletBalance[0]?.id : null
-    // );
-    // fData.append(
-    //   "coverUrl",
-    //   "https://images.unsplash.com/photo-1544392329-1c7613a76751?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    // );
-    // fData.append("title", lotteryForm.title);
-    // fData.append("description", lotteryForm.description);
-    // fData.append("cause", "test a");
-    // fData.append("ticketPrice", lotteryForm.ticketPrice);
-    // fData.append("jackpot", lotteryForm.jackpot);
-    // fData.append("ticketGoal", lotteryForm.ticketGoal);
-    // fData.append("startsOn", lotteryForm.startOn);
-    // fData.append("endsOn", lotteryForm.endOn);
-    // fData.append(
-    //   "socials",
-    //   JSON.stringify({
-    //     facebook: lotteryForm.facebook,
-    //     telegram: lotteryForm.telegram,
-    //     whatsapp: lotteryForm.whatsapp,
-    //     others: lotteryForm.others,
-    //   })
-    // );
-
-    // setSuccessModal(true);
-    // dispatch(updateAddLotteryForm({}));
+    // TODO: get coverUrl
+    setUploadLoading(true);
+    await uploadBytes(storageRef, file)
+      .then((snapshot) => {
+        console.log(snapshot);
+        setUploadLoading(false);
+      })
+      .catch((err) => {
+        setUploadLoading(false);
+        console.log(err);
+      });
 
     await createGame(fData)
       .unwrap()
@@ -323,7 +308,7 @@ const PreviewLottery = () => {
                 className="btnLg"
                 type="button"
                 centerText={true}
-                loading={isCreateGameLoading}
+                loading={isCreateGameLoading || uploadLoading}
                 onClick={submitForm}
               />
             </div>

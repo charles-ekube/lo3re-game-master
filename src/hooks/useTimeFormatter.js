@@ -17,9 +17,9 @@ const useTimeFormatter = () => {
   // for displaying
   function formatDateToLocaleString(date) {
     var d = new Date(date),
-      month = "" + (d.getUTCMonth() + 1),
-      day = "" + d.getUTCDate(),
-      year = d.getUTCFullYear();
+      month = "" + (d.getMonth() + 1),
+      day = "" + d.getDate(),
+      year = d.getFullYear();
 
     if (month.length < 2) month = "0" + month;
     if (day.length < 2) day = "0" + day;

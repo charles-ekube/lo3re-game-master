@@ -20,6 +20,8 @@ import Avatar from "../../utils/Avatar";
 import Pagination from "../../utils/Pagination";
 import { GrLink } from "react-icons/gr";
 import useTimeFormatter from "../../hooks/useTimeFormatter";
+import { useDeleteGameMutation } from "../../redux/services/gameApi";
+import { showError, showSuccess } from "../../utils/Alert";
 
 function anyKeyHasValue(obj) {
   for (const key in obj) {
@@ -32,12 +34,27 @@ function anyKeyHasValue(obj) {
 
 const ViewGame = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const game = location.state?.game;
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const location = useLocation();
-  const game = location.state?.game;
   const { formatDateToLocaleString, formatDuration } = useTimeFormatter();
+  const [deleteGame, { isLoading: isDeleteGameLoading }] =
+    useDeleteGameMutation();
+
+  const handleDeleteGame = async () => {
+    await deleteGame(game?.id)
+      .unwrap()
+      .then(() => {
+        showSuccess("Game deleted");
+        navigate(-1);
+      })
+      .catch((err) => {
+        showError("An error occurred, try again later");
+        console.log(err);
+      });
+  };
 
   return (
     <>
@@ -217,7 +234,11 @@ const ViewGame = () => {
                 text={"Update"}
                 className="btnLg"
                 type="button"
-                onClick={() => navigate("/dashboard/lotteries/update-game/1")}
+                onClick={() =>
+                  navigate("/dashboard/lotteries/update-game", {
+                    state: { game },
+                  })
+                }
                 centerText={true}
               />
             </div>
@@ -414,8 +435,8 @@ const ViewGame = () => {
               text={"Yes, delete"}
               className={"w50"}
               centerText={true}
-              // loading={isDeleteBeneficiaryLoading}
-              // onClick={handleDeleteBeneficiary}
+              loading={isDeleteGameLoading}
+              onClick={handleDeleteGame}
             />
           </div>
         </Modal>
