@@ -1,11 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BalanceCard from "../../../components/dashboard/wallet/BalanceCard";
 import { IoChevronForward } from "react-icons/io5";
 import lotteryStyles from "../../../assets/styles/lotteries.module.css";
 import { Link } from "react-router-dom";
 import LotteryGameCard from "../cards/LotteryGameCard";
+import { useFetchGamesQuery } from "../../../redux/services/gameApi";
+import Loader from "../../../utils/Loader";
+import { IoArrowForwardCircleOutline } from "react-icons/io5";
 
 const Stateful = () => {
+  const {
+    data: games,
+    isLoading: isGamesLoading,
+    isSuccess: isGameSuccess,
+  } = useFetchGamesQuery();
+  const [gamesArr, setGamesArr] = useState([]);
+
   const [tabs, setTabs] = useState([
     {
       name: "active",
@@ -33,6 +43,52 @@ const Stateful = () => {
       isActive: false,
     },
   ]);
+
+  useEffect(() => {
+    const returnActiveTab = () => {
+      return tabs.filter((tab) => tab.isActive);
+    };
+
+    if (isGameSuccess) {
+      let activeGame = [];
+      if (returnActiveTab()[0].name === "active") {
+        activeGame = games?.games
+          ?.filter((game) => game?.status === "active")
+          ?.slice(0, 5);
+      } else if (returnActiveTab()[0].name === "drafts") {
+        activeGame = games?.games
+          ?.filter((game) => game?.status === "drafts")
+          ?.slice(0, 5);
+      } else if (returnActiveTab()[0].name === "pending") {
+        activeGame = games?.games
+          ?.filter((game) => game?.status === "pending")
+          ?.slice(0, 5);
+      } else if (returnActiveTab()[0].name === "completed") {
+        activeGame = games?.games
+          ?.filter((game) => game?.status === "completed")
+          ?.slice(0, 5);
+      } else if (returnActiveTab()[0].name === "declined") {
+        activeGame = games?.games
+          ?.filter((game) => game?.status === "declined")
+          ?.slice(0, 5);
+      }
+
+      setGamesArr(activeGame);
+    }
+  }, [isGameSuccess, games, tabs]);
+
+  useEffect(() => {
+    if (isGameSuccess) {
+      // update badge count
+      let updatedTabs = [...tabs];
+      updatedTabs = updatedTabs.map((tab) => ({
+        ...tab,
+        badgeCount: games?.games?.filter((game) => game?.status === tab.name)
+          .length,
+      }));
+      setTabs(updatedTabs);
+    }
+  }, [isGameSuccess, games]);
 
   const toggleTabs = (clickedItem) => {
     const updatedTabs = tabs.map((item) => ({
@@ -83,9 +139,23 @@ const Stateful = () => {
               ))}
             </div>
           </div>
-          <div className="flexRow">
-            {/* TODO: add bg img, and tab responsiveness */}
-            <LotteryGameCard gameId={1} />
+          <Loader
+            isLoading={isGamesLoading}
+            height={"100px"}
+            variety={"dark"}
+          />
+          {!gamesArr.length && !isGamesLoading ? (
+            <p className={`text-muted ${lotteryStyles.emptyGamesText}`}>
+              You don't have any {tabs.filter((tab) => tab.isActive)[0].name}{" "}
+              games yet
+            </p>
+          ) : (
+            ""
+          )}
+          <div className={lotteryStyles.lotterySlide}>
+            {gamesArr?.map((game) => (
+              <LotteryGameCard key={game?.id} game={game} />
+            ))}
           </div>
         </div>
       </div>

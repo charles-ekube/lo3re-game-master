@@ -9,8 +9,10 @@ import Modal from "../../utils/Modal";
 import { updateAddLotteryForm } from "../../redux/features/generalSlice";
 import { FaCheck } from "react-icons/fa6";
 import { IoIosArrowRoundBack } from "react-icons/io";
-// import { useCreateLotteryMutation } from "../../redux/services/lotteryApi";
-// import { showError } from "../../utils/Alert";
+import { useCreateGameMutation } from "../../redux/services/gameApi";
+import { showError } from "../../utils/Alert";
+import { useFetchWalletBalanceQuery } from "../../redux/services/walletApi";
+import useTimeFormatter from "../../hooks/useTimeFormatter";
 
 function b64toBlob(b64Data, contentType, sliceSize) {
   contentType = contentType || "";
@@ -41,8 +43,11 @@ const PreviewLottery = () => {
   const dispatch = useDispatch();
   const [successModal, setSuccessModal] = useState(false);
   const lotteryForm = useSelector((state) => state.general.addLotteryForm);
-  // const [createLottery, { isLoading: isCreateLotteryLoading }] =
-  //   useCreateLotteryMutation();
+  const { dateSubmitFormat } = useTimeFormatter();
+  const { data: walletBalance, isLoading: isWalletBalanceLoading } =
+    useFetchWalletBalanceQuery();
+  const [createGame, { isLoading: isCreateGameLoading }] =
+    useCreateGameMutation();
   const localImg = localStorage["lotteryPhoto"];
 
   const getPhoto = () => {
@@ -69,40 +74,87 @@ const PreviewLottery = () => {
   }, []);
 
   const submitForm = async () => {
-    const fData = new FormData();
+    const {
+      title,
+      description,
+      startOn,
+      endOn,
+      jackpot,
+      ticketGoal,
+      ticketPrice,
+    } = lotteryForm;
 
-    fData.append("title", lotteryForm.lotteryName);
-    fData.append("description", lotteryForm.description);
-    fData.append("cause", "");
-    fData.append("ticket_price", lotteryForm.ticketPrice);
-    fData.append("jackpot", lotteryForm.jackpotPrize);
-    fData.append("ticket_goal", lotteryForm.ticketCapacity);
-    fData.append("starts_on", lotteryForm.lotteryStarts);
-    fData.append("ends_on", lotteryForm.lotteryEnds);
-    fData.append(
-      "socials",
-      JSON.stringify({
-        facebook: lotteryForm.facebookLink,
-        telegram: lotteryForm.telegramLink,
+    const fData = {
+      title,
+      description,
+      startOn: dateSubmitFormat(startOn),
+      endOn: dateSubmitFormat(endOn),
+      // startOn,
+      // endOn,
+      jackpot: Number(jackpot),
+      ticketGoal: Number(ticketGoal),
+      ticketPrice: Number(ticketPrice),
+      coverUrl: "",
+      cause: "test cause",
+      walletId: walletBalance.length ? walletBalance[0]?.id : null,
+      socials: {
+        facebook: lotteryForm.facebook,
+        twitter: lotteryForm.twitter,
+        telegram: lotteryForm.telegram,
         whatsapp: lotteryForm.whatsapp,
         others: lotteryForm.others,
-      })
-    );
+      },
+    };
 
-    setSuccessModal(true);
-    dispatch(updateAddLotteryForm({}));
+    if (isWalletBalanceLoading) {
+      if (!walletBalance.length || !walletBalance[0]?.id) {
+        showError("An error occured, try again later");
+        return;
+      }
+    }
 
-    // await createLottery(fData)
-    //   .unwrap()
-    //   .then(() => {
-    //     //   onSuccess open modal and empty reduxLotteryForm
-    //     setSuccessModal(true);
-    //     console.log(lotteryForm);
-    //     dispatch(updateAddLotteryForm({}));
+    // const fData = new FormData();
+    // fData.append("title", lotteryForm.title);
+    // fData.append(
+    //   "walletId",
+    //   walletBalance.length ? walletBalance[0]?.id : null
+    // );
+    // fData.append(
+    //   "coverUrl",
+    //   "https://images.unsplash.com/photo-1544392329-1c7613a76751?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    // );
+    // fData.append("title", lotteryForm.title);
+    // fData.append("description", lotteryForm.description);
+    // fData.append("cause", "test a");
+    // fData.append("ticketPrice", lotteryForm.ticketPrice);
+    // fData.append("jackpot", lotteryForm.jackpot);
+    // fData.append("ticketGoal", lotteryForm.ticketGoal);
+    // fData.append("startsOn", lotteryForm.startOn);
+    // fData.append("endsOn", lotteryForm.endOn);
+    // fData.append(
+    //   "socials",
+    //   JSON.stringify({
+    //     facebook: lotteryForm.facebook,
+    //     telegram: lotteryForm.telegram,
+    //     whatsapp: lotteryForm.whatsapp,
+    //     others: lotteryForm.others,
     //   })
-    //   .catch((err) => {
-    //     showError(err?.message || err?.data?.message || "An error occurred");
-    //   });
+    // );
+
+    // setSuccessModal(true);
+    // dispatch(updateAddLotteryForm({}));
+
+    await createGame(fData)
+      .unwrap()
+      .then((resp) => {
+        //   onSuccess open modal and empty reduxLotteryForm
+        console.log("resp", resp);
+        setSuccessModal(true);
+        dispatch(updateAddLotteryForm({}));
+      })
+      .catch((err) => {
+        showError(err?.message || err?.data?.message || "An error occurred");
+      });
   };
 
   return (
@@ -141,16 +193,16 @@ const PreviewLottery = () => {
               )}
             </div>
             <div className={lotteryStyles.content}>
-              <h3 className="title capitalize">{lotteryForm.lotteryName}</h3>
+              <h3 className="title capitalize">{lotteryForm.title}</h3>
               <p className="subtitle">
-                Jackpot prize: <b>${lotteryForm.jackpotPrize}</b>
+                Jackpot prize: <b>${lotteryForm.jackpot}</b>
               </p>
               <div
                 className={`flexRow text-muted mt-2 ${lotteryStyles.formDates}`}
               >
                 <p className="me10 f14">
                   Start date:{" "}
-                  {lotteryForm.lotteryStarts?.toLocaleString(undefined, {
+                  {lotteryForm.startOn?.toLocaleString(undefined, {
                     day: "numeric",
                     month: "numeric",
                     year: "numeric",
@@ -158,7 +210,7 @@ const PreviewLottery = () => {
                 </p>
                 <p className="f14">
                   End date:{" "}
-                  {lotteryForm.lotteryEnds?.toLocaleString(undefined, {
+                  {lotteryForm.endOn?.toLocaleString(undefined, {
                     day: "numeric",
                     month: "numeric",
                     year: "numeric",
@@ -180,13 +232,13 @@ const PreviewLottery = () => {
                 />
               </div>
               <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
-                <label>Ticket capacity</label>
+                <label>Ticket goal</label>
                 <input
                   type="number"
                   className="formInput"
-                  value={lotteryForm.ticketCapacity}
+                  value={lotteryForm.ticketGoal}
                   readOnly
-                  name="ticketCapacity"
+                  name="ticketGoal"
                 />
               </div>
             </div>
@@ -213,9 +265,9 @@ const PreviewLottery = () => {
                 <input
                   type="text"
                   className="formInput"
-                  value={lotteryForm.telegramLink}
+                  value={lotteryForm.telegram}
                   placeholder="Optional"
-                  name="telegramLink"
+                  name="telegram"
                   readOnly
                 />
               </div>
@@ -224,9 +276,9 @@ const PreviewLottery = () => {
                 <input
                   type="text"
                   className="formInput"
-                  value={lotteryForm.facebookLink}
+                  value={lotteryForm.facebook}
                   placeholder="Optional"
-                  name="facebookLink"
+                  name="facebook"
                   readOnly
                 />
               </div>
@@ -271,7 +323,7 @@ const PreviewLottery = () => {
                 className="btnLg"
                 type="button"
                 centerText={true}
-                // loading={isCreateLotteryLoading}
+                loading={isCreateGameLoading}
                 onClick={submitForm}
               />
             </div>

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import lotteryStyles from "../../assets/styles/lotteries.module.css";
 import CustomButtonII from "../../utils/CustomButtonII";
 import BgImage from "../../assets/images/Image.png";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { GoDotFill } from "react-icons/go";
 import { IoChevronForward } from "react-icons/io5";
@@ -18,26 +18,26 @@ import WasteCollection from "../../assets/images/wastecollection.png";
 import Text from "../../utils/CustomText";
 import Avatar from "../../utils/Avatar";
 import Pagination from "../../utils/Pagination";
+import { GrLink } from "react-icons/gr";
+import useTimeFormatter from "../../hooks/useTimeFormatter";
+
+function anyKeyHasValue(obj) {
+  for (const key in obj) {
+    if (obj[key] !== "") {
+      return true;
+    }
+  }
+  return false;
+}
 
 const ViewGame = () => {
   const navigate = useNavigate();
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [formState] = useState({
-    lotteryName: "Jackpot 1",
-    ticketPrice: "20",
-    jackpotPrize: "20,000",
-    ticketCapacity: "212",
-    lotteryStarts: "2/12/2024",
-    lotteryEnds: "2/12/2024",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia provident, quasi praesentium odio assumenda laudantium error. Iusto blanditiis fugiat dolores exercitationem maxime incidunt omnis, ullam assumenda vel sit! Placeat, doloribus!",
-    telegramLink: "",
-    facebookLink: "",
-    whatsapp: "",
-    others: "",
-  });
+  const location = useLocation();
+  const game = location.state?.game;
+  const { formatDateToLocaleString, formatDuration } = useTimeFormatter();
 
   return (
     <>
@@ -58,9 +58,9 @@ const ViewGame = () => {
               <img src={BgImage} alt="" className={lotteryStyles.fileImg} />
             </div>
             <div className={lotteryStyles.content}>
-              <h3 className="title capitalize">{formState.lotteryName}</h3>
+              <h3 className="title capitalize">{game?.title}</h3>
               <p className={`subtitle ${lotteryStyles.subtitle}`}>
-                Jackpot prize: <b>${formState.jackpotPrize}</b>
+                Jackpot prize: <b>${game?.jackpot}</b>
               </p>
               <div
                 className={`fs14 mediumText ${lotteryStyles.liveUserStatFlex}`}
@@ -69,15 +69,22 @@ const ViewGame = () => {
                   className="flexRow alignCenter"
                   style={{ gap: "8px", flexWrap: "wrap" }}
                 >
-                  <div className="flexRow alignCenter">
-                    <GoDotFill color={"#06C167"} />
-                    <span>Live</span>
+                  <div className="flexRow alignCenter capitalize">
+                    <GoDotFill className={`game-${game?.status}`} />
+                    <span>
+                      {game?.status === "active" ? "Live" : game?.status}
+                    </span>
                   </div>
-                  <p className={lotteryStyles.timerLg}>11h 00m left</p>
+                  <p className={lotteryStyles.timerLg}>
+                    {formatDuration(game?.endOn)} left
+                  </p>
                 </div>
                 <div className="flexRow alignCenter" style={{ gap: "4px" }}>
                   <TiGroup color="#2F53D7" fontSize={24} />
-                  <span className="text-muted fs14">1002/10,000 playing</span>
+                  {/* <span className="text-muted fs14">1002/10,000 playing</span> */}
+                  <span className="text-muted fs14">
+                    {game?.totalPlayers} playing
+                  </span>
                 </div>
               </div>
             </div>
@@ -89,17 +96,17 @@ const ViewGame = () => {
                 <input
                   type="text"
                   className="formInput"
-                  value={"$" + formState.ticketPrice}
+                  value={"$" + game?.ticketPrice}
                   readOnly
                   name="ticketPrice"
                 />
               </div>
               <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
-                <label>Ticket capacity</label>
+                <label>Ticket goal</label>
                 <input
-                  type="number"
+                  type="text"
                   className="formInput"
-                  value={formState.ticketCapacity}
+                  value={`${game?.ticketSalesCount}/${game?.ticketGoal}`}
                   readOnly
                   name="ticketCapacity"
                 />
@@ -110,7 +117,7 @@ const ViewGame = () => {
               <label>Description</label>
               <textarea
                 className="formInput"
-                value={formState.description}
+                value={game?.description}
                 name="description"
                 cols="30"
                 rows="5"
@@ -124,7 +131,7 @@ const ViewGame = () => {
                 <input
                   type="text"
                   className="formInput"
-                  value={formState.lotteryStarts}
+                  value={formatDateToLocaleString(game?.startOn)}
                   readOnly
                   name="ticketPrice"
                 />
@@ -134,7 +141,7 @@ const ViewGame = () => {
                 <input
                   type="text"
                   className="formInput"
-                  value={formState.lotteryEnds}
+                  value={formatDateToLocaleString(game?.endOn)}
                   readOnly
                   name="ticketCapacity"
                 />
@@ -142,20 +149,55 @@ const ViewGame = () => {
             </div>
 
             <div className={lotteryStyles.links}>
-              <p>Links</p>
+              {anyKeyHasValue(game?.socials) ? <p>Links</p> : ""}
               <div
                 className="flexRow"
                 style={{ gap: "10px", marginTop: "10px", fontSize: "27px" }}
               >
-                <a href="/#" target={"_blank"} rel="noreferrer">
-                  <FaTelegram color="#28A8E9" />
-                </a>
-                <a href="/#" target={"_blank"} rel="noreferrer">
-                  <FaFacebook color="#0F8FF2" />
-                </a>
-                <a href="/#" target={"_blank"} rel="noreferrer">
-                  <IoLogoWhatsapp color="#2AB03F" />
-                </a>
+                {game?.socials?.telegram ? (
+                  <a
+                    href={game?.socials?.telegram}
+                    target={"_blank"}
+                    rel="noreferrer"
+                  >
+                    <FaTelegram color="#28A8E9" />
+                  </a>
+                ) : (
+                  ""
+                )}
+                {game?.socials?.facebook ? (
+                  <a
+                    href={game?.socials?.facebook}
+                    target={"_blank"}
+                    rel="noreferrer"
+                  >
+                    <FaFacebook color="#0F8FF2" />
+                  </a>
+                ) : (
+                  ""
+                )}
+                {game?.socials?.whatsapp ? (
+                  <a
+                    href={game?.socials?.whatsapp}
+                    target={"_blank"}
+                    rel="noreferrer"
+                  >
+                    <IoLogoWhatsapp color="#2AB03F" />
+                  </a>
+                ) : (
+                  ""
+                )}
+                {game?.socials?.others ? (
+                  <a
+                    href={game?.socials?.others}
+                    target={"_blank"}
+                    rel="noreferrer"
+                  >
+                    <GrLink />
+                  </a>
+                ) : (
+                  ""
+                )}
               </div>
             </div>
 
@@ -189,13 +231,13 @@ const ViewGame = () => {
           <div className={`cardContainer ${lotteryStyles.asideCardContainer}`}>
             <BalanceCard
               title={"Tickets sold"}
-              figure={"40"}
+              figure={game?.ticketSalesCount}
               subtitle={"Updated 3 mins ago"}
               hideEyeIcon={true}
             />
             <BalanceCard
               title={"Ticket sales"}
-              figure={"$1000"}
+              figure={`$${game?.ticketSales}`}
               subtitle={"Total gains 0%"}
               hideEyeIcon={true}
             />

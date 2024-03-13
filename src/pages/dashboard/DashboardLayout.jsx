@@ -77,8 +77,8 @@ const DashboardLayout = () => {
               <Route path="" element={<Lotteries />} />
               <Route path="add" element={<AddLottery />} />
               <Route path="preview" element={<PreviewLottery />} />
-              <Route path="view-game/:id" element={<ViewGame />} />
-              <Route path="update-game/:id" element={<UpdateGame />} />
+              <Route path="view-game" element={<ViewGame />} />
+              <Route path="update-game" element={<UpdateGame />} />
             </Route>
             <Route path="/account" element={<Wallet />} />
             <Route path="/notification" element={<Notification />} />

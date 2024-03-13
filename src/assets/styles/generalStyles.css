@@ -38,7 +38,7 @@ button {
 }
 
 ::-webkit-scrollbar{
-  height: 5px;
+  height: 2px;
 }
 
 ::-webkit-scrollbar-track, .hScroll::-webkit-scrollbar-track{
@@ -436,6 +436,23 @@ button {
 
 .fullScreenloader > div {
   text-align: center;
+}
+
+/* game status dot */
+.game-active, .game-live, .game-completed {
+  color: var(--success);
+}
+
+.game-pending {
+  color: var(--warning);
+}
+
+.game-draft, .game-drafts {
+  color: var(--secondary);
+}
+
+.game-declined {
+  color: var(--dangerDark);
 }
 
 

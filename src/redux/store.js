@@ -6,7 +6,7 @@ import authReducer from "./features/authSlice";
 import generalReducer from "./features/generalSlice";
 import { accountApi } from "./services/accountApi";
 import { beneficiariesApi } from "./services/beneficiariesApi";
-import { lotteryApi } from "./services/lotteryApi";
+import { gameApi } from "./services/gameApi";
 import { twoFAApi } from "./services/twoFAApi";
 import { walletApi } from "./services/walletApi";
 
@@ -18,7 +18,7 @@ export const store = configureStore({
     [walletApi.reducerPath]: walletApi.reducer,
     [twoFAApi.reducerPath]: twoFAApi.reducer,
     [beneficiariesApi.reducerPath]: beneficiariesApi.reducer,
-    [lotteryApi.reducerPath]: lotteryApi.reducer,
+    [gameApi.reducerPath]: gameApi.reducer,
   },
   devTools: process.env.NODE_ENV === "development",
   middleware: (getDefaultMiddleware) =>
@@ -30,6 +30,6 @@ export const store = configureStore({
       walletApi.middleware,
       twoFAApi.middleware,
       beneficiariesApi.middleware,
-      lotteryApi.middleware,
+      gameApi.middleware,
     ]),
 });

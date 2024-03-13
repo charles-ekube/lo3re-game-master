@@ -2,31 +2,40 @@ import React, { useState } from "react";
 import { FaEllipsis } from "react-icons/fa6";
 import { MdVerified } from "react-icons/md";
 import { TiGroup } from "react-icons/ti";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import lotteryStyles from "../../../assets/styles/lotteries.module.css";
 import { BsTrash3 } from "react-icons/bs";
 import WasteCollection from "../../../assets/images/wastecollection.png";
 import Modal from "../../../utils/Modal";
 import CustomButtonII from "../../../utils/CustomButtonII";
 import { BiEditAlt } from "react-icons/bi";
+import useTimeFormatter from "../../../hooks/useTimeFormatter";
 
-const LotteryGameCard = ({ gameId }) => {
+const LotteryGameCard = ({ game }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const { formatDuration } = useTimeFormatter();
   const navigate = useNavigate();
+
+  const viewGame = () => {
+    navigate("/dashboard/lotteries/view-game", {
+      state: { game },
+    });
+  };
+
+  const updateGame = () => {
+    navigate("/dashboard/lotteries/update-game", {
+      state: { game },
+    });
+  };
 
   return (
     <>
       <div className={lotteryStyles.jackpotBox}>
         <div className={lotteryStyles.box}>
           <div className="flexRow justifyBetween alignCenter">
-            <span
-              className={lotteryStyles.timer}
-              onClick={() =>
-                navigate(`/dashboard/lotteries/view-game/${gameId}`)
-              }
-            >
-              11h 00m
+            <span className={lotteryStyles.timer} onClick={viewGame}>
+              {formatDuration(game?.endOn)}
             </span>
             <button
               className="btn btn-ghost no-hover p0"
@@ -42,12 +51,10 @@ const LotteryGameCard = ({ gameId }) => {
           </div>
           {showOptions ? (
             <div className={`${lotteryStyles.optionsContainer}`}>
-              <Link to={`/dashboard/lotteries/update-game/${gameId}`}>
-                <div className="flexRow">
-                  <BiEditAlt />
-                  <span>Edit</span>
-                </div>
-              </Link>
+              <div className={`${lotteryStyles.delOpt}`} onClick={updateGame}>
+                <BiEditAlt />
+                <span>Edit</span>
+              </div>
               <div
                 className={`${lotteryStyles.delOpt}`}
                 onClick={() => {
@@ -64,9 +71,7 @@ const LotteryGameCard = ({ gameId }) => {
           ) : (
             ""
           )}
-          <div
-            onClick={() => navigate(`/dashboard/lotteries/view-game/${gameId}`)}
-          >
+          <div onClick={viewGame}>
             <div className="flexRow justifyEnd alignCenter">
               <MdVerified
                 color="var(--primary)"
@@ -75,19 +80,18 @@ const LotteryGameCard = ({ gameId }) => {
             </div>
           </div>
         </div>
-        <div
-          className="content"
-          onClick={() => navigate(`/dashboard/lotteries/view-game/${gameId}`)}
-        >
+        <div className="content" onClick={viewGame}>
           <div className="flexRow justifyBetween alignCenter">
-            <p className={lotteryStyles.title}>Jackpot 1</p>
+            <p className={`capitalize ${lotteryStyles.title}`}>{game?.title}</p>
             <div className="flexRow alignCenter" style={{ gap: "3px" }}>
               <TiGroup color="#2F53D7" className={lotteryStyles.userGroup} />
-              <span className={lotteryStyles.ticketStat}>1k+</span>
+              <span className={lotteryStyles.ticketStat}>
+                {game?.totalPlayers}
+              </span>
             </div>
           </div>
           <div className={`flexRow ${lotteryStyles.subtitle}`}>
-            <p>$10,000</p>
+            <p>${game?.jackpot}</p>
             <span>10%</span>
           </div>
         </div>

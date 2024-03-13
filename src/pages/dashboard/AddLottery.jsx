@@ -23,15 +23,16 @@ const AddLottery = () => {
   const localImg = fromPreview ? localStorage["lotteryPhoto"] : null;
   const [preview, setPreview] = useState(undefined);
   const [formState, setFormState] = useState({
-    lotteryName: "",
-    ticketPrice: "",
-    jackpotPrize: "",
-    ticketCapacity: "",
-    lotteryStarts: new Date(),
-    lotteryEnds: new Date(),
+    title: "",
     description: "",
-    telegramLink: "",
-    facebookLink: "",
+    cause: "",
+    ticketPrice: "",
+    jackpot: "",
+    ticketGoal: "",
+    startOn: new Date(),
+    endOn: new Date(),
+    telegram: "",
+    facebook: "",
     whatsapp: "",
     others: "",
   });
@@ -94,18 +95,30 @@ const AddLottery = () => {
 
   const submitForm = () => {
     if (
-      formState.lotteryName !== "" &&
+      formState.title !== "" &&
       formState.ticketPrice !== "" &&
-      formState.jackpotPrize !== "" &&
-      formState.ticketCapacity !== "" &&
-      formState.lotteryStarts !== null &&
-      formState.lotteryEnds !== null &&
+      formState.jackpot !== "" &&
+      formState.ticketGoal !== "" &&
+      formState.startOn !== null &&
+      formState.endOn !== null &&
       formState.description !== ""
     ) {
       if (!file && !localImg) {
         showError("Upload a cover photo");
         return;
       }
+
+      if (formState.ticketGoal <= formState.jackpot) {
+        showError("Ticket goal must exceed jackpot");
+        return;
+      }
+
+      // TODO: fix ticket goal validation
+      // console.log(formState.ticketGoal <= formState.jackpot);
+      // console.log(formState.ticketGoal);
+      // console.log(formState.jackpot);
+      // return;
+
       dispatch(updateAddLotteryForm(formState));
       navigate("/dashboard/lotteries/preview");
     } else {
@@ -162,9 +175,9 @@ const AddLottery = () => {
                 <input
                   type="text"
                   className="formInput"
-                  value={formState.lotteryName}
+                  value={formState.title}
                   onChange={handleOnChange}
-                  name="lotteryName"
+                  name="title"
                 />
               </div>
               <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
@@ -182,9 +195,9 @@ const AddLottery = () => {
                 <input
                   type="number"
                   className="formInput"
-                  value={formState.jackpotPrize}
+                  value={formState.jackpot}
                   onChange={handleOnChange}
-                  name="jackpotPrize"
+                  name="jackpot"
                 />
               </div>
             </div>
@@ -195,7 +208,7 @@ const AddLottery = () => {
                   className="flexRow alignCenter"
                   style={{ gap: "5px", marginBottom: "8px" }}
                 >
-                  <label className="mb-0">Ticket capacity</label>
+                  <label className="mb-0">Ticket goal</label>
                   <div
                     className="tooltip"
                     data-tooltip="Minimum number of tickets that need to be sold for the lottery game to be considered valid. If the minimum ticket sale is not reached by the end date, the game may be canceled or extended."
@@ -206,9 +219,9 @@ const AddLottery = () => {
                 <input
                   type="number"
                   className="formInput"
-                  value={formState.ticketCapacity}
+                  value={formState.ticketGoal}
                   onChange={handleOnChange}
-                  name="ticketCapacity"
+                  name="ticketGoal"
                 />
               </div>
               <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
@@ -225,10 +238,11 @@ const AddLottery = () => {
                   </span>
                 </div>
                 <DatePicker
-                  selected={formState.lotteryStarts}
+                  selected={formState.startOn}
                   onChange={(date) =>
-                    setFormState({ ...formState, lotteryStarts: date })
+                    setFormState({ ...formState, startOn: date })
                   }
+                  minDate={formState.startOn}
                   className="formInput"
                 />
               </div>
@@ -246,10 +260,11 @@ const AddLottery = () => {
                   </span>
                 </div>
                 <DatePicker
-                  selected={formState.lotteryEnds}
+                  selected={formState.endOn}
                   onChange={(date) =>
-                    setFormState({ ...formState, lotteryEnds: date })
+                    setFormState({ ...formState, endOn: date })
                   }
+                  minDate={formState.endOn}
                   className="formInput"
                 />
               </div>
@@ -277,10 +292,10 @@ const AddLottery = () => {
                 <input
                   type="text"
                   className="formInput"
-                  value={formState.telegramLink}
+                  value={formState.telegram}
                   onChange={handleOnChange}
                   placeholder="Optional"
-                  name="telegramLink"
+                  name="telegram"
                 />
               </div>
               <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
@@ -288,10 +303,10 @@ const AddLottery = () => {
                 <input
                   type="text"
                   className="formInput"
-                  value={formState.facebookLink}
+                  value={formState.facebook}
                   onChange={handleOnChange}
                   placeholder="Optional"
-                  name="facebookLink"
+                  name="facebook"
                 />
               </div>
               <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
