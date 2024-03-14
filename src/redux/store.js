@@ -4,6 +4,7 @@ import {
 } from "@reduxjs/toolkit";
 import authReducer from "./features/authSlice";
 import generalReducer from "./features/generalSlice";
+import lotteryReducer from "./features/lotterySlice";
 import { accountApi } from "./services/accountApi";
 import { beneficiariesApi } from "./services/beneficiariesApi";
 import { gameApi } from "./services/gameApi";
@@ -14,6 +15,7 @@ export const store = configureStore({
   reducer: {
     general: generalReducer,
     auth: authReducer,
+    lottery: lotteryReducer,
     [accountApi.reducerPath]: accountApi.reducer,
     [walletApi.reducerPath]: walletApi.reducer,
     [twoFAApi.reducerPath]: twoFAApi.reducer,

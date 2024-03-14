@@ -117,11 +117,11 @@ const PreviewLottery = () => {
       }
     }
 
-    // TODO: get coverUrl
     setUploadLoading(true);
     await uploadBytes(storageRef, file)
       .then((snapshot) => {
-        console.log(snapshot);
+        // console.log(snapshot);
+        fData.coverUrl = snapshot?.metadata?.fullPath;
         setUploadLoading(false);
       })
       .catch((err) => {
@@ -133,12 +133,13 @@ const PreviewLottery = () => {
       .unwrap()
       .then((resp) => {
         //   onSuccess open modal and empty reduxLotteryForm
-        console.log("resp", resp);
+        // console.log("resp", resp);
         setSuccessModal(true);
         dispatch(updateAddLotteryForm({}));
       })
       .catch((err) => {
         showError(err?.message || err?.data?.message || "An error occurred");
+        console.log(err);
       });
   };
 
@@ -219,9 +220,9 @@ const PreviewLottery = () => {
               <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
                 <label>Ticket goal</label>
                 <input
-                  type="number"
+                  type="text"
                   className="formInput"
-                  value={lotteryForm.ticketGoal}
+                  value={`$${lotteryForm.ticketGoal}`}
                   readOnly
                   name="ticketGoal"
                 />

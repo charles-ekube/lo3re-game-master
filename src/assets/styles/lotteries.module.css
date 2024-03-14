@@ -106,13 +106,12 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background: #9EBCCA;
+    background: var(--lightGreyII);
     padding: 16px;
     height: 164px;
     border-radius: 16px;
     color: var(--white);
     margin-bottom: 10px;
-    background-image: url("../images/Image.png");
     background-size: cover;
     background-repeat: no-repeat;
     position: relative;
@@ -201,7 +200,7 @@
 .addLottery .avatar > .fileImg {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
 }
 
 .addLotteryHeader p {
@@ -726,6 +725,11 @@
     .jackpotBox {
         min-width: 130px;
     }
+
+    
+.lotterySlide {
+    gap: 18px;
+}
 
 }
 

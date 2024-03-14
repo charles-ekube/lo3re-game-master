@@ -7,43 +7,19 @@ import { Link } from "react-router-dom";
 import LotteryGameCard from "../../components/dashboard/cards/LotteryGameCard";
 import { useFetchGamesQuery } from "../../redux/services/gameApi";
 import Loader from "../../utils/Loader";
+import { useDispatch, useSelector } from "react-redux";
+import { updateLotteryTab } from "../../redux/features/lotterySlice";
 
 const Lotteries = () => {
+  const dispatch = useDispatch();
+  const tabs = useSelector((state) => state.lottery.lotteryTabs);
   const {
     data: games,
     isLoading: isGamesLoading,
     isSuccess: isGameSuccess,
   } = useFetchGamesQuery();
   const [gamesArr, setGamesArr] = useState([]);
-  console.log(games);
-
-  const [tabs, setTabs] = useState([
-    {
-      name: "active",
-      badgeCount: "0",
-      isActive: true,
-    },
-    {
-      name: "drafts",
-      badgeCount: "0",
-      isActive: false,
-    },
-    {
-      name: "pending",
-      badgeCount: "0",
-      isActive: false,
-    },
-    {
-      name: "completed",
-      badgeCount: "0",
-      isActive: false,
-    },
-    {
-      name: "declined",
-      badgeCount: "0",
-      isActive: false,
-    },
-  ]);
+  // console.log(games);
 
   useEffect(() => {
     const returnActiveTab = () => {
@@ -81,9 +57,9 @@ const Lotteries = () => {
         badgeCount: games?.games?.filter((game) => game?.status === tab.name)
           .length,
       }));
-      setTabs(updatedTabs);
+      dispatch(updateLotteryTab(updatedTabs));
     }
-  }, [isGameSuccess, games]);
+  }, [isGameSuccess, games, dispatch]);
 
   const toggleTabs = (clickedItem) => {
     const updatedTabs = tabs.map((item) => ({
@@ -91,7 +67,7 @@ const Lotteries = () => {
       isActive: item === clickedItem, // Set to true for the clicked profile, false for others
     }));
 
-    setTabs(updatedTabs); // Update the state with the new array
+    dispatch(updateLotteryTab(updatedTabs));
   };
 
   return (

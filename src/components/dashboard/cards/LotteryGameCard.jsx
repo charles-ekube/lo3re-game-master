@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaEllipsis } from "react-icons/fa6";
 import { MdVerified } from "react-icons/md";
 import { TiGroup } from "react-icons/ti";
@@ -12,21 +12,41 @@ import { BiEditAlt } from "react-icons/bi";
 import useTimeFormatter from "../../../hooks/useTimeFormatter";
 import { useDeleteGameMutation } from "../../../redux/services/gameApi";
 import { showError, showSuccess } from "../../../utils/Alert";
+import BgImage from "../../../assets/images/Image.png";
+import { getImage } from "../../../firebase";
+import useTextTruncate from "../../../hooks/useTextTruncate";
 
 const LotteryGameCard = ({ game }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { formatDuration } = useTimeFormatter();
   const navigate = useNavigate();
+  const [imgUrl, setImgUrl] = useState("");
+  const { truncateText } = useTextTruncate();
   const [deleteGame, { isLoading: isDeleteGameLoading }] =
     useDeleteGameMutation();
+
+  useEffect(() => {
+    let wasUnMounted = false;
+    if (game?.coverUrl) {
+      getImage(game?.coverUrl).then((url) => {
+        console.log(url);
+        if (wasUnMounted) return;
+        setImgUrl(url);
+      });
+    }
+
+    return () => {
+      wasUnMounted = true;
+    };
+  }, [game?.coverUrl]);
 
   const handleDeleteGame = async () => {
     await deleteGame(game?.id)
       .unwrap()
       .then(() => {
         showSuccess("Game deleted");
-        navigate(-1);
+        setShowDeleteModal(false);
       })
       .catch((err) => {
         showError("An error occurred, try again later");
@@ -49,7 +69,10 @@ const LotteryGameCard = ({ game }) => {
   return (
     <>
       <div className={lotteryStyles.jackpotBox}>
-        <div className={lotteryStyles.box}>
+        <div
+          className={lotteryStyles.box}
+          style={{ backgroundImage: `url(${imgUrl || BgImage})` }}
+        >
           <div className="flexRow justifyBetween alignCenter">
             <span className={lotteryStyles.timer} onClick={viewGame}>
               {formatDuration(game?.endOn)}
@@ -99,7 +122,9 @@ const LotteryGameCard = ({ game }) => {
         </div>
         <div className="content" onClick={viewGame}>
           <div className="flexRow justifyBetween alignCenter">
-            <p className={`capitalize ${lotteryStyles.title}`}>{game?.title}</p>
+            <p className={`capitalize ${lotteryStyles.title}`}>
+              {truncateText(game?.title, 8)}
+            </p>
             <div className="flexRow alignCenter" style={{ gap: "3px" }}>
               <TiGroup color="#2F53D7" className={lotteryStyles.userGroup} />
               <span className={lotteryStyles.ticketStat}>

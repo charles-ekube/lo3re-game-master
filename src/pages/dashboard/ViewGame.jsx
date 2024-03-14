@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import Camera from "../../assets/images/camera.png";
 import lotteryStyles from "../../assets/styles/lotteries.module.css";
 import CustomButtonII from "../../utils/CustomButtonII";
@@ -22,6 +22,7 @@ import { GrLink } from "react-icons/gr";
 import useTimeFormatter from "../../hooks/useTimeFormatter";
 import { useDeleteGameMutation } from "../../redux/services/gameApi";
 import { showError, showSuccess } from "../../utils/Alert";
+import { getImage } from "../../firebase";
 
 function anyKeyHasValue(obj) {
   for (const key in obj) {
@@ -39,9 +40,24 @@ const ViewGame = () => {
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [imgUrl, setImgUrl] = useState("");
   const { formatDateToLocaleString, formatDuration } = useTimeFormatter();
   const [deleteGame, { isLoading: isDeleteGameLoading }] =
     useDeleteGameMutation();
+
+  useEffect(() => {
+    let wasUnMounted = false;
+    if (game?.coverUrl) {
+      getImage(game?.coverUrl).then((url) => {
+        if (wasUnMounted) return;
+        setImgUrl(url);
+      });
+    }
+
+    return () => {
+      wasUnMounted = true;
+    };
+  }, [game?.coverUrl]);
 
   const handleDeleteGame = async () => {
     await deleteGame(game?.id)
@@ -72,7 +88,11 @@ const ViewGame = () => {
             className={`flexRow alignCenter avatarProfileContainer ${lotteryStyles.avatarProfileContainer} ${lotteryStyles.viewGameAvatarContainer}`}
           >
             <div className={lotteryStyles.avatar}>
-              <img src={BgImage} alt="" className={lotteryStyles.fileImg} />
+              <img
+                src={imgUrl || BgImage}
+                alt=""
+                className={lotteryStyles.fileImg}
+              />
             </div>
             <div className={lotteryStyles.content}>
               <h3 className="title capitalize">{game?.title}</h3>
@@ -123,7 +143,7 @@ const ViewGame = () => {
                 <input
                   type="text"
                   className="formInput"
-                  value={`${game?.ticketSalesCount}/${game?.ticketGoal}`}
+                  value={`$${game?.ticketSalesCount}/$${game?.ticketGoal}`}
                   readOnly
                   name="ticketCapacity"
                 />

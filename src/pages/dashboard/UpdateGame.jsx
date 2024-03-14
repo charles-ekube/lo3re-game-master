@@ -9,11 +9,15 @@ import { IoIosInformationCircleOutline } from "react-icons/io";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { useUpdateGameMutation } from "../../redux/services/gameApi";
 import useTimeFormatter from "../../hooks/useTimeFormatter";
+import { getImage, imageDb } from "../../firebase";
+import { ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
 
 const UpdateGame = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const game = location.state?.game;
+  // console.log(game);
   const fileElement = useRef(null);
 
   const [file, setFile] = useState();
@@ -21,6 +25,7 @@ const UpdateGame = () => {
   const [updateGame, { isLoading: isUpdateGameLoading }] =
     useUpdateGameMutation();
   const { dateSubmitFormat } = useTimeFormatter();
+  const [uploadLoading, setUploadLoading] = useState(false);
   const [formState, setFormState] = useState({
     coverUrl: game?.coverUrl,
     title: game?.title,
@@ -36,6 +41,20 @@ const UpdateGame = () => {
     whatsapp: game?.socials?.whatsapp,
     others: game?.socials?.others,
   });
+
+  useEffect(() => {
+    let wasUnMounted = false;
+    if (game?.coverUrl) {
+      getImage(game?.coverUrl).then((url) => {
+        if (wasUnMounted) return;
+        setFormState((state) => ({ ...state, coverUrl: url }));
+      });
+    }
+
+    return () => {
+      wasUnMounted = true;
+    };
+  }, [game?.coverUrl]);
 
   const handleFile = (e) => {
     let images = e.target.files;
@@ -82,6 +101,27 @@ const UpdateGame = () => {
     setFormState({ ...formState, [name]: value });
   };
 
+  const resetForm = () => {
+    setFormState({
+      ...formState,
+      title: game?.title,
+      description: game?.description,
+      cause: game?.cause,
+      ticketPrice: game?.ticketPrice,
+      jackpot: game?.jackpot,
+      ticketGoal: game?.ticketGoal,
+      startOn: new Date(game?.startOn),
+      endOn: new Date(game?.endOn),
+      telegram: game?.socials?.telegram,
+      facebook: game?.socials?.facebook,
+      whatsapp: game?.socials?.whatsapp,
+      others: game?.socials?.others,
+    });
+
+    setFile(undefined);
+  };
+
+  const storageRef = ref(imageDb, `uploads/${v4()}`);
   const submitForm = async () => {
     if (
       formState.title !== "" &&
@@ -121,6 +161,21 @@ const UpdateGame = () => {
           others: formState.others,
         },
       };
+
+      if (file) {
+        setUploadLoading(true);
+        console.log("uploading photo");
+        await uploadBytes(storageRef, file)
+          .then((snapshot) => {
+            // console.log(snapshot);
+            fData.coverUrl = snapshot?.metadata?.fullPath;
+            setUploadLoading(false);
+          })
+          .catch((err) => {
+            setUploadLoading(false);
+            console.log(err);
+          });
+      }
 
       await updateGame(fData)
         .unwrap()
@@ -362,13 +417,14 @@ const UpdateGame = () => {
                 className="btnLg me10"
                 type="button"
                 centerText={true}
+                onClick={resetForm}
               />
               <CustomButtonII
                 variant={"primary"}
                 text={"Save and continue"}
                 className="btnLg"
                 type="button"
-                loading={isUpdateGameLoading}
+                loading={isUpdateGameLoading || uploadLoading}
                 onClick={submitForm}
                 centerText={true}
               />

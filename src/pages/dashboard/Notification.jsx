@@ -17,7 +17,7 @@ export const Notification = () => {
             </div>
             <div>
               <h3 className={NotificationStyles.dateHeader}>August, 2024</h3>
-              <div class={NotificationStyles.timeline}>
+              <div className={NotificationStyles.timeline}>
                 <div
                   className={`${NotificationStyles.event} ${NotificationStyles.left}`}
                 >
