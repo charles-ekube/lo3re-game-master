@@ -45,6 +45,7 @@
   padding: 16px 24px;
   width: calc(50% - 10px);
   box-sizing: border-box;
+  animation: walletCardAnime .5s ease-out;
 }
 
 .balanceCard .cardTitle {
@@ -109,11 +110,22 @@
 }
 
 
-
-
+/* media query */
 @media (max-width: 480px) {
  .balanceCard {
     width: 100%;
     margin-bottom: 15px;
+  }
+}
+
+/* keyframes */
+@keyframes walletCardAnime {
+  from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
   }
 }

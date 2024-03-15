@@ -25,12 +25,29 @@ import {
   useFetchCryptoBeneficiariesQuery,
 } from "../../redux/services/beneficiariesApi";
 import QuickWithdraw from "../../components/dashboard/widgets/QuickWithdraw";
+import CustomDropdown from "../../utils/CustomDropdown";
+
+const walletTypes = [
+  {
+    name: "Main wallet",
+    value: "main",
+  },
+  {
+    name: "Referral wallet",
+    value: "referral",
+  },
+  {
+    name: "Bonus wallet",
+    value: "bonus",
+  },
+];
 
 const Wallet = () => {
   const navigate = useNavigate();
   const [fundWalletModal, setFundWalletModal] = useState(false);
   const [mainWallet, setMainWallet] = useState(null);
   const [no2FAModal, setNo2FAModal] = useState(false);
+  const [walletType, setWalletType] = useState(walletTypes[0].value);
   const [isQuickWithdrawModalOpen, setQuickWithdrawModal] = useState(false);
   const [quickWithdrawForm, setQuickWithdrawForm] = useState({
     id: "",
@@ -71,6 +88,10 @@ const Wallet = () => {
     }));
 
     setTabs(updatedTabs);
+  };
+
+  const handleWalletChange = (val) => {
+    setWalletType(val);
   };
 
   const isEmail2faActive = user?.user?.security?.email;
@@ -203,45 +224,73 @@ const Wallet = () => {
     <>
       <section className="mainContainer walletContainer">
         <div className="walletContent">
+          <div className="flexRow justifyBetween alignCenter mb-2">
+            <h3
+              className={`satoshi-text boldText`}
+              style={{ fontSize: "24px" }}
+            >
+              Wallet
+            </h3>
+            <div style={{ minWidth: "120px" }}>
+              <CustomDropdown
+                value={walletType}
+                itemOnClick={handleWalletChange}
+                dropdownItems={walletTypes}
+              />
+            </div>
+          </div>
           <div>
-            <div className="cardContainer list-divider wallet-container-spacing">
-              <BalanceCard
-                title={"Wallet Balance"}
-                figure={"$" + (mainWallet?.balance || 0)}
-                isBalanceLoading={isWalletBalanceLoading}
-                subtitle={"Total gains 0%"}
-              />
-              <BalanceCard
-                title={"Locked Balance"}
-                figure={"$" + (mainWallet?.locked_balance || 0)}
-                isBalanceLoading={isWalletBalanceLoading}
-                subtitle={"To be credited on 20/10/23"}
-              />
-            </div>
-            <div className="cardContainer list-divider wallet-container-spacing">
-              <BalanceCard
-                title={"Referral balance"}
-                figure={"$0"}
-                subtitle={"Total gains 0%"}
-              />
-              <BalanceCard
-                title={"Locked referral balance"}
-                figure={"$0"}
-                subtitle={"To be credited on 20/10/23"}
-              />
-            </div>
-            <div className="cardContainer list-divider wallet-container-spacing">
-              <BalanceCard
-                title={"Bonus balance"}
-                figure={"$0"}
-                subtitle={"Total gains 0%"}
-              />
-              <BalanceCard
-                title={"Locked bonus balance"}
-                figure={"$0"}
-                subtitle={"To be credited on 20/10/23"}
-              />
-            </div>
+            {walletType === "main" ? (
+              <div className="cardContainer wallet-container-spacing">
+                <BalanceCard
+                  title={"Wallet Balance"}
+                  figure={"$" + (mainWallet?.balance || 0)}
+                  isBalanceLoading={isWalletBalanceLoading}
+                  subtitle={"Total gains 0%"}
+                />
+                <BalanceCard
+                  title={"Locked Balance"}
+                  figure={"$" + (mainWallet?.locked_balance || 0)}
+                  isBalanceLoading={isWalletBalanceLoading}
+                  subtitle={"To be credited on 20/10/23"}
+                />
+              </div>
+            ) : (
+              ""
+            )}
+
+            {walletType === "referral" ? (
+              <div className="cardContainer wallet-container-spacing">
+                <BalanceCard
+                  title={"Referral balance"}
+                  figure={"$0"}
+                  subtitle={"Total gains 0%"}
+                />
+                <BalanceCard
+                  title={"Locked referral balance"}
+                  figure={"$0"}
+                  subtitle={"To be credited on 20/10/23"}
+                />
+              </div>
+            ) : (
+              ""
+            )}
+            {walletType === "bonus" ? (
+              <div className="cardContainer wallet-container-spacing">
+                <BalanceCard
+                  title={"Bonus balance"}
+                  figure={"$0"}
+                  subtitle={"Total gains 0%"}
+                />
+                <BalanceCard
+                  title={"Locked bonus balance"}
+                  figure={"$0"}
+                  subtitle={"To be credited on 20/10/23"}
+                />
+              </div>
+            ) : (
+              ""
+            )}
             <div className="cardContainer list-divider wallet-container-spacing">
               <BalanceCard
                 title={"Total Deposit"}

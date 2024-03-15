@@ -37,7 +37,7 @@ const TimelineItem = ({
   return (
     <>
       <div class={`${NotificationStyles.container}`}>
-        <img src={AngleRight} className={NotificationStyles.arrow} />
+        <img src={AngleRight} className={NotificationStyles.arrow} alt="" />
         <div class={`${NotificationStyles.content}`}>
           <div className="flexRow alignCenter">
             <div className={`${NotificationStyles.icon} ${iconBg.klass}`}>
