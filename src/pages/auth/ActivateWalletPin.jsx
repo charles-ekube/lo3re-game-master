@@ -5,7 +5,6 @@ import OtpInput from "../../utils/CustomOtp";
 import Modal from "../../utils/Modal";
 import { showError, showSuccess } from "../../utils/Alert";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 const finalFormStep = 2;
 const ActivateWalletPin = () => {
@@ -15,7 +14,7 @@ const ActivateWalletPin = () => {
   const [formStep, setFormStep] = useState(1);
   const [pin, setPin] = useState("");
   const [pinConfirm, setPinConfirm] = useState("");
-  const token = useSelector((state) => state.auth.accessToken);
+  const token = localStorage.getItem("accessToken");
   const onChange = (value) => {
     setPin(value);
   };

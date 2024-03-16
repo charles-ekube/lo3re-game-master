@@ -1,14 +1,13 @@
 import { onAuthStateChanged } from "firebase/auth";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate, Navigate, useLocation } from "react-router-dom";
 import { auth } from "../firebase";
 import { logOutUser } from "../redux/features/authSlice";
 
 function RequireAuth({ children }) {
   let location = useLocation();
-  const token = useSelector((state) => state.auth.accessToken);
-  const iv = localStorage.getItem("iv");
+  const token = localStorage.getItem("accessToken");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -41,10 +40,7 @@ function RequireAuth({ children }) {
   }, [dispatch, navigate]);
 
   if (!token) {
-    if (!iv) {
-      return <Navigate to="/" state={{ from: location }} replace />;
-    }
-    return <Navigate to="/sleep-screen" state={{ from: location }} />;
+    return <Navigate to="/" state={{ from: location }} replace />;
   }
 
   return <>{children}</>;
