@@ -108,7 +108,12 @@ const AddLottery = () => {
         return;
       }
 
-      if (formState.ticketGoal <= formState.jackpot) {
+      if (formState.title.length > 50) {
+        showError("Title must be less than 50 characters");
+        return;
+      }
+
+      if (Number(formState.ticketGoal) <= Number(formState.jackpot)) {
         showError("Ticket goal must exceed jackpot");
         return;
       }
@@ -260,6 +265,31 @@ const AddLottery = () => {
                   }
                   minDate={new Date()}
                   className="formInput"
+                />
+              </div>
+            </div>
+
+            <div className={`flexRow justifyBetween ${lotteryStyles.col3}`}>
+              <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
+                <div
+                  className="flexRow alignCenter"
+                  style={{ gap: "5px", marginBottom: "8px" }}
+                >
+                  <label className="mb-0">Causes</label>
+                  <span
+                    className="tooltip"
+                    data-tooltip="Specific causes proceeds from ticket sales goes to."
+                  >
+                    <IoIosInformationCircleOutline color="#888" />
+                  </span>
+                </div>
+                <input
+                  type="text"
+                  className="formInput"
+                  placeholder="Optional"
+                  value={formState.cause}
+                  onChange={handleOnChange}
+                  name="cause"
                 />
               </div>
             </div>

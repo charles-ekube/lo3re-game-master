@@ -12,17 +12,18 @@ import { BiEditAlt } from "react-icons/bi";
 import useTimeFormatter from "../../../hooks/useTimeFormatter";
 import { useDeleteGameMutation } from "../../../redux/services/gameApi";
 import { showError, showSuccess } from "../../../utils/Alert";
-import BgImage from "../../../assets/images/Image.png";
+import BgImage from "../../../assets/images/default.png";
 import { getImage } from "../../../firebase";
 import useTextTruncate from "../../../hooks/useTextTruncate";
 
 const LotteryGameCard = ({ game }) => {
   const [showOptions, setShowOptions] = useState(false);
+  const { truncateNumber } = useTextTruncate();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { formatDuration } = useTimeFormatter();
   const navigate = useNavigate();
   const [imgUrl, setImgUrl] = useState("");
-  const { truncateText } = useTextTruncate();
+  const { truncateText, formatMoney } = useTextTruncate();
   const [deleteGame, { isLoading: isDeleteGameLoading }] =
     useDeleteGameMutation();
 
@@ -30,7 +31,6 @@ const LotteryGameCard = ({ game }) => {
     let wasUnMounted = false;
     if (game?.coverUrl) {
       getImage(game?.coverUrl).then((url) => {
-        console.log(url);
         if (wasUnMounted) return;
         setImgUrl(url);
       });
@@ -127,14 +127,17 @@ const LotteryGameCard = ({ game }) => {
             </p>
             <div className="flexRow alignCenter" style={{ gap: "3px" }}>
               <TiGroup color="#2F53D7" className={lotteryStyles.userGroup} />
-              <span className={lotteryStyles.ticketStat}>
-                {game?.totalPlayers}
+              <span
+                className={lotteryStyles.ticketStat}
+                style={{ fontSize: "12px" }}
+              >
+                {truncateNumber(game?.totalPlayers)}
               </span>
             </div>
           </div>
           <div className={`flexRow ${lotteryStyles.subtitle}`}>
-            <p>${game?.jackpot}</p>
-            <span>10%</span>
+            <p>${formatMoney(game?.jackpot)}</p>
+            {/* <span>10%</span> */}
           </div>
         </div>
       </div>

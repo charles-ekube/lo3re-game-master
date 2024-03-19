@@ -36,6 +36,8 @@ function anyKeyHasValue(obj) {
 const ViewGame = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const hideBackBtn = searchParams.get("hideBackBtn");
   const game = location.state?.game;
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -78,12 +80,16 @@ const ViewGame = () => {
         className={`mainContainer w65-45 ${lotteryStyles.mainContainer}`}
       >
         <div className={`mainContent ${lotteryStyles.addLottery}`}>
-          <IoIosArrowRoundBack
-            size={34}
-            className={"cursor-pointer"}
-            onClick={() => navigate(-1)}
-            style={{ marginBottom: "16px" }}
-          />
+          {!hideBackBtn ? (
+            <IoIosArrowRoundBack
+              size={34}
+              className={"cursor-pointer"}
+              onClick={() => navigate(-1)}
+              style={{ marginBottom: "16px" }}
+            />
+          ) : (
+            ""
+          )}
           <div
             className={`flexRow alignCenter avatarProfileContainer ${lotteryStyles.avatarProfileContainer} ${lotteryStyles.viewGameAvatarContainer}`}
           >

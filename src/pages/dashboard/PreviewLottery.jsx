@@ -16,6 +16,7 @@ import useTimeFormatter from "../../hooks/useTimeFormatter";
 import { imageDb } from "../../firebase";
 import { v4 } from "uuid";
 import { ref, uploadBytes } from "firebase/storage";
+import useTextTruncate from "../../hooks/useTextTruncate";
 
 function b64toBlob(b64Data, contentType, sliceSize) {
   contentType = contentType || "";
@@ -46,7 +47,9 @@ const PreviewLottery = () => {
   const dispatch = useDispatch();
   const [successModal, setSuccessModal] = useState(false);
   const lotteryForm = useSelector((state) => state.general.addLotteryForm);
+  const [gameId, setGameId] = useState("");
   const { dateSubmitFormat } = useTimeFormatter();
+  const { formatMoney } = useTextTruncate();
   const [uploadLoading, setUploadLoading] = useState(false);
   const { data: walletBalance, isLoading: isWalletBalanceLoading } =
     useFetchWalletBalanceQuery();
@@ -132,8 +135,8 @@ const PreviewLottery = () => {
     await createGame(fData)
       .unwrap()
       .then((resp) => {
-        //   onSuccess open modal and empty reduxLotteryForm
-        // console.log("resp", resp);
+        //   open onSuccess modal and empty reduxLotteryForm
+        setGameId(resp?.data?.game?.id);
         setSuccessModal(true);
         dispatch(updateAddLotteryForm({}));
       })
@@ -181,7 +184,7 @@ const PreviewLottery = () => {
             <div className={lotteryStyles.content}>
               <h3 className="title capitalize">{lotteryForm.title}</h3>
               <p className="subtitle">
-                Jackpot prize: <b>${lotteryForm.jackpot}</b>
+                Jackpot prize: <b>${formatMoney(lotteryForm.jackpot)}</b>
               </p>
               <div
                 className={`flexRow text-muted mt-2 ${lotteryStyles.formDates}`}
@@ -212,7 +215,7 @@ const PreviewLottery = () => {
                 <input
                   type="text"
                   className="formInput"
-                  value={"$" + lotteryForm.ticketPrice}
+                  value={"$" + formatMoney(lotteryForm.ticketPrice)}
                   readOnly
                   name="ticketPrice"
                 />
@@ -222,7 +225,7 @@ const PreviewLottery = () => {
                 <input
                   type="text"
                   className="formInput"
-                  value={`$${lotteryForm.ticketGoal}`}
+                  value={`$${formatMoney(lotteryForm.ticketGoal)}`}
                   readOnly
                   name="ticketGoal"
                 />
@@ -358,9 +361,11 @@ const PreviewLottery = () => {
         <div className="modalFooter">
           <div className="flexRow justifyCenter">
             <CustomButtonII
-              text={"Go to dashboard"}
+              text={"Proceed to game"}
               variant={"primary"}
-              onClick={() => navigate("/dashboard")}
+              onClick={() =>
+                navigate(`/dashboard/lotteries/view-single-game/${gameId}`)
+              }
             />
           </div>
         </div>

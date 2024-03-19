@@ -26,6 +26,7 @@ import PasswordReset from "./PasswordReset";
 import ViewGame from "./ViewGame";
 import UpdateGame from "./UpdateGame";
 import { Notification } from "./Notification";
+import ViewSingleGame from "./ViewSingleGame";
 
 const DashboardLayout = () => {
   const dispatch = useDispatch();
@@ -78,6 +79,10 @@ const DashboardLayout = () => {
               <Route path="add" element={<AddLottery />} />
               <Route path="preview" element={<PreviewLottery />} />
               <Route path="view-game" element={<ViewGame />} />
+              <Route
+                path="view-single-game/:gid"
+                element={<ViewSingleGame />}
+              />
               <Route path="update-game" element={<UpdateGame />} />
             </Route>
             <Route path="/account" element={<Wallet />} />

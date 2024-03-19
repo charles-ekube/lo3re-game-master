@@ -11,6 +11,10 @@ export const gameApi = createApi({
       providesTags: ["games"],
       transformResponse: (results) => results.data,
     }),
+    fetchSingleGame: builder.query({
+      query: (gid) => `/games/${gid}`,
+      transformResponse: (results) => results.data,
+    }),
     createGame: builder.mutation({
       query: (data) => ({
         url: `/games`,
@@ -39,6 +43,7 @@ export const gameApi = createApi({
 
 export const {
   useFetchGamesQuery,
+  useFetchSingleGameQuery,
   useCreateGameMutation,
   useUpdateGameMutation,
   useDeleteGameMutation,
