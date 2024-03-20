@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 // import Camera from "../../assets/images/camera.png";
 import lotteryStyles from "../../assets/styles/lotteries.module.css";
 import CustomButtonII from "../../utils/CustomButtonII";
-import BgImage from "../../assets/images/Image.png";
+import BgImage from "../../assets/images/default.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { GoDotFill } from "react-icons/go";
@@ -15,14 +15,18 @@ import { IoLogoWhatsapp } from "react-icons/io";
 import BalanceCard from "../../components/dashboard/wallet/BalanceCard";
 import Modal from "../../utils/Modal";
 import WasteCollection from "../../assets/images/wastecollection.png";
-import Text from "../../utils/CustomText";
-import Avatar from "../../utils/Avatar";
-import Pagination from "../../utils/Pagination";
+import { DateTime } from "luxon";
 import { GrLink } from "react-icons/gr";
 import useTimeFormatter from "../../hooks/useTimeFormatter";
-import { useDeleteGameMutation } from "../../redux/services/gameApi";
+import {
+  useDeleteGameMutation,
+  useFetchGameTicketsQuery,
+} from "../../redux/services/gameApi";
 import { showError, showSuccess } from "../../utils/Alert";
 import { getImage } from "../../firebase";
+import useTextTruncate from "../../hooks/useTextTruncate";
+import Loader from "../../utils/Loader";
+import TicketSalesModal from "../../components/dashboard/widgets/TicketSalesModal";
 
 function anyKeyHasValue(obj) {
   for (const key in obj) {
@@ -41,9 +45,11 @@ const ViewGame = () => {
   const game = location.state?.game;
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
   const [imgUrl, setImgUrl] = useState("");
   const { formatDateToLocaleString, formatDuration } = useTimeFormatter();
+  const { truncateText, formatMoney } = useTextTruncate();
+  const { data: gameTickets, isLoading: isTicketsLoading } =
+    useFetchGameTicketsQuery();
   const [deleteGame, { isLoading: isDeleteGameLoading }] =
     useDeleteGameMutation();
 
@@ -103,7 +109,7 @@ const ViewGame = () => {
             <div className={lotteryStyles.content}>
               <h3 className="title capitalize">{game?.title}</h3>
               <p className={`subtitle ${lotteryStyles.subtitle}`}>
-                Jackpot prize: <b>${game?.jackpot}</b>
+                Jackpot prize: <b>${formatMoney(game?.jackpot)}</b>
               </p>
               <div
                 className={`fs14 mediumText ${lotteryStyles.liveUserStatFlex}`}
@@ -149,7 +155,9 @@ const ViewGame = () => {
                 <input
                   type="text"
                   className="formInput"
-                  value={`$${game?.ticketSalesCount}/$${game?.ticketGoal}`}
+                  value={`$${formatMoney(
+                    game?.ticketSalesCount
+                  )}/$${formatMoney(game?.ticketGoal)}`}
                   readOnly
                   name="ticketCapacity"
                 />
@@ -284,7 +292,7 @@ const ViewGame = () => {
             />
             <BalanceCard
               title={"Ticket sales"}
-              figure={`$${game?.ticketSales}`}
+              figure={`$${formatMoney(game?.ticketSales)}`}
               subtitle={"Total gains 0%"}
               hideEyeIcon={true}
             />
@@ -314,39 +322,51 @@ const ViewGame = () => {
                     </thead>
 
                     <tbody>
-                      <tr>
-                        <td className={lotteryStyles.st1}>#abc</td>
-                        <td className={lotteryStyles.st2}>
-                          <p className={lotteryStyles.tablePill}>012345</p>
-                        </td>
-                        <td className={lotteryStyles.st3}>3 mins ago</td>
-                      </tr>
-                      <tr>
-                        <td
-                          className={`${lotteryStyles.st1} ${lotteryStyles.mid}`}
-                        >
-                          #abc
-                        </td>
-                        <td
-                          className={`${lotteryStyles.st2} ${lotteryStyles.mid}`}
-                        >
-                          <p className={lotteryStyles.tablePill}>012345</p>
-                        </td>
-                        <td
-                          className={`${lotteryStyles.st3} ${lotteryStyles.mid}`}
-                        >
-                          3 mins ago
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className={lotteryStyles.st1}>#abc</td>
-                        <td className={lotteryStyles.st2}>
-                          <p className={lotteryStyles.tablePill}>012345</p>
-                        </td>
-                        <td className={lotteryStyles.st3}>3 mins ago</td>
-                      </tr>
+                      {gameTickets?.tickets?.map((ticket) => {
+                        let date = DateTime.fromSeconds(
+                          ticket?.createdAt?._seconds
+                        );
+                        date = date.toRelativeCalendar();
+
+                        const ticketSelections = JSON.parse(ticket?.selection);
+                        const selection1 = ticketSelections.length
+                          ? ticketSelections[0]
+                          : [];
+
+                        return (
+                          <tr key={ticket?.id}>
+                            <td className={lotteryStyles.st1}>
+                              {truncateText(ticket?.id, 5)}
+                            </td>
+                            <td className={lotteryStyles.st2}>
+                              <span className={lotteryStyles.tablePill}>
+                                {selection1.map((val) => `${val} `)}
+                              </span>
+                            </td>
+                            <td className={lotteryStyles.st3}>{date}</td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
+                  <Loader
+                    isLoading={isTicketsLoading}
+                    itemLength={gameTickets?.tickets?.length}
+                    isNullText={"No tickets yets"}
+                    height={"100%"}
+                    variety={"dark"}
+                  />
+                  {!isTicketsLoading && !gameTickets?.tickets?.length ? (
+                    <div
+                      className="flexColumn justifyCenter alignCenter text-muted textCenter fs14"
+                      style={{ height: "120px" }}
+                    >
+                      No purchased tickets yet
+                      <br /> yet
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             </div>
@@ -365,7 +385,7 @@ const ViewGame = () => {
                   className="flexColumn"
                   style={{ gap: "16px", marginTop: "16px" }}
                 >
-                  <p className="textCenter fs14" style={{ color: "#48494D" }}>
+                  <p className="textCenter text-muted fs14">
                     Sorry you don’t have any active conversations with the game
                     master at the moment.
                   </p>
@@ -467,67 +487,16 @@ const ViewGame = () => {
           </div>
         </Modal>
 
-        <Modal
-          title={"Ticket sales"}
+        <TicketSalesModal
           isOpen={isTicketModalOpen}
           onClose={() => setIsTicketModalOpen(false)}
-          modalClass={lotteryStyles.ticketSalesModal}
-        >
-          <div className={`${lotteryStyles.ticketList}`}>
-            <TicketRows />
-            <TicketRows />
-            <TicketRows />
-            <TicketRows />
-            <TicketRows />
-          </div>
-          <Pagination
-            limit={1}
-            curPage={currentPage}
-            totalItems={2}
-            paginate={(num) => setCurrentPage(num)}
-          />
-        </Modal>
+          tickets={gameTickets?.tickets}
+        />
       </section>
     </>
   );
 };
 
-const TicketRows = () => {
-  return (
-    <div
-      className={`flexRow justifyBetween alignCenter ${lotteryStyles.ticketRow}`}
-    >
-      <div className="flexRow alignCenter" style={{ gap: "8px" }}>
-        <Avatar
-          name={"R"}
-          className={lotteryStyles.ticketSaleAvatar}
-          boxSize={"48px"}
-        />
-        <Text
-          className={`satoshi-text mediumText capitalize ${lotteryStyles.modalTextResp}`}
-          style={{ color: "rgba(16, 16, 16, 1)" }}
-        >
-          Raynera
-        </Text>
-      </div>
-      <div>
-        <div
-          className={`status-pill pill-invalid mediumText btnSm ${lotteryStyles.modalTextResp} ${lotteryStyles.statusPill}`}
-          style={{ color: "#727272" }}
-        >
-          #01234567
-        </div>
-      </div>
-      <div
-        className={`flexColumn textRight ${lotteryStyles.modalTextResp}`}
-        style={{ color: "#A6A6A6", gap: "4px" }}
-      >
-        <p>3 mins ago</p>
-        <p className="mediumText">25 November, 2023</p>
-      </div>
-    </div>
-  );
-};
 
 const Winners = [
   {

@@ -15,6 +15,14 @@ export const gameApi = createApi({
       query: (gid) => `/games/${gid}`,
       transformResponse: (results) => results.data,
     }),
+    fetchGameTickets: builder.query({
+      query: (gid) => `/games/${gid}/tickets`,
+      transformResponse: (results) => results.data,
+    }),
+    fetchLeaderBoard: builder.query({
+      query: (gid) => `/games/${gid}/leaderboard`,
+      transformResponse: (results) => results.data,
+    }),
     createGame: builder.mutation({
       query: (data) => ({
         url: `/games`,
@@ -43,6 +51,8 @@ export const gameApi = createApi({
 
 export const {
   useFetchGamesQuery,
+  useFetchGameTicketsQuery,
+  useFetchLeaderBoardQuery,
   useFetchSingleGameQuery,
   useCreateGameMutation,
   useUpdateGameMutation,

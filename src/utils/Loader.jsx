@@ -1,7 +1,15 @@
 import React from "react";
 
 // variety: white/dark
-const Loader = ({ isLoading, height = "100vh", variety = "white" }) => {
+const Loader = ({
+  isLoading,
+  itemLength,
+  isNullText,
+  height = "100vh",
+  variety = "white",
+}) => {
+  const isNull = itemLength && isNullText ? itemLength === 0 : false;
+
   return isLoading ? (
     <div
       style={{
@@ -16,7 +24,7 @@ const Loader = ({ isLoading, height = "100vh", variety = "white" }) => {
       <div className={`loader loader-${variety}`}></div>
     </div>
   ) : (
-    <></>
+    <>{isNull ? isNullText : ""}</>
   );
 };
 

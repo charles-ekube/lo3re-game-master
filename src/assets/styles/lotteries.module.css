@@ -360,7 +360,7 @@
     background: rgb(255, 255, 255);
     border-radius: 16px;
     box-shadow: rgba(0, 0, 0, 0.06) 0px 4px 16px 0px;
-    padding: 24px;
+    padding: 15px;
     height: 216px;
     overflow-y: auto;
     margin-top: 16px;
@@ -558,6 +558,12 @@
 .ticketRow {
     border-bottom: 1px solid #E8E8E8;
     padding-block: 10px;
+    padding-inline: 2px;
+    cursor: pointer;
+}
+
+.ticketRow:hover {
+    background-color: #fafafa;
 }
 
 .ticketRow:last-child {
@@ -568,9 +574,20 @@
     font-size: 14px;
 }
 
+.ticketIdPill {
+    font-size: 14px;
+    background-color: var(--lightGrey);
+    color: #727272;
+    border-radius: 100px;
+    cursor: pointer;
+    padding: 10px 12px;
+    font-size: 14px;
+    height: inherit;
+}
+
 .ticketSaleAvatar {
-    width: 48px;
-    height: 48px;
+    width: 48px !important;
+    height: 48px !important;
 }
 
 .ticketSaleAvatar > span {
@@ -622,6 +639,50 @@
     justify-content: center;
     text-align: center;
     min-height: 100px;
+}
+
+.modalStep2 {
+    animation: slideInLeft .5s ease-out;
+}
+
+.ticketInfoContainer {
+    border: 1px solid #E8E8E8;
+    padding: 16px;
+    border-radius: 8px;
+    margin-top: 24px;
+}
+
+
+.modalItemRow {
+    padding: 16px 0;
+}
+
+.modalItemRow p:nth-child(2) {
+    font-size: 18px;
+}
+
+
+.luckyNumContainer {
+    border: 2px solid #E1E2E5;
+    padding: 12px 16px;
+    border-radius: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    width: fit-content;
+    margin-top: 8px;
+}
+
+.luckyNum {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    color: #101010;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 @media screen and (max-width: 1425px) {
@@ -726,11 +787,32 @@
     .jackpotBox {
         min-width: 130px;
     }
-
     
-.lotterySlide {
-    gap: 18px;
-}
+    .lotterySlide {
+        gap: 18px;
+    }
+    
+    .modalItemRow {
+        padding: 12px 0;
+    }
+
+    .modalItemRow p:nth-child(1) {
+        font-size: 14px;
+    }
+
+    .modalItemRow p:nth-child(2) {
+        font-size: 16px;
+    }
+
+    .luckyNumContainer {
+        padding: 6px 10px;
+    }
+
+    .luckyNum {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+    }    
 
 }
 
@@ -816,8 +898,8 @@
     }
     
     .ticketSaleAvatar {
-        width: 36px;
-        height: 36px;
+        width: 30px !important;
+        height: 30px !important;
     }
 
     .ticketSaleAvatar > span {
@@ -826,6 +908,11 @@
 
     .statusPill {
         padding: 5px 6px !important;
+    }
+
+    .ticketSalesModal {
+        padding: 18px !important;
+        padding-inline: 14px !important;
     }
 
 }
@@ -854,5 +941,17 @@
     
     100% {
         background-color: rgba(50, 50, 50, 0.5);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
     }
 }
