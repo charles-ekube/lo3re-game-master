@@ -13,7 +13,7 @@ import { useCreateGameMutation } from "../../redux/services/gameApi";
 import { showError } from "../../utils/Alert";
 import { useFetchWalletBalanceQuery } from "../../redux/services/walletApi";
 import useTimeFormatter from "../../hooks/useTimeFormatter";
-import { imageDb } from "../../firebase";
+import { getImage, imageDb } from "../../firebase";
 import { v4 } from "uuid";
 import { ref, uploadBytes } from "firebase/storage";
 import useTextTruncate from "../../hooks/useTextTruncate";
@@ -102,7 +102,7 @@ const PreviewLottery = () => {
       ticketGoal: Number(ticketGoal),
       ticketPrice: Number(ticketPrice),
       coverUrl: "",
-      cause: "test cause",
+      cause: lotteryForm.cause,
       walletId: walletBalance.length ? walletBalance[0]?.id : null,
       socials: {
         facebook: lotteryForm.facebook,
@@ -122,10 +122,13 @@ const PreviewLottery = () => {
 
     setUploadLoading(true);
     await uploadBytes(storageRef, file)
-      .then((snapshot) => {
+      .then(async (snapshot) => {
         // console.log(snapshot);
-        fData.coverUrl = snapshot?.metadata?.fullPath;
-        setUploadLoading(false);
+        const photoUrl = snapshot?.metadata?.fullPath;
+        await getImage(photoUrl).then((url) => {
+          fData.coverUrl = url;
+          setUploadLoading(false);
+        });
       })
       .catch((err) => {
         setUploadLoading(false);
@@ -163,7 +166,7 @@ const PreviewLottery = () => {
           <header className={lotteryStyles.addLotteryHeader}>
             <h2>Confirm Details</h2>
             <p>
-              Please check and confirm that all hte information you've added
+              Please check and confirm that all the information you've added
               about this lottery is correct
             </p>
           </header>

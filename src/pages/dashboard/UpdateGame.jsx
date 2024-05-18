@@ -42,20 +42,6 @@ const UpdateGame = () => {
     others: game?.socials?.others,
   });
 
-  useEffect(() => {
-    let wasUnMounted = false;
-    if (game?.coverUrl) {
-      getImage(game?.coverUrl).then((url) => {
-        if (wasUnMounted) return;
-        setFormState((state) => ({ ...state, coverUrl: url }));
-      });
-    }
-
-    return () => {
-      wasUnMounted = true;
-    };
-  }, [game?.coverUrl]);
-
   const handleFile = (e) => {
     let images = e.target.files;
 
@@ -166,10 +152,13 @@ const UpdateGame = () => {
         setUploadLoading(true);
         console.log("uploading photo");
         await uploadBytes(storageRef, file)
-          .then((snapshot) => {
+          .then(async (snapshot) => {
             // console.log(snapshot);
-            fData.coverUrl = snapshot?.metadata?.fullPath;
-            setUploadLoading(false);
+            const photoUrl = snapshot?.metadata?.fullPath;
+            await getImage(photoUrl).then((url) => {
+              fData.coverUrl = url;
+              setUploadLoading(false);
+            });
           })
           .catch((err) => {
             setUploadLoading(false);

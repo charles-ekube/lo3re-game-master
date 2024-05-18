@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FaEllipsis } from "react-icons/fa6";
 import { MdVerified } from "react-icons/md";
 import { TiGroup } from "react-icons/ti";
@@ -13,7 +13,6 @@ import useTimeFormatter from "../../../hooks/useTimeFormatter";
 import { useDeleteGameMutation } from "../../../redux/services/gameApi";
 import { showError, showSuccess } from "../../../utils/Alert";
 import BgImage from "../../../assets/images/default.png";
-import { getImage } from "../../../firebase";
 import useTextTruncate from "../../../hooks/useTextTruncate";
 
 const LotteryGameCard = ({ game }) => {
@@ -22,24 +21,9 @@ const LotteryGameCard = ({ game }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { formatDuration } = useTimeFormatter();
   const navigate = useNavigate();
-  const [imgUrl, setImgUrl] = useState("");
   const { truncateText, formatMoney } = useTextTruncate();
   const [deleteGame, { isLoading: isDeleteGameLoading }] =
     useDeleteGameMutation();
-
-  useEffect(() => {
-    let wasUnMounted = false;
-    if (game?.coverUrl) {
-      getImage(game?.coverUrl).then((url) => {
-        if (wasUnMounted) return;
-        setImgUrl(url);
-      });
-    }
-
-    return () => {
-      wasUnMounted = true;
-    };
-  }, [game?.coverUrl]);
 
   const handleDeleteGame = async () => {
     await deleteGame(game?.id)
@@ -71,7 +55,7 @@ const LotteryGameCard = ({ game }) => {
       <div className={lotteryStyles.jackpotBox}>
         <div
           className={lotteryStyles.box}
-          style={{ backgroundImage: `url(${imgUrl || BgImage})` }}
+          style={{ backgroundImage: `url(${game?.coverUrl || BgImage})` }}
         >
           <div className="flexRow justifyBetween alignCenter">
             <span className={lotteryStyles.timer} onClick={viewGame}>
