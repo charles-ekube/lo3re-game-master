@@ -359,22 +359,33 @@ const Wallet = () => {
               ) : (
                 ""
               )}
-              {transactionHistory?.data?.map((value) => (
-                <TransactionHistory
-                  key={"tnx-" + value?.id}
-                  txnId={value?.id}
-                  type={value?.type}
-                  amount={value?.amount}
-                  currency={value?.currency}
-                  date={value?.createdAt?._seconds}
-                  status={value?.status}
-                  method={value?.method}
-                />
-              ))}
-              {/* <TransactionHistory
-                onTxnOpen={() => setShowTxnModal(true)}
-                isCreditTxn={false}
-              /> */}
+              {transactionHistory?.data?.map((value) => {
+                let checkoutUrl = "";
+
+                if (value?.currency === "ngn") {
+                  checkoutUrl = value?.meta?.data?.authorization_url;
+                } else {
+                  if (value?.method === "credit_card") {
+                    checkoutUrl = value?.meta?.url;
+                  } else if (value?.method === "crypto") {
+                    checkoutUrl = value?.meta?.hosted_url;
+                  }
+                }
+
+                return (
+                  <TransactionHistory
+                    key={"tnx-" + value?.id}
+                    txnId={value?.id}
+                    type={value?.type}
+                    amount={value?.amount}
+                    currency={value?.currency}
+                    date={value?.createdAt?._seconds}
+                    status={value?.status}
+                    method={value?.method}
+                    checkoutUrl={checkoutUrl}
+                  />
+                );
+              })}
             </div>
           </div>
         </div>
