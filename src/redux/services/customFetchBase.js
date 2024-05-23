@@ -7,7 +7,7 @@ const baseUrl = "https://us-central1-lo3re-ee26a.cloudfunctions.net/api/";
 const base = fetchBaseQuery({
   baseUrl,
   prepareHeaders: (headers, { getState }) => {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("axxToken");
 
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);

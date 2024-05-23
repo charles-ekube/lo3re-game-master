@@ -7,7 +7,7 @@ import { logOutUser } from "../redux/features/authSlice";
 
 function RequireAuth({ children }) {
   let location = useLocation();
-  const token = localStorage.getItem("accessToken");
+  const token = localStorage.getItem("axxToken");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

@@ -5,18 +5,22 @@ import Text from "../../utils/CustomText";
 import Or from "../../assets/images/or.svg";
 import CustomInput from "../../utils/CustomInput";
 import Button from "../../utils/CustomButton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { auth } from "../../firebase";
 import { showError } from "../../utils/Alert";
 import {
   GoogleAuthProvider,
   signInWithPopup,
   sendSignInLinkToEmail,
+  getAdditionalUserInfo,
+  updateProfile,
 } from "firebase/auth";
 import { setFlow } from "../../utils/Helpers";
 
 const PreLogin = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/dashboard";
   const singUp = () => {
     navigate("/signUp");
   };
@@ -86,42 +90,50 @@ const PreLogin = () => {
     }
   };
 
-  const signInWithGoogle = async () => {
-    try {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      //   const credential = GoogleAuthProvider.credentialFromResult(result);
-      //   const token = credential.accessToken;
-
-      // The signed-in user info.
-      const user = result.user;
-
-      // IdP data available using getAdditionalUserInfo(result)
-      // ...
-
-      console.log("Google Sign-In successful:", user);
-    } catch (error) {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-
-      // The email of the user's account used.
-      const email = error.customData?.email;
-
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
-
-      console.error(
-        "Google Sign-In error:",
-        errorCode,
-        errorMessage,
-        email,
-        credential
-      );
-      handleFirebaseError(error);
-    }
+  const signInWithGoogle = () => {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // The signed-in user info.
+        const user = result.user;
+        const additionalInfo = getAdditionalUserInfo(result);
+        const fullName = user?.displayName;
+        if (additionalInfo?.isNewUser && fullName) {
+          // TODO: check for wallet pin & 2fa as usual for login flow
+          updateProfile(user, {
+            displayName: fullName.split(" ")[0],
+          })
+            .catch((error) => {
+              console.log(error, "update user error");
+            })
+            .finally(() => {
+              // @ts-ignore
+              localStorage.setItem("axxToken", user?.accessToken);
+              navigate("/activate-wallet-pin");
+            });
+        } else {
+          // @ts-ignore
+          localStorage.setItem("axxToken", user?.accessToken);
+          navigate(from);
+        }
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        console.error(
+          "Google Sign-In error:",
+          errorCode,
+          errorMessage,
+          email,
+          credential
+        );
+        handleFirebaseError(error);
+      });
   };
 
   return (

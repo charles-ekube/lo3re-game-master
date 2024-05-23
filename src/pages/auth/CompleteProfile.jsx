@@ -60,7 +60,7 @@ const CompleteProfile = () => {
           await updatePassword(auth.currentUser, confirmPassword);
           setState({ ...state, loading: false });
           window.localStorage.setItem(
-            "accessToken",
+            "axxToken",
             auth?.currentUser?.accessToken
           );
           showSuccess("Successful 👍");

@@ -15,7 +15,7 @@ export const auth = createSlice({
       await signOut(firebaseAuth);
       localStorage.removeItem("iv");
       state.accessToken = "";
-      localStorage.removeItem("accessToken");
+      localStorage.removeItem("axxToken");
       localStorage.removeItem("TFAVerified");
       window.location.replace("/");
     },

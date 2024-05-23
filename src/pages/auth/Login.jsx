@@ -50,7 +50,7 @@ const Login = ({ signInEmail }) => {
           "An error occurred, could not validate user"
       );
       // invalidate
-      localStorage.removeItem("accessToken");
+      localStorage.removeItem("axxToken");
     }
   }, [userError]);
 
@@ -84,7 +84,7 @@ const Login = ({ signInEmail }) => {
       try {
         const res = await signInWithEmailAndPassword(auth, email, password);
         // validate
-        localStorage.setItem("accessToken", res.user.accessToken);
+        localStorage.setItem("axxToken", res.user.accessToken);
         setUserSkip(false);
 
         // rest is handled in useEffect

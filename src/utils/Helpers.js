@@ -6,7 +6,7 @@ export const setToken = async (data) => {
   try {
     const accessToken = data;
     console.log(accessToken, "token");
-    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("axxToken", accessToken);
   } catch (error) {
     console.log("Could not set accessToken ", error.message);
   }

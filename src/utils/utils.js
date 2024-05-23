@@ -6,7 +6,7 @@ const apiRootUrl = "https://us-central1-lo3re-ee26a.cloudfunctions.net/api/";
 
 const getUserToken = () => {
   try {
-    let accessToken = localStorage.getItem("accessToken");
+    let accessToken = localStorage.getItem("axxToken");
     // console.log(accessToken)
     return accessToken;
   } catch (error) {

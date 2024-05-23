@@ -5,6 +5,8 @@ import OtpInput from "../../utils/CustomOtp";
 import Modal from "../../utils/Modal";
 import { showError, showSuccess } from "../../utils/Alert";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { accountApi } from "../../redux/services/accountApi";
 
 const finalFormStep = 2;
 const ActivateWalletPin = () => {
@@ -14,7 +16,8 @@ const ActivateWalletPin = () => {
   const [formStep, setFormStep] = useState(1);
   const [pin, setPin] = useState("");
   const [pinConfirm, setPinConfirm] = useState("");
-  const token = localStorage.getItem("accessToken");
+  const dispatch = useDispatch();
+  const token = localStorage.getItem("axxToken");
   const onChange = (value) => {
     setPin(value);
   };
@@ -56,7 +59,7 @@ const ActivateWalletPin = () => {
   };
 
   const setWalletPin = async () => {
-    if (pin === "") {
+    if (pinConfirm === "" || pinConfirm.length < 6) {
       showError("Enter your 6-digit wallet pin");
       return;
     }
@@ -73,6 +76,7 @@ const ActivateWalletPin = () => {
       .unwrap()
       .then(() => {
         showSuccess("Pin activated successfully");
+        dispatch(accountApi.util.invalidateTags(["profile"]));
         navigate("/dashboard");
       })
       .catch((err) => {
@@ -87,6 +91,11 @@ const ActivateWalletPin = () => {
 
   const handleSubmit = () => {
     if (formStep < finalFormStep) {
+      if (pin === "" || pin.length < 6) {
+        showError("Enter your 6-digit wallet pin");
+        return;
+      }
+
       setFormStep(formStep + 1);
     } else {
       setWalletPin();

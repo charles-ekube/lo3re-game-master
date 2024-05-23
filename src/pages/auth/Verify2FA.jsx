@@ -9,7 +9,7 @@ const Verify2FA = () => {
   const navigate = useNavigate();
   const [verifyTFA, { isLoading: isVerifyTFALoading }] = useVerifyTFAMutation();
   const [code, setCode] = useState("");
-  const token = localStorage.getItem("accessToken");
+  const token = localStorage.getItem("axxToken");
 
   useEffect(() => {
     if (!token) {
