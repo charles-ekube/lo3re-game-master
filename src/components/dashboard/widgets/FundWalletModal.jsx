@@ -42,11 +42,18 @@ const FundWalletModal = ({ isOpen, onClose }) => {
   const handleCurrencyChange = (val) => {
     setDepositFormStates({ ...depositFormStates, currency: val });
 
-    let getRate = supportedCurrencies.filter((cur) => cur.code === val);
-    setRate({
-      rate: getRate.length ? getRate[0]?.rates[0]?.usd?.rate : 0,
-      symbol: getRate.length ? getRate[0].symbol : "?",
-    });
+    if (val === "ngn") {
+      let getRate = supportedCurrencies.filter((cur) => cur.code === "ngn");
+      setRate({
+        rate: getRate.length ? getRate[0]?.rates?.usd?.rate : 0,
+        symbol: getRate.length ? getRate[0].symbol : "?",
+      });
+    } else if (val === "usd") {
+      setRate({
+        rate: 1,
+        symbol: "$",
+      });
+    }
   };
 
   useEffect(() => {

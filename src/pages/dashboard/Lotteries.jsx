@@ -29,7 +29,7 @@ const Lotteries = () => {
     if (isGameSuccess) {
       let activeGame = [];
       if (returnActiveTab()[0].name === "active") {
-        activeGame = games?.games?.filter((game) => game?.status === "active");
+        activeGame = games?.games?.filter((game) => game?.status === "live");
       } else if (returnActiveTab()[0].name === "drafts") {
         activeGame = games?.games?.filter((game) => game?.status === "drafts");
       } else if (returnActiveTab()[0].name === "pending") {
@@ -54,7 +54,7 @@ const Lotteries = () => {
       let updatedTabs = [...tabs];
       updatedTabs = updatedTabs.map((tab) => ({
         ...tab,
-        badgeCount: games?.games?.filter((game) => game?.status === tab.name)
+        badgeCount: games?.games?.filter((game) => game?.status === tab.label)
           .length,
       }));
       dispatch(updateLotteryTab(updatedTabs));

@@ -6,13 +6,22 @@ import { Link } from "react-router-dom";
 import LotteryGameCard from "../cards/LotteryGameCard";
 import { useFetchGamesQuery } from "../../../redux/services/gameApi";
 import Loader from "../../../utils/Loader";
+import useTextTruncate from "../../../hooks/useTextTruncate";
+import { useFetchWalletBalanceQuery } from "../../../redux/services/walletApi";
 
 const Stateful = () => {
+  const [mainWallet, setMainWallet] = useState(null);
+  const { formatMoney } = useTextTruncate();
   const {
     data: games,
     isLoading: isGamesLoading,
     isSuccess: isGameSuccess,
   } = useFetchGamesQuery();
+  const {
+    data: walletBalance,
+    isSuccess: isWalletBalanceSuccess,
+    isLoading: isWalletBalanceLoading,
+  } = useFetchWalletBalanceQuery();
   const [gamesArr, setGamesArr] = useState([]);
 
   const [tabs, setTabs] = useState([
@@ -44,12 +53,22 @@ const Stateful = () => {
   ]);
 
   useEffect(() => {
-    const returnActiveTab = () => {
-      return tabs.filter((tab) => tab.isActive);
-    };
+    if (isWalletBalanceSuccess) {
+      const mainWallet = walletBalance?.filter(
+        (val) => val?.type?.toLowerCase() === "main"
+      );
 
+      setMainWallet(mainWallet[0]);
+    }
+  }, [isWalletBalanceSuccess, walletBalance]);
+
+  useEffect(() => {
     if (isGameSuccess) {
       let activeGame = [];
+      const returnActiveTab = () => {
+        return tabs.filter((tab) => tab.isActive);
+      };
+
       if (returnActiveTab()[0].name === "active") {
         activeGame = games?.games?.filter((game) => game?.status === "active");
       } else if (returnActiveTab()[0].name === "drafts") {
@@ -68,7 +87,7 @@ const Stateful = () => {
 
       setGamesArr(activeGame);
     }
-  }, [isGameSuccess, games, tabs]);
+  }, [games?.games, isGameSuccess, tabs]);
 
   useEffect(() => {
     if (isGameSuccess) {
@@ -81,7 +100,7 @@ const Stateful = () => {
       }));
       setTabs(updatedTabs);
     }
-  }, [isGameSuccess, games]);
+  }, [isGameSuccess, games, tabs]);
 
   const toggleTabs = (clickedItem) => {
     const updatedTabs = tabs.map((item) => ({
@@ -98,13 +117,14 @@ const Stateful = () => {
         <div className="cardContainer mb-2">
           <BalanceCard
             title={"Total Earned"}
-            figure={"$0.00"}
+            figure={"$0"}
             subtitle={"Lotteries deployed: 0"}
           />
           <BalanceCard
             title={"Wallet Balance"}
-            figure={"$0.00"}
+            figure={`$${formatMoney(mainWallet?.balance || 0)}`}
             subtitle={"Total gains 0%"}
+            isBalanceLoading={isWalletBalanceLoading}
           />
         </div>
         <div className={lotteryStyles.lotteryContainer}>

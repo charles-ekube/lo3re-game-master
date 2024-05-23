@@ -125,11 +125,19 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
   const handleCurrencyChange = (val) => {
     setWithdrawalFormStates({ ...withdrawalFormStates, currency: val });
 
-    let getRate = supportedCurrencies.filter((cur) => cur.code === val);
-    setRate({
-      rate: getRate.length ? getRate[0]?.rates[0]?.usd?.rate : 0,
-      symbol: getRate[0].symbol,
-    });
+    
+    if (val === "ngn") {
+      let getRate = supportedCurrencies.filter((cur) => cur.code === "usd");
+      setRate({
+        rate: getRate.length ? getRate[0]?.rates?.usd?.rate : 0,
+        symbol: getRate.length ? getRate[0].symbol : "?",
+      });
+    } else if (val === "usd") {
+      setRate({
+        rate: 1,
+        symbol: "$",
+      });
+    }
   };
 
   useEffect(() => {

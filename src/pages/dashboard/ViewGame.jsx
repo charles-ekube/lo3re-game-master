@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 // import Camera from "../../assets/images/camera.png";
 import lotteryStyles from "../../assets/styles/lotteries.module.css";
 import CustomButtonII from "../../utils/CustomButtonII";
@@ -23,7 +23,6 @@ import {
   useFetchGameTicketsQuery,
 } from "../../redux/services/gameApi";
 import { showError, showSuccess } from "../../utils/Alert";
-import { getImage } from "../../firebase";
 import useTextTruncate from "../../hooks/useTextTruncate";
 import Loader from "../../utils/Loader";
 import TicketSalesModal from "../../components/dashboard/widgets/TicketSalesModal";
@@ -45,27 +44,12 @@ const ViewGame = () => {
   const game = location.state?.game;
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [imgUrl, setImgUrl] = useState("");
   const { formatDateToLocaleString, formatDuration } = useTimeFormatter();
   const { truncateText, formatMoney } = useTextTruncate();
   const { data: gameTickets, isLoading: isTicketsLoading } =
     useFetchGameTicketsQuery();
   const [deleteGame, { isLoading: isDeleteGameLoading }] =
     useDeleteGameMutation();
-
-  useEffect(() => {
-    let wasUnMounted = false;
-    if (game?.coverUrl) {
-      getImage(game?.coverUrl).then((url) => {
-        if (wasUnMounted) return;
-        setImgUrl(url);
-      });
-    }
-
-    return () => {
-      wasUnMounted = true;
-    };
-  }, [game?.coverUrl]);
 
   const handleDeleteGame = async () => {
     await deleteGame(game?.id)
@@ -101,7 +85,7 @@ const ViewGame = () => {
           >
             <div className={lotteryStyles.avatar}>
               <img
-                src={imgUrl || BgImage}
+                src={game?.coverUrl || BgImage}
                 alt=""
                 className={lotteryStyles.fileImg}
               />
@@ -496,7 +480,6 @@ const ViewGame = () => {
     </>
   );
 };
-
 
 const Winners = [
   {

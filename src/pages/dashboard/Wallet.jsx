@@ -26,6 +26,7 @@ import {
 } from "../../redux/services/beneficiariesApi";
 import QuickWithdraw from "../../components/dashboard/widgets/QuickWithdraw";
 import CustomDropdown from "../../utils/CustomDropdown";
+import useTextTruncate from "../../hooks/useTextTruncate";
 
 const walletTypes = [
   {
@@ -44,8 +45,11 @@ const walletTypes = [
 
 const Wallet = () => {
   const navigate = useNavigate();
+  const { formatMoney } = useTextTruncate();
   const [fundWalletModal, setFundWalletModal] = useState(false);
   const [mainWallet, setMainWallet] = useState(null);
+  const [refWallet, setRefWallet] = useState(null);
+  const [bonusWallet, setBonusWallet] = useState(null);
   const [no2FAModal, setNo2FAModal] = useState(false);
   const [walletType, setWalletType] = useState(walletTypes[0].value);
   const [isQuickWithdrawModalOpen, setQuickWithdrawModal] = useState(false);
@@ -58,9 +62,9 @@ const Wallet = () => {
   const [withdrawWalletModal, setWithdrawWalletModal] = useState(false);
   const {
     data: walletBalance,
-    isLoading: isWalletBalanceLoading,
     isSuccess: isWalletBalanceSuccess,
     error: walletBalanceError,
+    isLoading: isWalletBalanceLoading,
   } = useFetchWalletBalanceQuery();
   const { data: transactionHistory, isLoading: isTransactionHistoryLoading } =
     useFetchTransactionsQuery("limit=5");
@@ -109,6 +113,24 @@ const Wallet = () => {
   // console.log(error);
 
   useEffect(() => {
+    if (isWalletBalanceSuccess) {
+      const mainWallet = walletBalance?.filter(
+        (val) => val?.type?.toLowerCase() === walletTypes[0].value
+      );
+      const refWallet = walletBalance?.filter(
+        (val) => val?.type?.toLowerCase() === walletTypes[1].value
+      );
+      const bonusWallet = walletBalance?.filter(
+        (val) => val?.type?.toLowerCase() === walletTypes[2].value
+      );
+
+      setMainWallet(mainWallet[0]);
+      setRefWallet(refWallet[0]);
+      setBonusWallet(bonusWallet[0]);
+    }
+  }, [isWalletBalanceSuccess, walletBalance]);
+
+  useEffect(() => {
     if (walletBalanceError) {
       console.log(walletBalanceError);
       showError(
@@ -118,14 +140,6 @@ const Wallet = () => {
       );
     }
   }, [walletBalanceError]);
-
-  useEffect(() => {
-    if (isWalletBalanceSuccess) {
-      if (walletBalance?.length >= 1) {
-        setMainWallet(walletBalance[0]);
-      }
-    }
-  }, [isWalletBalanceSuccess, walletBalance]);
 
   const toBeneficiaries = () => {
     navigate("/dashboard/settings/beneficiaries");
@@ -244,13 +258,13 @@ const Wallet = () => {
               <div className="cardContainer wallet-container-spacing">
                 <BalanceCard
                   title={"Wallet Balance"}
-                  figure={"$" + (mainWallet?.balance || 0)}
+                  figure={`$${formatMoney(mainWallet?.balance || 0)}`}
                   isBalanceLoading={isWalletBalanceLoading}
                   subtitle={"Total gains 0%"}
                 />
                 <BalanceCard
                   title={"Locked Balance"}
-                  figure={"$" + (mainWallet?.locked_balance || 0)}
+                  figure={`$${formatMoney(mainWallet?.lockedBalance || 0)}`}
                   isBalanceLoading={isWalletBalanceLoading}
                   subtitle={"To be credited on 20/10/23"}
                 />
@@ -263,12 +277,14 @@ const Wallet = () => {
               <div className="cardContainer wallet-container-spacing">
                 <BalanceCard
                   title={"Referral balance"}
-                  figure={"$0"}
+                  figure={`$${formatMoney(refWallet?.balance || 0)}`}
+                  isBalanceLoading={isWalletBalanceLoading}
                   subtitle={"Total gains 0%"}
                 />
                 <BalanceCard
                   title={"Locked referral balance"}
-                  figure={"$0"}
+                  figure={`$${formatMoney(refWallet?.lockedBalance || 0)}`}
+                  isBalanceLoading={isWalletBalanceLoading}
                   subtitle={"To be credited on 20/10/23"}
                 />
               </div>
@@ -279,12 +295,14 @@ const Wallet = () => {
               <div className="cardContainer wallet-container-spacing">
                 <BalanceCard
                   title={"Bonus balance"}
-                  figure={"$0"}
+                  figure={`$${formatMoney(bonusWallet?.balance || 0)}`}
+                  isBalanceLoading={isWalletBalanceLoading}
                   subtitle={"Total gains 0%"}
                 />
                 <BalanceCard
                   title={"Locked bonus balance"}
-                  figure={"$0"}
+                  figure={`$${formatMoney(bonusWallet?.lockedBalance || 0)}`}
+                  isBalanceLoading={isWalletBalanceLoading}
                   subtitle={"To be credited on 20/10/23"}
                 />
               </div>
