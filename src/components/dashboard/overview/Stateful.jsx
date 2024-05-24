@@ -143,9 +143,9 @@ const Stateful = () => {
                 You don't have any {tabs.filter((tab) => tab.isActive)[0].name}{" "}
                 games yet
               </p>
-              <div className="flexRow justifyCenter">
+              <div className="flexRow justifyCenter" style={{ marginBottom: "15px" }}>
                 <CustomButtonII
-                  text={"Create game"}
+                  text={"Create lottery"}
                   variant={"primary"}
                   onClick={() => navigate("/dashboard/lotteries/add")}
                 />

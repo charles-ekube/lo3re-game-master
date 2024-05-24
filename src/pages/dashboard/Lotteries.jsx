@@ -113,10 +113,19 @@ const Lotteries = () => {
               variety={"dark"}
             />
             {!gamesArr.length && !isGamesLoading ? (
-              <p className={`text-muted ${lotteryStyles.emptyGamesText}`}>
-                You don't have any {tabs.filter((tab) => tab.isActive)[0].name}{" "}
-                games yet
-              </p>
+              <>
+                <p className={`text-muted ${lotteryStyles.emptyGamesText}`}>
+                  You don't have any {tabs.filter((tab) => tab.isActive)[0].name}{" "}
+                  games yet
+                </p>
+                <div className="flexRow justifyCenter" style={{ marginBottom: "15px" }}>
+                  <CustomButtonII
+                    text={"Create lottery"}
+                    variant={"primary"}
+                    onClick={() => navigate("/dashboard/lotteries/add")}
+                  />
+                </div>
+              </>
             ) : (
               ""
             )}
