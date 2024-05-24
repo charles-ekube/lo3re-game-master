@@ -52,17 +52,28 @@ const AddLottery = () => {
       return false;
     }
 
-    const TwoMB = 2000000;
+    const TwoMB = 2097152;
     if (images?.length) {
       if (images[0].size >= TwoMB) {
         showError("File must be less than 2MB");
         return;
       } else {
-        setFile(images[0]);
         const reader = new FileReader();
+
         reader.onload = (base64) => {
-          localStorage["lotteryPhoto"] = reader.result;
+          const img = new Image();
+          img.onload = () => {
+            if (img.width < 800 || img.height < 800) {
+              showError("File dimension must be at least 800 x 800");
+              return;
+            }
+            setFile(images[0]);
+            localStorage["lotteryPhoto"] = reader.result;
+          };
+
+          img.src = base64.target.result;
         };
+
         reader.readAsDataURL(images[0]);
       }
     }
@@ -274,29 +285,27 @@ const AddLottery = () => {
               </div>
             </div>
 
-            <div className={`flexRow justifyBetween ${lotteryStyles.col3}`}>
-              <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
-                <div
-                  className="flexRow alignCenter"
-                  style={{ gap: "5px", marginBottom: "8px" }}
+            <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
+              <div
+                className="flexRow alignCenter"
+                style={{ gap: "5px", marginBottom: "8px" }}
+              >
+                <label className="mb-0">Cause</label>
+                <span
+                  className="tooltip"
+                  data-tooltip="Specific cause proceeds from ticket sales goes to."
                 >
-                  <label className="mb-0">Cause</label>
-                  <span
-                    className="tooltip"
-                    data-tooltip="Specific cause proceeds from ticket sales goes to."
-                  >
-                    <IoIosInformationCircleOutline color="#888" />
-                  </span>
-                </div>
-                <input
-                  type="text"
-                  className="formInput"
-                  placeholder="Optional"
-                  value={formState.cause}
-                  onChange={handleOnChange}
-                  name="cause"
-                />
+                  <IoIosInformationCircleOutline color="#888" />
+                </span>
               </div>
+              <input
+                type="text"
+                className="formInput"
+                placeholder="Optional"
+                value={formState.cause}
+                onChange={handleOnChange}
+                name="cause"
+              />
             </div>
 
             <div className={lotteryStyles.formDesc}>

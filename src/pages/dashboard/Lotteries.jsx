@@ -3,15 +3,17 @@ import Text from "../../utils/CustomText";
 import ContactCard from "../../components/dashboard/cards/ContactCard";
 import CardSlider from "../../components/dashboard/overview/CardSlider";
 import lotteryStyles from "../../assets/styles/lotteries.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LotteryGameCard from "../../components/dashboard/cards/LotteryGameCard";
 import { useFetchGamesQuery } from "../../redux/services/gameApi";
 import Loader from "../../utils/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { updateLotteryTab } from "../../redux/features/lotterySlice";
+import CustomButtonII from "../../utils/CustomButtonII";
 
 const Lotteries = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const tabs = useSelector((state) => state.lottery.lotteryTabs);
   const {
     data: games,
@@ -115,14 +117,18 @@ const Lotteries = () => {
             {!gamesArr.length && !isGamesLoading ? (
               <>
                 <p className={`text-muted ${lotteryStyles.emptyGamesText}`}>
-                  You don't have any {tabs.filter((tab) => tab.isActive)[0].name}{" "}
-                  games yet
+                  You don't have any{" "}
+                  {tabs.filter((tab) => tab.isActive)[0].name} games yet
                 </p>
-                <div className="flexRow justifyCenter" style={{ marginBottom: "15px" }}>
+                <div
+                  className="flexRow justifyCenter"
+                  style={{ marginBottom: "15px" }}
+                >
                   <CustomButtonII
                     text={"Create lottery"}
                     variant={"primary"}
                     onClick={() => navigate("/dashboard/lotteries/add")}
+                    style={{ paddingInline: "40px" }}
                   />
                 </div>
               </>
