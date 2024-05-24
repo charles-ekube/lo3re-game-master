@@ -22,12 +22,12 @@ const Lotteries = () => {
   // console.log(games);
 
   useEffect(() => {
-    const returnActiveTab = () => {
-      return tabs.filter((tab) => tab.isActive);
-    };
-
     if (isGameSuccess) {
       let activeGame = [];
+      const returnActiveTab = () => {
+        return tabs.filter((tab) => tab.isActive);
+      };
+
       if (returnActiveTab()[0].name === "active") {
         activeGame = games?.games?.filter((game) => game?.status === "live");
       } else if (returnActiveTab()[0].name === "drafts") {
@@ -57,9 +57,11 @@ const Lotteries = () => {
         badgeCount: games?.games?.filter((game) => game?.status === tab.label)
           .length,
       }));
-      dispatch(updateLotteryTab(updatedTabs));
+      if (JSON.stringify(tabs) !== JSON.stringify(updatedTabs)) {
+        dispatch(updateLotteryTab(updatedTabs));
+      }
     }
-  }, [isGameSuccess, games, dispatch]);
+  }, [isGameSuccess, games, tabs, dispatch]);
 
   const toggleTabs = (clickedItem) => {
     const updatedTabs = tabs.map((item) => ({

@@ -113,6 +113,11 @@ const AddLottery = () => {
         return;
       }
 
+      if (formState.cause.length > 100) {
+        showError("Cause must be less than 100 characters");
+        return;
+      }
+
       if (Number(formState.ticketGoal) <= Number(formState.jackpot)) {
         showError("Ticket goal must exceed jackpot");
         return;
@@ -275,10 +280,10 @@ const AddLottery = () => {
                   className="flexRow alignCenter"
                   style={{ gap: "5px", marginBottom: "8px" }}
                 >
-                  <label className="mb-0">Causes</label>
+                  <label className="mb-0">Cause</label>
                   <span
                     className="tooltip"
-                    data-tooltip="Specific causes proceeds from ticket sales goes to."
+                    data-tooltip="Specific cause proceeds from ticket sales goes to."
                   >
                     <IoIosInformationCircleOutline color="#888" />
                   </span>

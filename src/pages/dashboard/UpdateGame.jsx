@@ -127,18 +127,19 @@ const UpdateGame = () => {
         ticketGoal,
         ticketPrice,
         coverUrl,
+        cause,
       } = formState;
 
       const fData = {
         title,
         description,
         coverUrl,
+        cause,
         startOn: dateSubmitFormat(startOn),
         endOn: dateSubmitFormat(endOn),
         jackpot: Number(jackpot),
         ticketGoal: Number(ticketGoal),
         ticketPrice: Number(ticketPrice),
-        cause: "test cause",
         gid: game?.id,
         socials: {
           facebook: formState.facebook,
@@ -332,6 +333,17 @@ const UpdateGame = () => {
                   minDate={new Date()}
                 />
               </div>
+            </div>
+
+            <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
+              <label>Cause</label>
+              <input
+                type="text"
+                className="formInput"
+                value={formState.cause}
+                onChange={handleOnChange}
+                name="cause"
+              />
             </div>
 
             <div className={lotteryStyles.formDesc}>

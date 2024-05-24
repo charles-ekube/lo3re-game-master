@@ -78,7 +78,12 @@ const ViewGame = () => {
               style={{ marginBottom: "16px" }}
             />
           ) : (
-            ""
+            <IoIosArrowRoundBack
+              size={34}
+              className={"cursor-pointer"}
+              onClick={() => navigate("/dashboard/lotteries")}
+              style={{ marginBottom: "16px" }}
+            />
           )}
           <div
             className={`flexRow alignCenter avatarProfileContainer ${lotteryStyles.avatarProfileContainer} ${lotteryStyles.viewGameAvatarContainer}`}
@@ -146,6 +151,17 @@ const ViewGame = () => {
                   name="ticketCapacity"
                 />
               </div>
+            </div>
+
+            <div className={`inputContainer ${lotteryStyles.inputContainer}`}>
+              <label>Cause</label>
+              <input
+                type="text"
+                className="formInput"
+                value={game?.cause}
+                readOnly
+                name="cause"
+              />
             </div>
 
             <div className={`inputContainer ${lotteryStyles.inputContainer}`}>

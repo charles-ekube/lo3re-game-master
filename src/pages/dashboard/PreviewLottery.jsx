@@ -11,6 +11,7 @@ import { FaCheck } from "react-icons/fa6";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { useCreateGameMutation } from "../../redux/services/gameApi";
 import { showError } from "../../utils/Alert";
+import ConfettiExplosion from "react-confetti-explosion";
 import { useFetchWalletBalanceQuery } from "../../redux/services/walletApi";
 import useTimeFormatter from "../../hooks/useTimeFormatter";
 import { getImage, imageDb } from "../../firebase";
@@ -92,6 +93,9 @@ const PreviewLottery = () => {
       ticketGoal,
       ticketPrice,
     } = lotteryForm;
+    const mainWallet = walletBalance?.filter(
+      (val) => val?.type?.toLowerCase() === "main"
+    );
 
     const fData = {
       title,
@@ -103,7 +107,7 @@ const PreviewLottery = () => {
       ticketPrice: Number(ticketPrice),
       coverUrl: "",
       cause: lotteryForm.cause,
-      walletId: walletBalance.length ? walletBalance[0]?.id : null,
+      walletId: mainWallet.length ? mainWallet[0]?.id : null,
       socials: {
         facebook: lotteryForm.facebook,
         twitter: lotteryForm.twitter,
@@ -113,9 +117,10 @@ const PreviewLottery = () => {
       },
     };
 
-    if (isWalletBalanceLoading) {
-      if (!walletBalance.length || !walletBalance[0]?.id) {
+    if (!isWalletBalanceLoading) {
+      if (!mainWallet.length || !mainWallet[0]?.id) {
         showError("An error occured, try again later");
+        console.log("Could not fetch main wallet");
         return;
       }
     }
@@ -188,6 +193,9 @@ const PreviewLottery = () => {
               <h3 className="title capitalize">{lotteryForm.title}</h3>
               <p className="subtitle">
                 Jackpot prize: <b>${formatMoney(lotteryForm.jackpot)}</b>
+              </p>
+              <p className="subtitle">
+                Cause: <b>{lotteryForm.cause}</b>
               </p>
               <div
                 className={`flexRow text-muted mt-2 ${lotteryStyles.formDates}`}
@@ -349,11 +357,24 @@ const PreviewLottery = () => {
         </aside>
       </section>
 
-      <Modal isOpen={successModal} hideCloseBtn={true} onClose={() => null}>
+      <Modal
+        isOpen={successModal}
+        hideCloseBtn={true}
+        onClose={() => null}
+        zClass={"z600"}
+        glassOverlay={true}
+      >
         <div className={lotteryStyles.packageImg}>
           <img src={HHG} alt="" />
         </div>
         <div className={lotteryStyles.modalText}>
+          <ConfettiExplosion
+            zIndex={1500}
+            force={0.8}
+            duration={3000}
+            particleCount={250}
+            width={1600}
+          />
           <h2 className="satoshi-text">Package Secured</h2>
           <p>
             Your lottery has been set up and is now awaiting approval. Our team

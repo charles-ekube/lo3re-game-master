@@ -8,10 +8,14 @@ import { useFetchGamesQuery } from "../../../redux/services/gameApi";
 import Loader from "../../../utils/Loader";
 import useTextTruncate from "../../../hooks/useTextTruncate";
 import { useFetchWalletBalanceQuery } from "../../../redux/services/walletApi";
+import { useDispatch, useSelector } from "react-redux";
+import { updateLotteryTab } from "../../../redux/features/lotterySlice";
 
 const Stateful = () => {
   const [mainWallet, setMainWallet] = useState(null);
   const { formatMoney } = useTextTruncate();
+  const dispatch = useDispatch();
+  const tabs = useSelector((state) => state.lottery.lotteryTabs);
   const {
     data: games,
     isLoading: isGamesLoading,
@@ -23,34 +27,6 @@ const Stateful = () => {
     isLoading: isWalletBalanceLoading,
   } = useFetchWalletBalanceQuery();
   const [gamesArr, setGamesArr] = useState([]);
-
-  const [tabs, setTabs] = useState([
-    {
-      name: "active",
-      badgeCount: "01",
-      isActive: true,
-    },
-    {
-      name: "drafts",
-      badgeCount: "0",
-      isActive: false,
-    },
-    {
-      name: "pending",
-      badgeCount: "0",
-      isActive: false,
-    },
-    {
-      name: "completed",
-      badgeCount: "0",
-      isActive: false,
-    },
-    {
-      name: "declined",
-      badgeCount: "0",
-      isActive: false,
-    },
-  ]);
 
   useEffect(() => {
     if (isWalletBalanceSuccess) {
@@ -70,7 +46,7 @@ const Stateful = () => {
       };
 
       if (returnActiveTab()[0].name === "active") {
-        activeGame = games?.games?.filter((game) => game?.status === "active");
+        activeGame = games?.games?.filter((game) => game?.status === "live");
       } else if (returnActiveTab()[0].name === "drafts") {
         activeGame = games?.games?.filter((game) => game?.status === "drafts");
       } else if (returnActiveTab()[0].name === "pending") {
@@ -95,12 +71,14 @@ const Stateful = () => {
       let updatedTabs = [...tabs];
       updatedTabs = updatedTabs.map((tab) => ({
         ...tab,
-        badgeCount: games?.games?.filter((game) => game?.status === tab.name)
+        badgeCount: games?.games?.filter((game) => game?.status === tab.label)
           .length,
       }));
-      setTabs(updatedTabs);
+      if (JSON.stringify(tabs) !== JSON.stringify(updatedTabs)) {
+        dispatch(updateLotteryTab(updatedTabs));
+      }
     }
-  }, [isGameSuccess, games, tabs]);
+  }, [isGameSuccess, games, tabs, dispatch]);
 
   const toggleTabs = (clickedItem) => {
     const updatedTabs = tabs.map((item) => ({
@@ -108,7 +86,7 @@ const Stateful = () => {
       isActive: item === clickedItem, // Set to true for the clicked profile, false for others
     }));
 
-    setTabs(updatedTabs); // Update the state with the new array
+    dispatch(updateLotteryTab(updatedTabs));
   };
 
   return (
