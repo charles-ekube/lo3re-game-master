@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import BalanceCard from "../../../components/dashboard/wallet/BalanceCard";
 import { IoChevronForward } from "react-icons/io5";
 import lotteryStyles from "../../../assets/styles/lotteries.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LotteryGameCard from "../cards/LotteryGameCard";
 import { useFetchGamesQuery } from "../../../redux/services/gameApi";
 import Loader from "../../../utils/Loader";
@@ -10,11 +10,13 @@ import useTextTruncate from "../../../hooks/useTextTruncate";
 import { useFetchWalletBalanceQuery } from "../../../redux/services/walletApi";
 import { useDispatch, useSelector } from "react-redux";
 import { updateLotteryTab } from "../../../redux/features/lotterySlice";
+import CustomButtonII from "../../../utils/CustomButtonII";
 
 const Stateful = () => {
   const [mainWallet, setMainWallet] = useState(null);
   const { formatMoney } = useTextTruncate();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const tabs = useSelector((state) => state.lottery.lotteryTabs);
   const {
     data: games,
@@ -136,10 +138,19 @@ const Stateful = () => {
             variety={"dark"}
           />
           {!gamesArr.length && !isGamesLoading ? (
-            <p className={`text-muted ${lotteryStyles.emptyGamesText}`}>
-              You don't have any {tabs.filter((tab) => tab.isActive)[0].name}{" "}
-              games yet
-            </p>
+            <>
+              <p className={`text-muted ${lotteryStyles.emptyGamesText}`}>
+                You don't have any {tabs.filter((tab) => tab.isActive)[0].name}{" "}
+                games yet
+              </p>
+              <div className="flexRow justifyCenter">
+                <CustomButtonII
+                  text={"Create game"}
+                  variant={"primary"}
+                  onClick={() => navigate("/dashboard/lotteries/add")}
+                />
+              </div>
+            </>
           ) : (
             ""
           )}
