@@ -45,7 +45,7 @@ const ViewGame = () => {
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { formatDateToLocaleString, formatDuration } = useTimeFormatter();
-  const { truncateText, formatMoney } = useTextTruncate();
+  const { truncateText, formatMoney, ensureHttps } = useTextTruncate();
   const { data: gameTickets, isLoading: isTicketsLoading } =
     useFetchGameTicketsQuery();
   const [deleteGame, { isLoading: isDeleteGameLoading }] =
@@ -207,7 +207,7 @@ const ViewGame = () => {
               >
                 {game?.socials?.telegram ? (
                   <a
-                    href={game?.socials?.telegram}
+                    href={ensureHttps(game?.socials?.telegram)}
                     target={"_blank"}
                     rel="noreferrer"
                   >
@@ -218,7 +218,7 @@ const ViewGame = () => {
                 )}
                 {game?.socials?.facebook ? (
                   <a
-                    href={game?.socials?.facebook}
+                    href={ensureHttps(game?.socials?.facebook)}
                     target={"_blank"}
                     rel="noreferrer"
                   >
@@ -229,7 +229,7 @@ const ViewGame = () => {
                 )}
                 {game?.socials?.whatsapp ? (
                   <a
-                    href={game?.socials?.whatsapp}
+                    href={ensureHttps(game?.socials?.whatsapp)}
                     target={"_blank"}
                     rel="noreferrer"
                   >
@@ -240,7 +240,7 @@ const ViewGame = () => {
                 )}
                 {game?.socials?.others ? (
                   <a
-                    href={game?.socials?.others}
+                    href={ensureHttps(game?.socials?.others)}
                     target={"_blank"}
                     rel="noreferrer"
                   >

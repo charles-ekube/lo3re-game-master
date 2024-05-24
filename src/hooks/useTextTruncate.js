@@ -30,10 +30,18 @@ const useTextTruncate = () => {
     return number?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") || number;
   }
 
+  function ensureHttps(url) {
+    if (!url.startsWith("https://")) {
+      return "https://" + url;
+    }
+    return url;
+  }
+
   return {
     truncateText,
     truncateNumber,
     formatMoney,
+    ensureHttps,
   };
 };
 
