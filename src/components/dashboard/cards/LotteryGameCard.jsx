@@ -24,6 +24,7 @@ const LotteryGameCard = ({ game, isDraft = false }) => {
   const { truncateText, formatMoney } = useTextTruncate();
   const [deleteGame, { isLoading: isDeleteGameLoading }] =
     useDeleteGameMutation();
+  console.log("isdraft", isDraft);
 
   const handleDeleteGame = async () => {
     await deleteGame(game?.id)

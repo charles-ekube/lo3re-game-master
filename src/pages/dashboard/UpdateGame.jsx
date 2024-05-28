@@ -7,7 +7,10 @@ import { showError, showSuccess } from "../../utils/Alert";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import { IoIosArrowRoundBack } from "react-icons/io";
-import { useUpdateGameMutation } from "../../redux/services/gameApi";
+import {
+  useUpdateDraftGameMutation,
+  useUpdateGameMutation,
+} from "../../redux/services/gameApi";
 import useTimeFormatter from "../../hooks/useTimeFormatter";
 import { getImage, imageDb } from "../../firebase";
 import { ref, uploadBytes } from "firebase/storage";
@@ -17,6 +20,7 @@ const UpdateGame = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const game = location.state?.game;
+  const isDraft = location.state?.isDraft;
   // console.log(game);
   const fileElement = useRef(null);
 
@@ -24,6 +28,8 @@ const UpdateGame = () => {
   const [preview, setPreview] = useState(undefined);
   const [updateGame, { isLoading: isUpdateGameLoading }] =
     useUpdateGameMutation();
+  const [updateDraftGame, { isLoading: isUpdateDraftGameLoading }] =
+    useUpdateDraftGameMutation();
   const { dateSubmitFormat } = useTimeFormatter();
   const [uploadLoading, setUploadLoading] = useState(false);
   const [formState, setFormState] = useState({
@@ -167,20 +173,37 @@ const UpdateGame = () => {
           });
       }
 
-      await updateGame(fData)
-        .unwrap()
-        .then(() => {
-          showSuccess("Game updated successfully");
-          navigate("/dashboard/lotteries");
-        })
-        .catch((err) => {
-          showError(
-            err?.message ||
-              err?.data?.message ||
-              "An error occurred, try again later"
-          );
-          console.log(err);
-        });
+      if (!isDraft) {
+        await updateGame(fData)
+          .unwrap()
+          .then(() => {
+            showSuccess("Game updated successfully");
+            navigate("/dashboard/lotteries");
+          })
+          .catch((err) => {
+            showError(
+              err?.message ||
+                err?.data?.message ||
+                "An error occurred, try again later"
+            );
+            console.log(err);
+          });
+      } else {
+        await updateDraftGame(fData)
+          .unwrap()
+          .then(() => {
+            showSuccess("Game updated successfully");
+            navigate("/dashboard/lotteries");
+          })
+          .catch((err) => {
+            showError(
+              err?.message ||
+                err?.data?.message ||
+                "An error occurred, try again later"
+            );
+            console.log(err);
+          });
+      }
     } else {
       showError("Required fields are missing");
     }
@@ -425,7 +448,11 @@ const UpdateGame = () => {
                 text={"Save and continue"}
                 className="btnLg"
                 type="button"
-                loading={isUpdateGameLoading || uploadLoading}
+                loading={
+                  isUpdateGameLoading ||
+                  uploadLoading ||
+                  isUpdateDraftGameLoading
+                }
                 onClick={submitForm}
                 centerText={true}
               />

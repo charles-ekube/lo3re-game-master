@@ -179,7 +179,11 @@ const Stateful = () => {
           )}
           <div className={lotteryStyles.lotterySlide}>
             {gamesArr?.map((game) => (
-              <LotteryGameCard key={game?.id} game={game} />
+              <LotteryGameCard
+                key={game?.id}
+                game={game}
+                isDraft={game?.status === "draft" || !game?.status}
+              />
             ))}
           </div>
         </div>
