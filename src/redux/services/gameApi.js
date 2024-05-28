@@ -4,7 +4,7 @@ import baseQuery from "./customFetchBase";
 export const gameApi = createApi({
   reducerPath: "gameApi",
   baseQuery,
-  tagTypes: ["games"],
+  tagTypes: ["games", "draftGames"],
   endpoints: (builder) => ({
     fetchGames: builder.query({
       query: () => `/games`,
@@ -46,6 +46,38 @@ export const gameApi = createApi({
       }),
       invalidatesTags: ["games"],
     }),
+    fetchDraftGames: builder.query({
+      query: () => `/games/draft`,
+      providesTags: ["draftGames"],
+      transformResponse: (results) => results.data,
+    }),
+    fetchSingleDraftGame: builder.query({
+      query: (gid) => `/games/draft/${gid}`,
+      transformResponse: (results) => results.data,
+    }),
+    draftAGame: builder.mutation({
+      query: (body) => ({
+        url: `/games/draft`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["draftGames"],
+    }),
+    updateDraftGame: builder.mutation({
+      query: (body) => ({
+        url: `/games/draft/${body.gid}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["draftGames"],
+    }),
+    deleteDraftGame: builder.mutation({
+      query: (gid) => ({
+        url: `/games/draft/${gid}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["draftGames"],
+    }),
   }),
 });
 
@@ -57,4 +89,9 @@ export const {
   useCreateGameMutation,
   useUpdateGameMutation,
   useDeleteGameMutation,
+  useFetchDraftGamesQuery,
+  useFetchSingleDraftGameQuery,
+  useDraftAGameMutation,
+  useUpdateDraftGameMutation,
+  useDeleteDraftGameMutation,
 } = gameApi;

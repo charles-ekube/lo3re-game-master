@@ -9,7 +9,10 @@ import Modal from "../../utils/Modal";
 import { updateAddLotteryForm } from "../../redux/features/generalSlice";
 import { FaCheck } from "react-icons/fa6";
 import { IoIosArrowRoundBack } from "react-icons/io";
-import { useCreateGameMutation } from "../../redux/services/gameApi";
+import {
+  useCreateGameMutation,
+  useDraftAGameMutation,
+} from "../../redux/services/gameApi";
 import { showError } from "../../utils/Alert";
 import ConfettiExplosion from "react-confetti-explosion";
 import { useFetchWalletBalanceQuery } from "../../redux/services/walletApi";
@@ -52,10 +55,16 @@ const PreviewLottery = () => {
   const { dateSubmitFormat } = useTimeFormatter();
   const { formatMoney } = useTextTruncate();
   const [uploadLoading, setUploadLoading] = useState(false);
-  const { data: walletBalance, isLoading: isWalletBalanceLoading } =
-    useFetchWalletBalanceQuery();
+  const [uploadDraftLoading, setUploadDraftLoading] = useState(false);
+  const {
+    data: walletBalance,
+    isLoading: isWalletBalanceLoading,
+    isError: isWalletError,
+  } = useFetchWalletBalanceQuery();
   const [createGame, { isLoading: isCreateGameLoading }] =
     useCreateGameMutation();
+  const [draftGameMutation, { isLoading: isDraftGameLoading }] =
+    useDraftAGameMutation();
   const localImg = localStorage["lotteryPhoto"];
 
   const getPhoto = () => {
@@ -81,8 +90,78 @@ const PreviewLottery = () => {
     setFile(photo);
   }, []);
 
-  const storageRef = ref(imageDb, `uploads/${v4()}`);
+  const draftGame = async () => {
+    const {
+      title,
+      description,
+      startOn,
+      endOn,
+      jackpot,
+      ticketGoal,
+      ticketPrice,
+    } = lotteryForm;
+    const mainWallet = walletBalance?.filter(
+      (val) => val?.type?.toLowerCase() === "main"
+    );
 
+    const fData = {
+      title,
+      description,
+      startOn: dateSubmitFormat(startOn),
+      endOn: dateSubmitFormat(endOn),
+      jackpot: Number(jackpot),
+      ticketGoal: Number(ticketGoal),
+      ticketPrice: Number(ticketPrice),
+      coverUrl: "",
+      cause: lotteryForm.cause,
+      walletId: mainWallet.length ? mainWallet[0]?.id : null,
+      socials: {
+        facebook: lotteryForm.facebook,
+        twitter: lotteryForm.twitter,
+        telegram: lotteryForm.telegram,
+        whatsapp: lotteryForm.whatsapp,
+        others: lotteryForm.others,
+      },
+    };
+
+    if (!isWalletError) {
+      if (!mainWallet.length || !mainWallet[0]?.id) {
+        showError("An error occured, try again later");
+        console.log("Could not fetch main wallet");
+        return;
+      }
+    }
+
+    setUploadDraftLoading(true);
+    await uploadBytes(storageRef, file)
+      .then(async (snapshot) => {
+        // console.log(snapshot);
+        const photoUrl = snapshot?.metadata?.fullPath;
+        await getImage(photoUrl).then((url) => {
+          fData.coverUrl = url;
+          setUploadDraftLoading(false);
+        });
+      })
+      .catch((err) => {
+        setUploadDraftLoading(false);
+        console.log(err);
+      });
+
+    await draftGameMutation(fData)
+      .unwrap()
+      .then((resp) => {
+        //   open onSuccess modal and empty reduxLotteryForm
+        setGameId(resp?.data?.game?.id);
+        setSuccessModal(true);
+        dispatch(updateAddLotteryForm({}));
+      })
+      .catch((err) => {
+        showError(err?.message || err?.data?.message || "An error occurred");
+        console.log(err);
+      });
+  };
+
+  const storageRef = ref(imageDb, `uploads/${v4()}`);
   const submitForm = async () => {
     const {
       title,
@@ -316,6 +395,8 @@ const PreviewLottery = () => {
                 type="button"
                 readOnly={true}
                 centerText={true}
+                loading={isDraftGameLoading || uploadDraftLoading}
+                onClick={draftGame}
               />
               <CustomButtonII
                 variant={"primary"}

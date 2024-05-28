@@ -466,7 +466,7 @@ const ViewGame = () => {
           </div>
           <h3 className="deleteTitle">Delete Lottery</h3>
           <p className="deleteSubtitle">
-            Are you sure you want to delete this active lottery?
+            Are you sure you want to delete this {game?.status} lottery?
           </p>
           <div className="flexRow gap-1 mt35">
             <CustomButtonII

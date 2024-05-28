@@ -39,9 +39,15 @@ const LotteryGameCard = ({ game }) => {
   };
 
   const viewGame = () => {
-    navigate("/dashboard/lotteries/view-game", {
-      state: { game },
-    });
+    if (game?.status === "draft" || !game?.status) {
+      navigate("/dashboard/lotteries/view-drafted-game", {
+        state: { game },
+      });
+    } else {
+      navigate("/dashboard/lotteries/view-game", {
+        state: { game },
+      });
+    }
   };
 
   const updateGame = () => {

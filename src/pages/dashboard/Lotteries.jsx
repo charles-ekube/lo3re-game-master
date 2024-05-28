@@ -5,7 +5,10 @@ import CardSlider from "../../components/dashboard/overview/CardSlider";
 import lotteryStyles from "../../assets/styles/lotteries.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import LotteryGameCard from "../../components/dashboard/cards/LotteryGameCard";
-import { useFetchGamesQuery } from "../../redux/services/gameApi";
+import {
+  useFetchDraftGamesQuery,
+  useFetchGamesQuery,
+} from "../../redux/services/gameApi";
 import Loader from "../../utils/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { updateLotteryTab } from "../../redux/features/lotterySlice";
@@ -20,8 +23,13 @@ const Lotteries = () => {
     isLoading: isGamesLoading,
     isSuccess: isGameSuccess,
   } = useFetchGamesQuery();
+  const {
+    data: draftedGames,
+    isLoading: isDraftGamesLoading,
+    isSuccess: isDraftGamesSuccess,
+  } = useFetchDraftGamesQuery();
   const [gamesArr, setGamesArr] = useState([]);
-  // console.log(games);
+  console.log("drafted games", draftedGames);
 
   useEffect(() => {
     if (isGameSuccess) {
@@ -33,7 +41,7 @@ const Lotteries = () => {
       if (returnActiveTab()[0].name === "active") {
         activeGame = games?.games?.filter((game) => game?.status === "live");
       } else if (returnActiveTab()[0].name === "drafts") {
-        activeGame = games?.games?.filter((game) => game?.status === "drafts");
+        activeGame = isDraftGamesSuccess ? draftedGames?.games : [];
       } else if (returnActiveTab()[0].name === "pending") {
         activeGame = games?.games?.filter((game) => game?.status === "pending");
       } else if (returnActiveTab()[0].name === "completed") {
@@ -48,22 +56,33 @@ const Lotteries = () => {
 
       setGamesArr(activeGame);
     }
-  }, [isGameSuccess, games, tabs]);
+  }, [isGameSuccess, isDraftGamesSuccess, games, draftedGames, tabs]);
 
   useEffect(() => {
     if (isGameSuccess) {
       // update badge count
       let updatedTabs = [...tabs];
-      updatedTabs = updatedTabs.map((tab) => ({
-        ...tab,
-        badgeCount: games?.games?.filter((game) => game?.status === tab.label)
-          .length,
-      }));
+      updatedTabs = updatedTabs.map((tab) => {
+        if (tab.label === "drafts" && isDraftGamesSuccess) {
+          return {
+            ...tab,
+            badgeCount: draftedGames?.games?.length || 0,
+          };
+        } else {
+          return {
+            ...tab,
+            badgeCount: games?.games?.filter(
+              (game) => game?.status === tab.label
+            ).length,
+          };
+        }
+      });
       if (JSON.stringify(tabs) !== JSON.stringify(updatedTabs)) {
+        console.log("badge", updatedTabs);
         dispatch(updateLotteryTab(updatedTabs));
       }
     }
-  }, [isGameSuccess, games, tabs, dispatch]);
+  }, [isGameSuccess, isDraftGamesSuccess, games, draftedGames, tabs, dispatch]);
 
   const toggleTabs = (clickedItem) => {
     const updatedTabs = tabs.map((item) => ({
@@ -110,11 +129,11 @@ const Lotteries = () => {
               </div>
             </div>
             <Loader
-              isLoading={isGamesLoading}
+              isLoading={isGamesLoading || isDraftGamesLoading}
               height={"100px"}
               variety={"dark"}
             />
-            {!gamesArr.length && !isGamesLoading ? (
+            {!gamesArr.length && (!isGamesLoading || !isDraftGamesLoading) ? (
               <>
                 <p className={`text-muted ${lotteryStyles.emptyGamesText}`}>
                   You don't have any{" "}

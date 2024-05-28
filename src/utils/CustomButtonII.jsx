@@ -1,7 +1,7 @@
 import React from "react";
 import Text from "./CustomText";
 
-// varaints => primary, secondary, light, danger, ghost-danger
+// varaints => primary, secondary, light, danger, ghost, ghost-danger
 const CustomButtonII = ({
   text,
   onClick,
@@ -22,7 +22,9 @@ const CustomButtonII = ({
           className="flexRow justifyCenter alignCenter"
           style={{ width: "100%", height: "100%" }}
         >
-          <span className={"loader"}></span>
+          <span
+            className={`loader ${variant === "ghost" ? "loader-dark" : ""}`}
+          ></span>
         </div>
       ) : (
         <Text

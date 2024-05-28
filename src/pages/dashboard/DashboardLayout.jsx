@@ -27,6 +27,7 @@ import ViewGame from "./ViewGame";
 import UpdateGame from "./UpdateGame";
 import { Notification } from "./Notification";
 import ViewSingleGame from "./ViewSingleGame";
+import ViewDraftedGame from "./ViewDraftedGame";
 
 const DashboardLayout = () => {
   const dispatch = useDispatch();
@@ -79,6 +80,7 @@ const DashboardLayout = () => {
               <Route path="add" element={<AddLottery />} />
               <Route path="preview" element={<PreviewLottery />} />
               <Route path="view-game" element={<ViewGame />} />
+              <Route path="view-drafted-game" element={<ViewDraftedGame />} />
               <Route
                 path="view-single-game/:gid"
                 element={<ViewSingleGame />}
