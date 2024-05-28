@@ -234,7 +234,7 @@ const ViewGame = () => {
                 type="button"
                 onClick={() =>
                   navigate("/dashboard/lotteries/update-game", {
-                    state: { game },
+                    state: { game, isDraft: true },
                   })
                 }
                 centerText={true}

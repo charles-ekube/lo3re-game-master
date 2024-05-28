@@ -15,7 +15,7 @@ import { showError, showSuccess } from "../../../utils/Alert";
 import BgImage from "../../../assets/images/default.png";
 import useTextTruncate from "../../../hooks/useTextTruncate";
 
-const LotteryGameCard = ({ game }) => {
+const LotteryGameCard = ({ game, isDraft = false }) => {
   const [showOptions, setShowOptions] = useState(false);
   const { truncateNumber } = useTextTruncate();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -52,7 +52,7 @@ const LotteryGameCard = ({ game }) => {
 
   const updateGame = () => {
     navigate("/dashboard/lotteries/update-game", {
-      state: { game },
+      state: { game, isDraft },
     });
   };
 

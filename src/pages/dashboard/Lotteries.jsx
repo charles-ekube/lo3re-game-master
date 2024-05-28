@@ -156,7 +156,11 @@ const Lotteries = () => {
             )}
             <div className={lotteryStyles.lotteryGrid}>
               {gamesArr?.map((game) => (
-                <LotteryGameCard key={game?.id} game={game} />
+                <LotteryGameCard
+                  key={game?.id}
+                  game={game}
+                  isDraft={game?.status === "draft" || !game?.status}
+                />
               ))}
             </div>
           </div>
