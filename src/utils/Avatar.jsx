@@ -3,7 +3,14 @@ import { CiUser } from "react-icons/ci";
 import Text from "./CustomText";
 import "../assets/styles/utilsStyles.css";
 
-const Avatar = ({ name, fontSize = "16px", className }) => {
+const Avatar = ({
+  name,
+  fontSize = "16px",
+  onlyFirstLetter = false,
+  src,
+  boxSize = "36px",
+  className,
+}) => {
   // Check if displayName is a string and not empty
   let firstLetter = "";
   let lastLetter = "";
@@ -16,14 +23,21 @@ const Avatar = ({ name, fontSize = "16px", className }) => {
   }
 
   return (
-    <div className={`nameTagContainer ${className}`}>
-      <Text
-        className={"satoshi-text mediumText upper"}
-        style={{ color: "rgba(16, 16, 16, 1)", fontSize }}
-      >
-        {firstLetter ? firstLetter : <CiUser size={18} />}
-        {lastLetter ? lastLetter : ""}
-      </Text>
+    <div
+      className={`nameTagContainer ${src ? "hasSrc" : ""} ${className}`}
+      style={{ height: boxSize, width: boxSize }}
+    >
+      {src ? (
+        <img src={src} className="nameTagImg" alt="" />
+      ) : (
+        <Text
+          className={"satoshi-text mediumText upper"}
+          style={{ color: "rgba(16, 16, 16, 1)", fontSize }}
+        >
+          {firstLetter ? firstLetter : <CiUser size={18} />}
+          {lastLetter && !onlyFirstLetter ? lastLetter : ""}
+        </Text>
+      )}
     </div>
   );
 };

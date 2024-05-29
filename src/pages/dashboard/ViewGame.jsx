@@ -20,12 +20,16 @@ import { GrLink } from "react-icons/gr";
 import useTimeFormatter from "../../hooks/useTimeFormatter";
 import {
   useDeleteGameMutation,
+  useFetchGameLeaderBoardQuery,
   useFetchGameTicketsQuery,
 } from "../../redux/services/gameApi";
+import { useFetchProfileQuery } from "../../redux/services/accountApi";
 import { showError, showSuccess } from "../../utils/Alert";
 import useTextTruncate from "../../hooks/useTextTruncate";
 import Loader from "../../utils/Loader";
 import TicketSalesModal from "../../components/dashboard/widgets/TicketSalesModal";
+import Avatar from "../../utils/Avatar";
+import LeaderBoardModal from "../../components/dashboard/widgets/LeaderBoardModal";
 
 function anyKeyHasValue(obj) {
   for (const key in obj) {
@@ -43,6 +47,7 @@ const ViewGame = () => {
   const hideBackBtn = searchParams.get("hideBackBtn");
   const game = location.state?.game;
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
+  const [isLeaderboardModalOpen, setIsLeaderboardModalOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { formatDateToLocaleString, formatDuration } = useTimeFormatter();
   const { truncateText, formatMoney, ensureHttps } = useTextTruncate();
@@ -50,6 +55,11 @@ const ViewGame = () => {
     useFetchGameTicketsQuery();
   const [deleteGame, { isLoading: isDeleteGameLoading }] =
     useDeleteGameMutation();
+  const { data: leaderboard, isLoading: isLeaderboardLoading } =
+    useFetchGameLeaderBoardQuery(game?.id);
+  const { data: user } = useFetchProfileQuery();
+
+  console.log("ld", leaderboard);
 
   const handleDeleteGame = async () => {
     await deleteGame(game?.id)
@@ -322,7 +332,7 @@ const ViewGame = () => {
                     </thead>
 
                     <tbody>
-                      {gameTickets?.tickets?.map((ticket) => {
+                      {gameTickets?.tickets?.slice(0, 5)?.map((ticket) => {
                         let date = DateTime.fromSeconds(
                           ticket?.createdAt?._seconds
                         );
@@ -403,7 +413,10 @@ const ViewGame = () => {
           <div className={lotteryStyles.leaderboard}>
             <div className={`flexRow justifyBetween ${lotteryStyles.mb12}`}>
               <p className={lotteryStyles.asideTitle}>Leaderboard</p>
-              <p className="flexRow alignCenter cursor-pointer fs14">
+              <p
+                className="flexRow alignCenter cursor-pointer fs14"
+                onClick={() => setIsLeaderboardModalOpen(true)}
+              >
                 View all <IoChevronForward fontSize={"20px"} />
               </p>
             </div>
@@ -420,37 +433,72 @@ const ViewGame = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {Winners.map((val, idx) => (
-                      <tr
-                        className={`${
-                          idx === 2 ? lotteryStyles.activeUser : ""
-                        }`}
-                        key={`ld-${idx}`}
-                      >
-                        <td>
-                          <div className={`flexRow alignCenter`}>
-                            <div className={lotteryStyles.tableAvatar}>
-                              <p>R</p>
+                    {leaderboard?.leaderboards?.slice(0, 5)?.map((val, idx) => {
+                      let date = DateTime.fromSeconds(
+                        val?.ticket?.createdAt?._seconds
+                      );
+                      date = date.toRelativeCalendar();
+
+                      const results = val?.results;
+                      const selections = results?.length
+                        ? results[0]?.selection
+                        : [];
+
+                      return (
+                        <tr
+                          className={`${
+                            val?.profile?.userId === user?.id
+                              ? lotteryStyles.activeUser
+                              : ""
+                          }`}
+                          key={`ld-${idx}`}
+                        >
+                          <td>
+                            <div className={`flexRow alignCenter`}>
+                              <Avatar
+                                fontSize="20px"
+                                name={val?.profile?.username}
+                                className={lotteryStyles.tableAvatar}
+                                onlyFirstLetter={true}
+                                src={val?.profile?.photoUrl}
+                                boxSize={"40px"}
+                              />
+                              <div>
+                                <p className={lotteryStyles.leaderName}>
+                                  {val?.profile?.username}
+                                </p>
+                              </div>
                             </div>
-                            <div>
-                              <p className={lotteryStyles.leaderName}>
-                                {val.name}
-                              </p>
-                            </div>
-                          </div>
-                        </td>
-                        <td>{val.rank}</td>
-                        <td>
-                          <p className={lotteryStyles.leaderLottoNumber}>
-                            012345
-                          </p>
-                        </td>
-                        <td>{val.win}</td>
-                        <td>3 mins ago</td>
-                      </tr>
-                    ))}
+                          </td>
+                          <td>{val?.friendlyRank}</td>
+                          <td>
+                            <p className={lotteryStyles.leaderLottoNumber}>
+                              {selections?.map((num) => num + " ")}
+                            </p>
+                          </td>
+                          <td>${formatMoney(val?.prizeAmount)}</td>
+                          <td>{date}</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
+                <Loader
+                  isLoading={isLeaderboardLoading}
+                  itemLength={leaderboard?.leaderboards?.length}
+                  // isNullText={"No tickets yets"}
+                  height={"100%"}
+                />
+                {!isLeaderboardLoading && !leaderboard?.leaderboards?.length ? (
+                  <div
+                    className="flexColumn justifyCenter alignCenter text-muted textCenter fs14"
+                    style={{ height: "120px" }}
+                  >
+                    Leaderboard is currently empty.
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
             </div>
           </div>
@@ -492,32 +540,16 @@ const ViewGame = () => {
           onClose={() => setIsTicketModalOpen(false)}
           tickets={gameTickets?.tickets}
         />
+
+        <LeaderBoardModal
+          isOpen={isLeaderboardModalOpen}
+          onClose={() => setIsLeaderboardModalOpen(false)}
+          items={leaderboard?.leaderboards}
+        />
       </section>
     </>
   );
 };
 
-const Winners = [
-  {
-    name: "Raynera",
-    rank: "👑 King",
-    win: "$50",
-  },
-  {
-    name: "Raynera",
-    rank: "⚔️ Knight",
-    win: "$20",
-  },
-  {
-    name: "Raynera",
-    rank: "🧙🏽‍♂️ Mage",
-    win: "$10",
-  },
-  {
-    name: "Raynera",
-    rank: "-",
-    win: "$0",
-  },
-];
 
 export default ViewGame;

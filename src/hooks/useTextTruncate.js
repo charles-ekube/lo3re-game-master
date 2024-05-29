@@ -27,7 +27,26 @@ const useTextTruncate = () => {
   }
 
   function formatMoney(number) {
-    return number?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") || number;
+    // Convert number to string
+    const numberString = number?.toFixed(2)?.toString();
+
+    if (numberString) {
+      // Split the number into parts before and after the decimal point
+      const [integerPart, decimalPart] = numberString.split(".");
+
+      // Format the integer part with commas
+      const formattedIntegerPart = integerPart.replace(
+        /\B(?=(\d{3})+(?!\d))/g,
+        ","
+      );
+
+      // Combine the formatted integer part and the decimal part (if any)
+      return decimalPart
+        ? `${formattedIntegerPart}.${decimalPart}`
+        : formattedIntegerPart;
+    }
+
+    return numberString;
   }
 
   function ensureHttps(url) {

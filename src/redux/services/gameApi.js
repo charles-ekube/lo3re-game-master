@@ -46,6 +46,10 @@ export const gameApi = createApi({
       }),
       invalidatesTags: ["games"],
     }),
+    fetchGameLeaderBoard: builder.query({
+      query: (gid) => `/games/${gid}/leaderboard`,
+      transformResponse: (results) => results.data,
+    }),
     fetchDraftGames: builder.query({
       query: () => `/games/draft`,
       providesTags: ["draftGames"],
@@ -94,4 +98,5 @@ export const {
   useDraftAGameMutation,
   useUpdateDraftGameMutation,
   useDeleteDraftGameMutation,
+  useFetchGameLeaderBoardQuery,
 } = gameApi;

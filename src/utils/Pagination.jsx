@@ -2,7 +2,13 @@ import React from "react";
 import CustomButtonII from "../utils/CustomButtonII";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 
-const Pagination = ({ limit, curPage, totalItems, paginate }) => {
+const Pagination = ({
+  limit,
+  curPage,
+  totalItems,
+  paginate,
+  colorScheme = "light",
+}) => {
   const pageNumbers = [];
   const totalPage = Math.ceil(totalItems / limit);
 
@@ -11,7 +17,7 @@ const Pagination = ({ limit, curPage, totalItems, paginate }) => {
   }
 
   return (
-    <div className="paginationContainer">
+    <div className={`paginationContainer pagination-${colorScheme}`}>
       <ul className="pagination">
         <li className="page-item">
           <CustomButtonII

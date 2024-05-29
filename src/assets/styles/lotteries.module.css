@@ -465,7 +465,7 @@
 }
 
 .ticketSalesModal {
-    width: 700px;
+    width: 700px !important;
 }
 
 .leaderboardContainer {
@@ -773,7 +773,7 @@
     }
 
     .ticketSalesModal {
-        width: 90%;
+        width: 90% !important;
     }
     
 }
