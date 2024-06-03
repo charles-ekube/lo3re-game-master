@@ -284,6 +284,7 @@ const BankBeneModal = ({ isOpen, onClose, beneficiaryToUpdate = null }) => {
       //   console.log(supportedBanks);
 
       setFinalFormState({
+        title,
         currency,
         account_number,
         account_name,
@@ -305,6 +306,7 @@ const BankBeneModal = ({ isOpen, onClose, beneficiaryToUpdate = null }) => {
       }
 
       setFinalFormState({
+        title,
         currency,
         account_number,
         account_name,
