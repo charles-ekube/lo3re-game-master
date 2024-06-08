@@ -1,6 +1,12 @@
 import React from "react";
 
-const CustomCheckbox = ({ label, isChecked, onChange, name }) => {
+const CustomCheckbox = ({
+  label,
+  isChecked,
+  onChange,
+  name,
+  isDisabled = false,
+}) => {
   return (
     <>
       <label className="cr-wrapper">
@@ -9,6 +15,7 @@ const CustomCheckbox = ({ label, isChecked, onChange, name }) => {
           name={name}
           checked={isChecked}
           onChange={onChange}
+          disabled={isDisabled}
         />
         <div className="cr-input"></div>
         {label && <span>{label}</span>}

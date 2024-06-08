@@ -28,7 +28,7 @@ const useTextTruncate = () => {
 
   function formatMoney(number) {
     // Convert number to string
-    const numberString = number?.toFixed(2)?.toString();
+    const numberString = Number(number)?.toFixed(2)?.toString();
 
     if (numberString) {
       // Split the number into parts before and after the decimal point

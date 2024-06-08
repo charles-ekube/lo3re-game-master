@@ -6,6 +6,7 @@ import ContactCard from "../../components/dashboard/cards/ContactCard";
 import Stateful from "../../components/dashboard/overview/Stateful";
 import { useFetchProfileQuery } from "../../redux/services/accountApi";
 import { useFetchGamesQuery } from "../../redux/services/gameApi";
+import Loader from "../../utils/Loader";
 
 const Overview = () => {
   const { data: games, isLoading: isGamesLoading } = useFetchGamesQuery();
@@ -15,10 +16,13 @@ const Overview = () => {
       {/* <TopNav /> */}
       <section className={"mainContainer"}>
         <div>
+          <Loader isLoading={isGamesLoading} height={"80vh"} variety="dark" />
+          {games?.games?.length ? <Stateful /> : ""}
+
           {!isGamesLoading && games?.games?.length === 0 ? (
             <OverviewEmptyState userDetails={user} />
           ) : (
-            <Stateful />
+            ""
           )}
         </div>
         <aside className={"asideViewContainer"}>

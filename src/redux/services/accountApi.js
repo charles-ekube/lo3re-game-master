@@ -11,7 +11,11 @@ export const accountApi = createApi({
       providesTags: ["profile"],
       transformResponse: (results) => results.data,
     }),
+    fetchFollowers: builder.query({
+      query: () => `/followers`,
+      transformResponse: (results) => results.data,
+    }),
   }),
 });
 
-export const { useFetchProfileQuery } = accountApi;
+export const { useFetchProfileQuery, useFetchFollowersQuery } = accountApi;

@@ -133,7 +133,7 @@ const Lotteries = () => {
               height={"100px"}
               variety={"dark"}
             />
-            {!gamesArr.length && (!isGamesLoading || !isDraftGamesLoading) ? (
+            {!gamesArr.length && !isGamesLoading && !isDraftGamesLoading ? (
               <>
                 <p className={`text-muted ${lotteryStyles.emptyGamesText}`}>
                   You don't have any{" "}

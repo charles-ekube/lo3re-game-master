@@ -184,6 +184,9 @@ button {
 .text-muted {
   color: #868686;
 }
+.textMuted {
+  color: #868686;
+}
 
 .dNone {
   display: none;

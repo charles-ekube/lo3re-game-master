@@ -21,6 +21,7 @@ import { getImage, imageDb } from "../../firebase";
 import { v4 } from "uuid";
 import { ref, uploadBytes } from "firebase/storage";
 import useTextTruncate from "../../hooks/useTextTruncate";
+import CustomCheckbox from "../../utils/CustomCheckbox";
 
 function b64toBlob(b64Data, contentType, sliceSize) {
   contentType = contentType || "";
@@ -186,6 +187,7 @@ const PreviewLottery = () => {
       ticketPrice: Number(ticketPrice),
       coverUrl: "",
       cause: lotteryForm.cause,
+      infinite: lotteryForm.infinite,
       walletId: mainWallet.length ? mainWallet[0]?.id : null,
       socials: {
         facebook: lotteryForm.facebook,
@@ -334,6 +336,13 @@ const PreviewLottery = () => {
                   readOnly
                 ></textarea>
               </div>
+
+              <CustomCheckbox
+                isChecked={lotteryForm.infinite}
+                label={"Run game indefinitely"}
+                name={"infinite"}
+                isDisabled={true}
+              />
             </div>
 
             <div

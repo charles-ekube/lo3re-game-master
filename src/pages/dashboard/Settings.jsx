@@ -4,7 +4,10 @@ import Text from "../../utils/CustomText";
 import ContactCard from "../../components/dashboard/cards/ContactCard";
 import { Link } from "react-router-dom";
 import "../../assets/styles/settings.css";
-import { useFetchProfileQuery } from "../../redux/services/accountApi";
+import {
+  useFetchFollowersQuery,
+  useFetchProfileQuery,
+} from "../../redux/services/accountApi";
 import Modal from "../../utils/Modal";
 import Avatar from "../../utils/Avatar";
 import { CiSearch } from "react-icons/ci";
@@ -12,6 +15,7 @@ import Pagination from "../../utils/Pagination";
 
 const Settings = () => {
   const { data: user } = useFetchProfileQuery();
+  const { data: followers } = useFetchFollowersQuery();
 
   const [isFollowerModalOpen, setIsFollowerModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -52,7 +56,7 @@ const Settings = () => {
                   className="text-center cursor-pointer"
                   onClick={() => setIsFollowerModalOpen(true)}
                 >
-                  <h3 className="satoshi-text">20</h3>
+                  <h3 className="satoshi-text">{followers?.length || 0}</h3>
                   <p className="f14">Followers</p>
                 </div>
                 <div
@@ -190,17 +194,30 @@ const Settings = () => {
           <input placeholder="Search everything" />
         </div>
         <div className="follower-list">
-          <NameTagContainer />
-          <NameTagContainer />
-          <NameTagContainer />
-          <NameTagContainer />
+          {!followers?.length ? (
+            <p
+              style={{ marginBlock: "50px" }}
+              className={"textMuted textCenter"}
+            >
+              You don't have any followers yet
+            </p>
+          ) : (
+            ""
+          )}
+          {followers?.map((value, idx) => (
+            <NameTagContainer
+              key={`foll-${idx}`}
+              name={value?.username}
+              photo={value?.photoUrl}
+            />
+          ))}
         </div>
-        <Pagination
+        {/* <Pagination
           limit={1}
           curPage={currentPage}
           totalItems={2}
           paginate={(num) => setCurrentPage(num)}
-        />
+        /> */}
       </Modal>
 
       <Modal
@@ -229,15 +246,15 @@ const Settings = () => {
   );
 };
 
-const NameTagContainer = () => {
+const NameTagContainer = ({ name, photo }) => {
   return (
     <div className="flexRow alignCenter" style={{ gap: "8px" }}>
-      <Avatar name={"Adam Clarkb"} />
+      <Avatar name={name} src={photo} />
       <Text
         className={"satoshi-text f14 capitalize"}
         style={{ color: "rgba(16, 16, 16, 1)" }}
       >
-        Adam Clarke
+        {name}
       </Text>
     </div>
   );

@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { updateAddLotteryForm } from "../../redux/features/generalSlice";
 import { IoIosInformationCircleOutline } from "react-icons/io";
+import CustomCheckbox from "../../utils/CustomCheckbox";
 
 const AddLottery = () => {
   const dispatch = useDispatch();
@@ -31,6 +32,7 @@ const AddLottery = () => {
     ticketGoal: "",
     startOn: "",
     endOn: "",
+    infinite: false,
     telegram: "",
     facebook: "",
     whatsapp: "",
@@ -320,6 +322,15 @@ const AddLottery = () => {
                   rows="5"
                 ></textarea>
               </div>
+
+              <CustomCheckbox
+                isChecked={formState.infinite}
+                label={"Run game indefinitely?"}
+                name={"infinite"}
+                onChange={(e) =>
+                  setFormState({ ...formState, infinite: e.target.checked })
+                }
+              />
             </div>
 
             <div
