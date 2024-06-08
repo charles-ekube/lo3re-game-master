@@ -26,7 +26,7 @@ const ThreeColumnRow = ({
             </div>
           )}
           <div className="FlexColumn justifyCenter textLeft">
-            <p className="title">{title}</p>
+            <p className="title capitalize">{title}</p>
             <p className="subtitle">{subtitle}</p>
           </div>
         </div>

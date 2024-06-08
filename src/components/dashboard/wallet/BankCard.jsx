@@ -102,7 +102,11 @@ const BankCard = ({ beneficiary, type, onClick }) => {
             <img src={icon} alt="" />
           </div>
           <div className="FlexColumn justifyCenter">
-            <p className={cardStyles.title} title={titleRaw}>
+            <p
+              className={cardStyles.title}
+              title={titleRaw}
+              style={{ textTransform: "capitalize" }}
+            >
               {title}
             </p>
             <p className={cardStyles.subtitle}>

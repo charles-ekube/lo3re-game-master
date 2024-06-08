@@ -35,7 +35,7 @@ const walletTypes = [
   },
   {
     name: "Referral wallet",
-    value: "referral",
+    value: "affiliate",
   },
   {
     name: "Bonus wallet",
@@ -182,8 +182,16 @@ const Wallet = () => {
     if (returnActiveTab()?.name === "Crypto") {
       return (
         <>
+          <Loader
+            isLoading={isCryptoBeneLoading}
+            height={"100px"}
+            variety={"dark"}
+          />
           {!cryptoBeneficiaries?.length && !isCryptoBeneLoading ? (
-            <p className="text-muted text-center mt40">
+            <p
+              className="text-muted text-center mt40"
+              style={{ marginBlock: "50px" }}
+            >
               You have not added any crypto beneficiaries yet.
             </p>
           ) : (
@@ -208,8 +216,16 @@ const Wallet = () => {
     } else {
       return (
         <>
+          <Loader
+            isLoading={isBankBeneLoading}
+            height={"100px"}
+            variety={"dark"}
+          />
           {!bankBeneficiaries?.length && !isBankBeneLoading ? (
-            <p className="text-muted text-center mt40">
+            <p
+              className="text-muted text-center mt40"
+              style={{ marginBlock: "50px" }}
+            >
               You have not added any bank transfer beneficiaries yet.
             </p>
           ) : (
@@ -410,14 +426,7 @@ const Wallet = () => {
                 ))}
               </div>
             </div>
-            <div className="content">
-              <Loader
-                isLoading={isBankBeneLoading || isCryptoBeneLoading}
-                height={"100px"}
-                variety={"dark"}
-              />
-              {renderBeneElem()}
-            </div>
+            <div className="content">{renderBeneElem()}</div>
             <button className="cardLinkBtn" onClick={toBeneficiaries}>
               Manage beneficiaries
             </button>

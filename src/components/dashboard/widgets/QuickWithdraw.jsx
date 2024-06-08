@@ -73,14 +73,16 @@ const QuickWithdraw = ({ isOpen, onClose, beneficiary }) => {
 
   // set rate
   useEffect(() => {
-    let getRate = supportedCurrencies.filter(
-      (cur) => cur.code === formState.currency
-    );
-
-    if (getRate.length) {
+    if (formState.currency === "ngn") {
+      let getRate = supportedCurrencies.filter((cur) => cur.code === "usd");
       setRate({
-        rate: getRate.length ? getRate[0]?.rates[0]?.usd?.rate : 0,
-        symbol: getRate[0].symbol,
+        rate: getRate.length ? getRate[0]?.rates?.usd?.rate : 0,
+        symbol: getRate.length ? getRate[0].symbol : "?",
+      });
+    } else if (formState.currency === "usd") {
+      setRate({
+        rate: 1,
+        symbol: "$",
       });
     }
   }, [formState.currency, supportedCurrencies]);

@@ -85,6 +85,7 @@ const AddBeneficiary = ({
             } else {
               console.log("acct validation err", resp);
               showError("Could not validate account details");
+              handleChange("", "account_name");
             }
           })
           .catch((err) => {

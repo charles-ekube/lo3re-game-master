@@ -5,11 +5,15 @@ import ContactCard from "../../components/dashboard/cards/ContactCard";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import CustomInput from "../../utils/CustomInput";
+import { useResetPasswordMutation } from "../../redux/services/accountApi";
+import { showError, showSuccess } from "../../utils/Alert";
+import CustomButtonII from "../../utils/CustomButtonII";
 
 const PasswordReset = () => {
   const navigate = useNavigate();
+  const [resetPassword, { isLoading: isResetPasswordLoading }] =
+    useResetPasswordMutation();
   const [formState, setFormState] = useState({
-    oldPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
@@ -22,6 +26,48 @@ const PasswordReset = () => {
 
   const goBack = () => {
     navigate(-1);
+  };
+
+  const handleSubmit = () => {
+    if (!formState.newPassword || !formState.confirmPassword) {
+      showError("All fields are required");
+      return;
+    }
+
+    if (formState.newPassword !== formState.confirmPassword) {
+      showError("Passwords don't match");
+      return;
+    }
+
+    resetPassword({
+      new_password: formState.newPassword,
+      confirm_password: formState.confirmPassword,
+    })
+      .unwrap()
+      .then((resp) => {
+        if (resp?.success) {
+          showSuccess("Password reset successful ✅");
+          setFormState({
+            newPassword: "",
+            confirmPassword: "",
+          });
+        } else {
+          showError(
+            resp?.data?.message ||
+              resp?.message ||
+              "An error occurred, try again later"
+          );
+          console.log("reset err", resp);
+        }
+      })
+      .catch((err) => {
+        console.log("reset err", err);
+        showError(
+          err?.data?.message ||
+            err?.message ||
+            "An error occurred, try again later"
+        );
+      });
   };
 
   return (
@@ -38,15 +84,6 @@ const PasswordReset = () => {
           </div>
 
           <div className="password-reset-content">
-            <div>
-              <CustomInput
-                label={"Old password"}
-                type={"password"}
-                name={"oldPassword"}
-                onChange={handleInput}
-                value={formState.oldPassword}
-              />
-            </div>
             <div>
               <CustomInput
                 label={"New password"}
@@ -66,7 +103,14 @@ const PasswordReset = () => {
               />
 
               <div className="text-end mt35">
-                <button className="btn btn-dark btnLg">Reset</button>
+                <CustomButtonII
+                  text={"Reset"}
+                  // className={"w100"}
+                  onClick={handleSubmit}
+                  loading={isResetPasswordLoading}
+                  centerText={true}
+                />
+                {/* <button className="btn btn-dark btnLg">Reset</button> */}
               </div>
             </div>
           </div>

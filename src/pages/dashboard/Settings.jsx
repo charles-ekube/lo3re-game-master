@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CardSlider from "../../components/dashboard/overview/CardSlider";
 import Text from "../../utils/CustomText";
 import ContactCard from "../../components/dashboard/cards/ContactCard";
@@ -12,19 +12,27 @@ import Modal from "../../utils/Modal";
 import Avatar from "../../utils/Avatar";
 import { CiSearch } from "react-icons/ci";
 import Pagination from "../../utils/Pagination";
+import { useFetchWalletBalanceQuery } from "../../redux/services/walletApi";
+import useTextTruncate from "../../hooks/useTextTruncate";
 
 const Settings = () => {
   const { data: user } = useFetchProfileQuery();
   const { data: followers } = useFetchFollowersQuery();
 
+  const [refWallet, setRefWallet] = useState(null);
   const [isFollowerModalOpen, setIsFollowerModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const { formatMoney } = useTextTruncate();
   const [isUniquePlayersModalOpen, setIsUniquePlayersModalOpen] =
     useState(false);
+  console.log(isUniquePlayersModalOpen);
   const isEmail2faActive = user?.user?.security?.email;
   const isAuthApp2faActive = user?.user?.security["2fa"]
     ? user?.user?.security["2fa"]?.status === "verified"
     : false;
+
+  const { data: walletBalance, isSuccess: isWalletBalanceSuccess } =
+    useFetchWalletBalanceQuery();
 
   // Check if name is a string and not empty
   let firstLetter = "";
@@ -36,6 +44,16 @@ const Settings = () => {
     firstLetter = user?.name[0];
     lastLetter = user?.name[user?.name.length - 1];
   }
+
+  useEffect(() => {
+    if (isWalletBalanceSuccess) {
+      const refWallet = walletBalance?.filter(
+        (val) => val?.type?.toLowerCase() === "affiliate"
+      );
+
+      setRefWallet(refWallet[0]);
+    }
+  }, [isWalletBalanceSuccess, walletBalance]);
 
   return (
     <>
@@ -67,7 +85,9 @@ const Settings = () => {
                   <p className="f14">Unique players</p>
                 </div>
                 <div className="text-center">
-                  <h3 className="satoshi-text">$20</h3>
+                  <h3 className="satoshi-text">{`$${formatMoney(
+                    refWallet?.balance
+                  )}`}</h3>
                   <p className="f14">Referral commissions</p>
                 </div>
               </div>
@@ -222,7 +242,8 @@ const Settings = () => {
 
       <Modal
         title={"Unique players"}
-        isOpen={isUniquePlayersModalOpen}
+        // isOpen={isUniquePlayersModalOpen}
+        isOpen={false}
         onClose={() => setIsUniquePlayersModalOpen(false)}
       >
         <div className="topNavSearchContainer followerSearchContainer">

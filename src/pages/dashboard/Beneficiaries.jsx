@@ -87,8 +87,16 @@ const Beneficiaries = () => {
     if (returnActiveTab()?.name === "Crypto") {
       return (
         <>
+          <Loader
+            isLoading={isCryptoBeneLoading}
+            variety="dark"
+            height="100px"
+          />
           {!cryptoBeneficiaries?.length && !isCryptoBeneLoading ? (
-            <p className="text-muted text-center mt40">
+            <p
+              className="text-muted text-center mt40"
+              style={{ marginBlock: "50px" }}
+            >
               You have not added any crypto beneficiaries yet.
             </p>
           ) : (
@@ -106,8 +114,12 @@ const Beneficiaries = () => {
     } else {
       return (
         <>
+          <Loader isLoading={isBankBeneLoading} variety="dark" height="100px" />
           {!bankBeneficiaries?.length && !isBankBeneLoading ? (
-            <p className="text-muted text-center mt40">
+            <p
+              className="text-muted text-center mt40"
+              style={{ marginBlock: "50px" }}
+            >
               You have not added any bank transfer beneficiaries yet.
             </p>
           ) : (
@@ -155,11 +167,6 @@ const Beneficiaries = () => {
           </div>
           {/* content */}
           <div className="settingContent">
-            <Loader
-              isLoading={isBankBeneLoading || isCryptoBeneLoading}
-              variety="dark"
-              height="100px"
-            />
             {renderElem()}
             <CustomButtonII
               text={"Add New Beneficiary"}

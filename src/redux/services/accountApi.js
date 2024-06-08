@@ -15,7 +15,18 @@ export const accountApi = createApi({
       query: () => `/followers`,
       transformResponse: (results) => results.data,
     }),
+    resetPassword: builder.mutation({
+      query: (data) => ({
+        url: `auth/reset-password`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useFetchProfileQuery, useFetchFollowersQuery } = accountApi;
+export const {
+  useFetchProfileQuery,
+  useFetchFollowersQuery,
+  useResetPasswordMutation,
+} = accountApi;

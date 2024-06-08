@@ -135,6 +135,7 @@ const BankBeneModal = ({ isOpen, onClose, beneficiaryToUpdate = null }) => {
             } else {
               console.log("acct validation err", resp);
               showError("Could not validate account details");
+              setFormState((prevState) => ({ ...prevState, account_name: "" }));
             }
           })
           .catch((err) => {
