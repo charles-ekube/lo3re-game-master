@@ -1,156 +1,108 @@
 import React, { useEffect, useState } from "react";
-import http from "../../../utils/utils";
 import { showError } from "../../../utils/Alert";
 import CustomDropdown from "../../../utils/CustomDropdown";
 import CustomCheckbox from "../../../utils/CustomCheckbox";
-import { useDispatch, useSelector } from "react-redux";
 import {
-  setBankTransferBeneficiaryForm,
-  setCryptoBeneficiaryForm,
-} from "../../../redux/features/generalSlice";
+  useFetchSupportedBanksQuery,
+  useFetchSupportedCoinsQuery,
+  useValidateAccountDetailMutation,
+} from "../../../redux/services/beneficiariesApi";
 
-const AddBeneficiary = ({ currency, payMethod }) => {
-  // const [formStep, setFormStep] = useState(1);
-  const [requestLoading, setRequestLoading] = useState(false);
-  const dispatch = useDispatch();
-  const bankFormState = useSelector(
-    (state) => state.general.bankTransferBeneficiaryForm
-  );
-  const cryptoFormState = useSelector(
-    (state) => state.general.cryptoBeneficiaryForm
-  );
+const AddBeneficiary = ({
+  currency,
+  payMethod,
+  bankFormState,
+  cryptoFormState,
+  handleChange,
+}) => {
   const accountTypeOptions = [
     { name: "Personal Account", value: "personal" },
     { name: "Business Account", value: "business" },
   ];
 
-  const [showTagInput, setShowTagInput] = useState(false);
-  const [supportedCryptos, setSupportedCryptos] = useState([]);
-  const [cyrptoNetworks, setCryptoNetworks] = useState([]);
-
   const [supportedBanks, setSupportedBanks] = useState([]);
+  const [showTagInput, setShowTagInput] = useState(false);
+  const [cyrptoNetworks, setCryptoNetworks] = useState([]);
+  const [supportedCryptos, setSupportedCryptos] = useState([]);
 
-  const handleOnChange = (val, name) => {
-    if (payMethod?.code === "bank_transfer") {
-      dispatch(
-        setBankTransferBeneficiaryForm({
-          ...bankFormState,
-          [name]: val,
-        })
-      );
-    } else {
-      dispatch(
-        setCryptoBeneficiaryForm({
-          ...cryptoFormState,
-          [name]: val,
-        })
-      );
-    }
-  };
+  const {
+    data: fetchedSuppCoins,
+    isLoading: isSuppCoinsLoading,
+    isSuccess: isFetchedSuppCoinsSuccess,
+  } = useFetchSupportedCoinsQuery();
+  const {
+    data: fetchedSuppBanks,
+    isLoading: isSuppBanksLoading,
+    isSuccess: isFetchedSuppBanksSuccess,
+  } = useFetchSupportedBanksQuery();
+  const [validateAcctDetail, { isLoading: isValidateAcctLoading }] =
+    useValidateAccountDetailMutation();
 
-  const fetchBanks = async () => {
-    setRequestLoading(true);
-    try {
-      const res = await http.get(`wallets/supported-banks`);
-      const newArray = res?.data.map((cur) => ({
-        ...cur,
-        value: cur.code,
+  //   process fetched supported banks
+  useEffect(() => {
+    if (isFetchedSuppBanksSuccess) {
+      const newArray = fetchedSuppBanks?.map((bank) => ({
+        ...bank,
+        value: bank?.code,
       }));
 
       setSupportedBanks(newArray);
-      // console.log("banks", res);
-      setRequestLoading(false);
-    } catch (error) {
-      console.log("fetch bank err", error);
-      setRequestLoading(false);
     }
-  };
+  }, [isFetchedSuppBanksSuccess, fetchedSuppBanks]);
 
-  const validateAccount = async () => {
-    try {
-      const { account_number, bank_code } = bankFormState;
-      handleOnChange("...", "account_name");
-      const res = await http.post(
-        `wallets/withdrawals/validate-bank-details?currency=ngn`,
-        {
-          account_number,
-          bank_code,
-        }
-      );
-
-      if (res.data?.status) {
-        const acName = res?.data?.data?.account_name;
-        if (acName) {
-          handleOnChange(acName, "account_name");
-        }
-      } else {
-        showError("Could not resolve account name");
-        console.log(res);
-        handleOnChange("", "account_name");
-      }
-    } catch (error) {
-      showError("Could not resolve account name");
-      console.log(error);
-      handleOnChange("", "account_name");
-    }
-  };
-
-  const fetchCryptos = async () => {
-    setRequestLoading(true);
-    try {
-      // 👇🏽👇🏽 not return all banks
-      const res = await http.get(`wallets/supported-coins`);
-      const newArray = res.map((crypto) => ({
+  //   process fetched supported coins
+  useEffect(() => {
+    if (isFetchedSuppCoinsSuccess) {
+      const newArray = fetchedSuppCoins?.map((crypto) => ({
         ...crypto,
         value: crypto.id,
         name: crypto.name.toUpperCase(),
         icon: crypto.logo_url,
       }));
 
-      // setBanks(res);
       setSupportedCryptos(newArray);
-      setRequestLoading(false);
-    } catch (error) {
-      console.log("fetch bank err", error);
-      setRequestLoading(false);
     }
-  };
-
-  // fetch supported banks/cryptos
-  useEffect(() => {
-    if (payMethod?.code === "bank_transfer") {
-      if (currency?.toLowerCase() === "ngn") {
-        fetchBanks();
-      }
-    } else {
-      fetchCryptos();
-    }
-  }, [currency, payMethod]);
+  }, [isFetchedSuppCoinsSuccess, fetchedSuppCoins]);
 
   // validate acct
   useEffect(() => {
     if (currency === "ngn") {
-      if (bankFormState.account_number.length === 10) {
-        validateAccount();
-      } else {
-        // handleOnChange("", "account_name");
-        dispatch(
-          setCryptoBeneficiaryForm({
-            ...cryptoFormState,
-            account_name: "",
+      if (
+        bankFormState.account_number.length === 10 &&
+        bankFormState.bank_code
+      ) {
+        validateAcctDetail({
+          account_number: bankFormState.account_number,
+          bank_code: bankFormState.bank_code,
+        })
+          .unwrap()
+          .then((resp) => {
+            if (resp?.data?.status) {
+              const acctName = resp?.data?.data?.account_name;
+              if (acctName) {
+                handleChange(acctName, "account_name");
+              }
+            } else {
+              console.log("acct validation err", resp);
+              showError("Could not validate account details");
+            }
           })
-        );
+          .catch((err) => {
+            showError("Could not validate account details");
+            console.log(err);
+            handleChange("", "account_name");
+          });
       }
     }
   }, [
-    bankFormState.account_number,
     currency,
+    bankFormState.account_number,
     bankFormState.bank_code,
-    dispatch,
-    cryptoFormState,
+    validateAcctDetail,
+    handleChange,
   ]);
 
-  // add network
+  // add/pop network
   useEffect(() => {
     const selectedCoin = supportedCryptos.filter(
       (val) => val.id === cryptoFormState.coin_id
@@ -161,7 +113,6 @@ const AddBeneficiary = ({ currency, payMethod }) => {
         value: val,
       }));
       setCryptoNetworks(networkArr);
-      console.log(networkArr);
     }
   }, [cryptoFormState.coin_id, supportedCryptos]);
 
@@ -178,7 +129,7 @@ const AddBeneficiary = ({ currency, payMethod }) => {
   }, [cryptoFormState.coin_id, supportedCryptos]);
 
   const renderElem = () => {
-    if (!requestLoading) {
+    if (!isSuppCoinsLoading && !isSuppBanksLoading) {
       if (payMethod?.code === "bank_transfer") {
         return (
           <>
@@ -188,7 +139,7 @@ const AddBeneficiary = ({ currency, payMethod }) => {
                 <CustomDropdown
                   value={bankFormState.bank_code}
                   dropdownItems={supportedBanks}
-                  itemOnClick={(val) => handleOnChange(val, "bank_code")}
+                  itemOnClick={(val) => handleChange(val, "bank_code")}
                 />
               </div>
             ) : (
@@ -197,7 +148,7 @@ const AddBeneficiary = ({ currency, payMethod }) => {
                 <CustomDropdown
                   value={bankFormState.account_type}
                   dropdownItems={accountTypeOptions}
-                  itemOnClick={(val) => handleOnChange(val, "account_type")}
+                  itemOnClick={(val) => handleChange(val, "account_type")}
                 />
               </div>
             )}
@@ -207,9 +158,7 @@ const AddBeneficiary = ({ currency, payMethod }) => {
                 type="number"
                 className="formInput"
                 value={bankFormState.account_number}
-                onChange={(e) =>
-                  handleOnChange(e.target.value, "account_number")
-                }
+                onChange={(e) => handleChange(e.target.value, "account_number")}
               />
             </div>
             <div className="inputContainer">
@@ -220,9 +169,19 @@ const AddBeneficiary = ({ currency, payMethod }) => {
                 type="text"
                 className="formInput"
                 value={bankFormState.account_name}
-                onChange={(e) => handleOnChange(e.target.value, "account_name")}
+                onChange={(e) => handleChange(e.target.value, "account_name")}
                 readOnly={currency === "ngn"}
               />
+              <p
+                style={{
+                  fontSize: "12px",
+                  color: "#999",
+                  marginTop: "8px",
+                  textAlign: "left",
+                }}
+              >
+                {isValidateAcctLoading ? "Verifying Account..." : ""}
+              </p>
             </div>
             {currency === "usd" ? (
               <>
@@ -232,9 +191,7 @@ const AddBeneficiary = ({ currency, payMethod }) => {
                     type="text"
                     className="formInput"
                     value={bankFormState.sort_code}
-                    onChange={(e) =>
-                      handleOnChange(e.target.value, "sort_code")
-                    }
+                    onChange={(e) => handleChange(e.target.value, "sort_code")}
                   />
                 </div>
                 <div className="inputContainer">
@@ -244,7 +201,7 @@ const AddBeneficiary = ({ currency, payMethod }) => {
                     className="formInput"
                     value={bankFormState.routing_number}
                     onChange={(e) =>
-                      handleOnChange(e.target.value, "routing_number")
+                      handleChange(e.target.value, "routing_number")
                     }
                   />
                 </div>
@@ -253,7 +210,7 @@ const AddBeneficiary = ({ currency, payMethod }) => {
                   <textarea
                     className="formInput"
                     value={bankFormState.description}
-                    onChange={(e) => handleOnChange(e.target.value, "note")}
+                    onChange={(e) => handleChange(e.target.value, "note")}
                     placeholder="Optional"
                     cols="30"
                     rows="3"
@@ -267,7 +224,7 @@ const AddBeneficiary = ({ currency, payMethod }) => {
               isChecked={bankFormState.saveForLater}
               label={"Save for future transactions"}
               name={"saveForLater"}
-              onChange={(e) => handleOnChange(e.target.checked, e.target.name)}
+              onChange={(e) => handleChange(e.target.checked, e.target.name)}
             />
           </>
         );
@@ -280,7 +237,7 @@ const AddBeneficiary = ({ currency, payMethod }) => {
               <CustomDropdown
                 value={cryptoFormState.coin_id}
                 dropdownItems={supportedCryptos}
-                itemOnClick={(val) => handleOnChange(val, "coin_id")}
+                itemOnClick={(val) => handleChange(val, "coin_id")}
               />
             </div>
             <div className="inputContainer">
@@ -288,7 +245,7 @@ const AddBeneficiary = ({ currency, payMethod }) => {
               <CustomDropdown
                 value={cryptoFormState.network}
                 dropdownItems={cyrptoNetworks}
-                itemOnClick={(val) => handleOnChange(val, "network")}
+                itemOnClick={(val) => handleChange(val, "network")}
               />
             </div>
             <div className="inputContainer">
@@ -297,7 +254,7 @@ const AddBeneficiary = ({ currency, payMethod }) => {
                 type={"text"}
                 className="formInput"
                 value={cryptoFormState.address}
-                onChange={(e) => handleOnChange(e.target.value, "address")}
+                onChange={(e) => handleChange(e.target.value, "address")}
               />
             </div>
             {showTagInput && (
@@ -307,7 +264,7 @@ const AddBeneficiary = ({ currency, payMethod }) => {
                   type={"text"}
                   className="formInput"
                   value={cryptoFormState.tag_id}
-                  onChange={(e) => handleOnChange(e.target.value, "tag_id")}
+                  onChange={(e) => handleChange(e.target.value, "tag_id")}
                 />
               </div>
             )}
@@ -315,7 +272,7 @@ const AddBeneficiary = ({ currency, payMethod }) => {
               isChecked={cryptoFormState.saveForLater}
               label={"Save for future transactions"}
               name={"saveForLater"}
-              onChange={(e) => handleOnChange(e.target.checked, e.target.name)}
+              onChange={(e) => handleChange(e.target.checked, e.target.name)}
             />
           </>
         );

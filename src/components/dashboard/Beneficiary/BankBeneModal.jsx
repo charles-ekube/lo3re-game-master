@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   useAddBankBeneficiaryMutation,
   useUpdateBankBeneficiaryMutation,
+  useValidateAccountDetailMutation,
 } from "../../../redux/services/beneficiariesApi";
 import CustomButtonII from "../../../utils/CustomButtonII";
 import Modal from "../../../utils/Modal";
@@ -22,6 +23,9 @@ const BankBeneModal = ({ isOpen, onClose, beneficiaryToUpdate = null }) => {
     useUpdateBankBeneficiaryMutation();
   const [addBankBeneficiary, { isLoading: isAddBankBeneficiaryLoading }] =
     useAddBankBeneficiaryMutation();
+  const [validateAcctDetail, { isLoading: isValidateAcctLoading }] =
+    useValidateAccountDetailMutation();
+
   const [showWalletPinModal, setShowWalletPinModal] = useState(false);
   const [finalFormState, setFinalFormState] = useState({});
   const [formState, setFormState] = useState({
@@ -110,45 +114,42 @@ const BankBeneModal = ({ isOpen, onClose, beneficiaryToUpdate = null }) => {
     //   fetchCryptos();
   }, []);
 
-  const validateAccount = async () => {
-    try {
-      const { account_number, bank_code } = formState;
-      handleOnChange("...", "account_name");
-      const res = await http.post(
-        `wallets/withdrawals/validate-bank-details?currency=ngn`,
-        {
-          account_number,
-          bank_code,
-        }
-      );
-
-      if (res.data?.status) {
-        const acName = res?.data?.data?.account_name;
-        if (acName) {
-          handleOnChange(acName, "account_name");
-        }
-      } else {
-        showError("Could not resolve account name");
-        console.log(res);
-        handleOnChange("", "account_name");
-      }
-    } catch (error) {
-      showError("Could not resolve account name");
-      console.log(error);
-      handleOnChange("", "account_name");
-    }
-  };
-
   // validate acct
   useEffect(() => {
     if (formState.currency === "ngn") {
-      if (formState.account_number.length === 10) {
-        validateAccount();
-      } else {
-        handleOnChange("", "account_name");
+      if (formState.account_number.length === 10 && formState.bank_code) {
+        validateAcctDetail({
+          account_number: formState.account_number,
+          bank_code: formState.bank_code,
+        })
+          .unwrap()
+          .then((resp) => {
+            if (resp?.data?.status) {
+              const acName = resp?.data?.data?.account_name;
+              if (acName) {
+                setFormState((prevState) => ({
+                  ...prevState,
+                  account_name: acName,
+                }));
+              }
+            } else {
+              console.log("acct validation err", resp);
+              showError("Could not validate account details");
+            }
+          })
+          .catch((err) => {
+            showError("Could not validate account details");
+            console.log(err);
+            setFormState((prevState) => ({ ...prevState, account_name: "" }));
+          });
       }
     }
-  }, [formState.account_number, formState.currency, formState.bank_code]);
+  }, [
+    formState.currency,
+    formState.account_number,
+    formState.bank_code,
+    validateAcctDetail,
+  ]);
 
   const handleOnChange = (val, name) => {
     setFormState({ ...formState, [name]: val });
@@ -397,6 +398,16 @@ const BankBeneModal = ({ isOpen, onClose, beneficiaryToUpdate = null }) => {
               readOnly={formState.currency === "ngn"}
               disabled={beneficiaryToUpdate ? true : false}
             />
+            <p
+              style={{
+                fontSize: "12px",
+                color: "#999",
+                marginTop: "8px",
+                textAlign: "left",
+              }}
+            >
+              {isValidateAcctLoading ? "Verifying Account..." : ""}
+            </p>
           </div>
           {formState.currency === "usd" ? (
             <>

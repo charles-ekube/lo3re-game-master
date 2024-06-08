@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import CurrancyInput from "../../../utils/CurrancyInput";
 import CustomButtonII from "../../../utils/CustomButtonII";
 import CustomRadio from "../../../utils/CustomRadio";
@@ -10,7 +10,7 @@ import CardIcon from "../../../assets/images/icons/card.png";
 import CryptoIcon from "../../../assets/images/icons/buy-crypto.png";
 import { showError, showSuccess } from "../../../utils/Alert";
 import CustomDropdown from "../../../utils/CustomDropdown";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   resetBankTransferBeneficiaryForm,
   resetCryptoBeneficiaryForm,
@@ -31,12 +31,49 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
   const { data: supportedBanks } = useFetchSupportedBanksQuery();
   const { data: supportedCryptos } = useFetchSupportedCryptosQuery();
   const dispatch = useDispatch();
-  const beneficiaryForm = useSelector(
-    (state) => state.general.bankTransferBeneficiaryForm
+  const [paymentMethods, setPaymentMethods] = useState();
+  const [beneficiaries, setBeneficiaries] = useState([]);
+
+  const [beneficiaryForm, setBeneficiaryForm] = useState({
+    account_number: "",
+    account_name: "",
+    bank_id: "",
+    bank_code: "",
+    bank_name: "",
+    saveForLater: false,
+    account_type: "",
+    sort_code: "",
+    routing_number: "",
+    note: "",
+  });
+
+  const [cryptoBeneficiaryForm, setCryptoBeneficiaryForm] = useState({
+    coin_id: "",
+    network: "",
+    address: "",
+    tag_id: "",
+    saveForLater: false,
+  });
+
+  const handleOnBeneInputChange = useCallback(
+    (val, name) => {
+      const activePayMethod = paymentMethods.filter(
+        (val) => val.isActive === true
+      );
+      if (activePayMethod.length) {
+        if (activePayMethod[0]?.code === "bank_transfer") {
+          setBeneficiaryForm((prevState) => ({ ...prevState, [name]: val }));
+        } else {
+          setCryptoBeneficiaryForm((prevState) => ({
+            ...prevState,
+            [name]: val,
+          }));
+        }
+      }
+    },
+    [paymentMethods]
   );
-  const cryptoBeneficiaryForm = useSelector(
-    (state) => state.general.cryptoBeneficiaryForm
-  );
+
   const [rate, setRate] = useState({
     rate: "1",
     symbol: "$",
@@ -69,8 +106,6 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
   const isAuthApp2faActive = user?.user?.security["2fa"]
     ? user?.user?.security["2fa"]?.status === "verified"
     : false;
-  const [paymentMethods, setPaymentMethods] = useState();
-  const [beneficiaries, setBeneficiaries] = useState([]);
 
   const closeModal = () => {
     onClose();
@@ -125,7 +160,6 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
   const handleCurrencyChange = (val) => {
     setWithdrawalFormStates({ ...withdrawalFormStates, currency: val });
 
-    
     if (val === "ngn") {
       let getRate = supportedCurrencies.filter((cur) => cur.code === "usd");
       setRate({
@@ -158,7 +192,7 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
         }));
 
         setSupportedCurrencies(newArray);
-        if (formStep === 1) {
+        if (formStep === 1 && !withdrawalFormStates.currency) {
           setWithdrawalFormStates((state) => ({ ...state, currency: "usd" }));
         }
         // console.log("currencies", newArray);
@@ -168,7 +202,7 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
     };
 
     fetchCurrencies();
-  }, [formStep]);
+  }, [formStep, withdrawalFormStates.currency]);
 
   const returnPayMethodIcon = (code) => {
     if (code === "bank_transfer") {
@@ -566,6 +600,9 @@ const WithdrawWalletModal = ({ isOpen, onClose }) => {
         return (
           <AddBeneficiary
             currency={withdrawalFormStates.currency}
+            bankFormState={beneficiaryForm}
+            cryptoFormState={cryptoBeneficiaryForm}
+            handleChange={handleOnBeneInputChange}
             payMethod={
               paymentMethods
                 ? paymentMethods.filter((val) => val.isActive === true)[0]

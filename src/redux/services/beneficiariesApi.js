@@ -16,6 +16,21 @@ export const beneficiariesApi = createApi({
       providesTags: ["cryptoBene"],
       transformResponse: (results) => results.data,
     }),
+    fetchSupportedBanks: builder.query({
+      query: () => `/wallets/supported-banks`,
+      transformResponse: (results) => results.data,
+    }),
+    fetchSupportedCoins: builder.query({
+      query: () => `/wallets/supported-coins`,
+      transformResponse: (results) => results,
+    }),
+    validateAccountDetail: builder.mutation({
+      query: (data) => ({
+        url: `wallets/withdrawals/validate-bank-details?currency=ngn`,
+        method: "POST",
+        body: data,
+      }),
+    }),
     addBankBeneficiary: builder.mutation({
       query: (data) => ({
         url: `wallets/withdrawals/bank-details`,
@@ -74,4 +89,7 @@ export const {
   useAddCryptoBeneficiaryMutation,
   useUpdateCryptoBeneficiaryMutation,
   useDeleteCryptoBeneficiaryMutation,
+  useFetchSupportedBanksQuery,
+  useFetchSupportedCoinsQuery,
+  useValidateAccountDetailMutation,
 } = beneficiariesApi;
