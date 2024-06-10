@@ -5,12 +5,14 @@ const useTimeFormatter = () => {
     var d = new Date(date),
       month = "" + (d.getMonth() + 1),
       day = "" + d.getDate(),
-      year = d.getFullYear();
+      year = d.getFullYear(),
+      hr = String(d.getHours()).padStart(2, "0"),
+      min = String(d.getMinutes()).padStart(2, "0");
 
     if (month.length < 2) month = "0" + month;
     if (day.length < 2) day = "0" + day;
 
-    return [year, month, day].join("/");
+    return [year, month, day].join("-") + `T${hr}:${min}:00Z`;
   }
 
   // formats date to dd-mm-yyyy utc
@@ -19,12 +21,14 @@ const useTimeFormatter = () => {
     var d = new Date(date),
       month = "" + (d.getMonth() + 1),
       day = "" + d.getDate(),
-      year = d.getFullYear();
+      year = d.getFullYear(),
+      hr = String(d.getHours()).padStart(2, "0"),
+      min = String(d.getMinutes()).padStart(2, "0");
 
     if (month.length < 2) month = "0" + month;
     if (day.length < 2) day = "0" + day;
 
-    return [day, month, year].join("/");
+    return [day, month, year].join("/") + ` ${hr}:${min}`;
   }
 
   // return date in human readable format (eg. 5days || 11h 30min)

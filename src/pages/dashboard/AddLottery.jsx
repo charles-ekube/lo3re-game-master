@@ -255,6 +255,7 @@ const AddLottery = () => {
                   </span>
                 </div>
                 <DatePicker
+                  showTimeSelect
                   selected={formState.startOn}
                   onChange={(date) =>
                     setFormState({ ...formState, startOn: date })
@@ -277,6 +278,7 @@ const AddLottery = () => {
                   </span>
                 </div>
                 <DatePicker
+                  showTimeSelect
                   selected={formState.endOn}
                   onChange={(date) =>
                     setFormState({ ...formState, endOn: date })

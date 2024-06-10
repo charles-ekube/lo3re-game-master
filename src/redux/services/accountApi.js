@@ -15,6 +15,10 @@ export const accountApi = createApi({
       query: () => `/followers`,
       transformResponse: (results) => results.data,
     }),
+    fetchUniquePlayers: builder.query({
+      query: () => `/unique-players`,
+      transformResponse: (results) => results.data,
+    }),
     resetPassword: builder.mutation({
       query: (data) => ({
         url: `auth/reset-password`,
@@ -28,5 +32,6 @@ export const accountApi = createApi({
 export const {
   useFetchProfileQuery,
   useFetchFollowersQuery,
+  useFetchUniquePlayersQuery,
   useResetPasswordMutation,
 } = accountApi;

@@ -91,6 +91,7 @@ const PreviewLottery = () => {
     setFile(photo);
   }, []);
 
+  const storageRef = ref(imageDb, `uploads/${v4()}`);
   const draftGame = async () => {
     const {
       title,
@@ -152,7 +153,7 @@ const PreviewLottery = () => {
       .unwrap()
       .then((resp) => {
         //   open onSuccess modal and empty reduxLotteryForm
-        setGameId(resp?.data?.game?.id);
+        setGameId(resp?.data?.id);
         setSuccessModal(true);
         dispatch(updateAddLotteryForm({}));
       })
@@ -162,7 +163,6 @@ const PreviewLottery = () => {
       });
   };
 
-  const storageRef = ref(imageDb, `uploads/${v4()}`);
   const submitForm = async () => {
     const {
       title,
@@ -225,7 +225,7 @@ const PreviewLottery = () => {
       .unwrap()
       .then((resp) => {
         //   open onSuccess modal and empty reduxLotteryForm
-        setGameId(resp?.data?.game?.id);
+        setGameId(resp?.data?.id);
         setSuccessModal(true);
         dispatch(updateAddLotteryForm({}));
       })
@@ -287,6 +287,9 @@ const PreviewLottery = () => {
                     day: "numeric",
                     month: "numeric",
                     year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true,
                   })}
                 </p>
                 <p className="f14">
@@ -295,6 +298,9 @@ const PreviewLottery = () => {
                     day: "numeric",
                     month: "numeric",
                     year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true,
                   })}
                 </p>
               </div>
@@ -341,7 +347,7 @@ const PreviewLottery = () => {
                 isChecked={lotteryForm.infinite}
                 label={"Run game indefinitely"}
                 name={"infinite"}
-                isDisabled={true}
+                isReadOnly={true}
               />
             </div>
 

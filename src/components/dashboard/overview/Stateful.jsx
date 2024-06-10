@@ -95,7 +95,6 @@ const Stateful = () => {
         }
       });
       if (JSON.stringify(tabs) !== JSON.stringify(updatedTabs)) {
-        console.log("badge", updatedTabs);
         dispatch(updateLotteryTab(updatedTabs));
       }
     }

@@ -7,21 +7,23 @@ import "../../assets/styles/settings.css";
 import {
   useFetchFollowersQuery,
   useFetchProfileQuery,
+  useFetchUniquePlayersQuery,
 } from "../../redux/services/accountApi";
 import Modal from "../../utils/Modal";
 import Avatar from "../../utils/Avatar";
 import { CiSearch } from "react-icons/ci";
-import Pagination from "../../utils/Pagination";
+// import Pagination from "../../utils/Pagination";
 import { useFetchWalletBalanceQuery } from "../../redux/services/walletApi";
 import useTextTruncate from "../../hooks/useTextTruncate";
 
 const Settings = () => {
   const { data: user } = useFetchProfileQuery();
   const { data: followers } = useFetchFollowersQuery();
+  const { data: uniquePlayers } = useFetchUniquePlayersQuery();
 
   const [refWallet, setRefWallet] = useState(null);
   const [isFollowerModalOpen, setIsFollowerModalOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   const { formatMoney } = useTextTruncate();
   const [isUniquePlayersModalOpen, setIsUniquePlayersModalOpen] =
     useState(false);
@@ -68,12 +70,12 @@ const Settings = () => {
                   className="text-center cursor-pointer"
                   onClick={() => setIsUniquePlayersModalOpen(true)}
                 >
-                  <h3 className="satoshi-text">20</h3>
+                  <h3 className="satoshi-text">{uniquePlayers?.length || 0}</h3>
                   <p className="f14">Unique players</p>
                 </div>
                 <div className="text-center">
                   <h3 className="satoshi-text">{`$${formatMoney(
-                    refWallet?.balance
+                    refWallet?.balance || 0
                   )}`}</h3>
                   <p className="f14">Referral commissions</p>
                 </div>
@@ -229,8 +231,7 @@ const Settings = () => {
 
       <Modal
         title={"Unique players"}
-        // isOpen={isUniquePlayersModalOpen}
-        isOpen={false}
+        isOpen={isUniquePlayersModalOpen}
         onClose={() => setIsUniquePlayersModalOpen(false)}
       >
         <div className="topNavSearchContainer followerSearchContainer">
@@ -238,17 +239,30 @@ const Settings = () => {
           <input placeholder="Search everything" />
         </div>
         <div className="follower-list">
-          <NameTagContainer />
-          <NameTagContainer />
-          <NameTagContainer />
-          <NameTagContainer />
+          {!uniquePlayers?.length ? (
+            <p
+              style={{ marginBlock: "50px" }}
+              className={"textMuted textCenter"}
+            >
+              You don't have any unique players yet
+            </p>
+          ) : (
+            ""
+          )}
+          {uniquePlayers?.map((value, idx) => (
+            <NameTagContainer
+              key={`unP-${idx}`}
+              name={value?.username}
+              photo={value?.photoUrl}
+            />
+          ))}
         </div>
-        <Pagination
+        {/* <Pagination
           limit={1}
           curPage={currentPage}
           totalItems={2}
           paginate={(num) => setCurrentPage(num)}
-        />
+        /> */}
       </Modal>
     </>
   );
