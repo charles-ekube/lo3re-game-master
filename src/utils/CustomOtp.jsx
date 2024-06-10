@@ -116,7 +116,7 @@ const OtpInput = ({ label, value, valueLength, onChange }) => {
       {valueItems.map((digit, idx) => (
         <input
           key={idx}
-          type="text"
+          type="password"
           inputMode="numeric"
           autoComplete="one-time-code"
           pattern="\d{1}"

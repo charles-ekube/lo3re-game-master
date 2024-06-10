@@ -30,6 +30,7 @@ import Loader from "../../utils/Loader";
 import TicketSalesModal from "../../components/dashboard/widgets/TicketSalesModal";
 import Avatar from "../../utils/Avatar";
 import LeaderBoardModal from "../../components/dashboard/widgets/LeaderBoardModal";
+import CustomCheckbox from "../../utils/CustomCheckbox";
 
 function anyKeyHasValue(obj) {
   for (const key in obj) {
@@ -184,6 +185,15 @@ const ViewGame = () => {
                 rows="5"
                 readOnly
               ></textarea>
+            </div>
+
+            <div style={{ marginBlock: "10px", marginBottom: "18px" }}>
+              <CustomCheckbox
+                isChecked={true}
+                label={"Run game indefinitely"}
+                name={"infinite"}
+                isReadOnly={true}
+              />
             </div>
 
             <div className={`flexRow justifyBetween ${lotteryStyles.col2}`}>

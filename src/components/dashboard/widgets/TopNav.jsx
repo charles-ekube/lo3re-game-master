@@ -8,7 +8,7 @@ import { FaTimes } from "react-icons/fa";
 import TransactionHistory from "../../../components/dashboard/wallet/TransactionHistory";
 import TicketPurchaseNotification from "./TicketPurchaseNotification";
 import { useFetchProfileQuery } from "../../../redux/services/accountApi";
-import { FaUser } from "react-icons/fa6";
+import Avatar from "../../../utils/Avatar";
 
 const TopNav = () => {
   const [isScreenWidth1150, setIsScreenWidth1150] = useState(false);
@@ -37,17 +37,6 @@ const TopNav = () => {
     window.dispatchEvent(new Event("resize"));
   }, []);
 
-  // Check if displayName is a string and not empty
-  let firstLetter = "";
-  let lastLetter = "";
-  if (typeof user?.name !== "string" || user?.name.length === 0) {
-    firstLetter = "X";
-    lastLetter = "X";
-  } else {
-    firstLetter = user?.name[0];
-    lastLetter = user?.name[user?.name.length - 1];
-  }
-
   return (
     <>
       <nav className="topNavContainer">
@@ -69,15 +58,10 @@ const TopNav = () => {
         </section>
         <section className={"topNavUserContainer"}>
           <div className="flexRow alignCenter" style={{ gap: "5px" }}>
-            <div className="nameTagContainer">
-              <Text
-                className={"satoshi-text f14 upper"}
-                style={{ color: "rgba(16, 16, 16, 1)" }}
-              >
-                {firstLetter ? firstLetter : <FaUser size={18} />}
-                {lastLetter ? lastLetter : ""}
-              </Text>
-            </div>
+            <Avatar
+              name={user?.name ? user?.name : "User"}
+              src={user?.picture}
+            />
             <Text
               className={"satoshi-text f14 capitalize d-none-md"}
               style={{ color: "rgba(16, 16, 16, 1)" }}

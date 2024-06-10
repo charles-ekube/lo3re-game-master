@@ -34,17 +34,6 @@ const Settings = () => {
   const { data: walletBalance, isSuccess: isWalletBalanceSuccess } =
     useFetchWalletBalanceQuery();
 
-  // Check if name is a string and not empty
-  let firstLetter = "";
-  let lastLetter = "";
-  if (typeof user?.name !== "string" || user?.name.length === 0) {
-    firstLetter = "X";
-    lastLetter = "X";
-  } else {
-    firstLetter = user?.name[0];
-    lastLetter = user?.name[user?.name.length - 1];
-  }
-
   useEffect(() => {
     if (isWalletBalanceSuccess) {
       const refWallet = walletBalance?.filter(
@@ -60,13 +49,11 @@ const Settings = () => {
       <section className="mainContainer">
         <div className="content">
           <div className="avatarStatsContainer">
-            <div className="avatar">
-              <p>
-                {firstLetter
-                  ? firstLetter?.toUpperCase() + lastLetter?.toUpperCase()
-                  : "XX"}
-              </p>
-            </div>
+            <Avatar
+              name={user?.name ? user?.name : "User"}
+              src={user?.picture}
+              boxSize={"115px"}
+            />
             <div className="userStats">
               <h3 className="userName capitalize">@{user?.name}</h3>
               <div className="stats">
@@ -110,7 +97,7 @@ const Settings = () => {
               </div>
             </Link>
             <Link to={"beneficiaries"} className={"link"}>
-              <div className="linkContainer">Accounts and Cards</div>
+              <div className="linkContainer">Manage Beneficiaries</div>
             </Link>
             <div className="linkContainer">
               <Link to={"affiliate"} className={"link"}>

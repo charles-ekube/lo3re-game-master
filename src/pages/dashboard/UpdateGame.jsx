@@ -15,6 +15,7 @@ import useTimeFormatter from "../../hooks/useTimeFormatter";
 import { getImage, imageDb } from "../../firebase";
 import { ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
+import CustomCheckbox from "../../utils/CustomCheckbox";
 
 const UpdateGame = () => {
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ const UpdateGame = () => {
     ticketPrice: game?.ticketPrice,
     jackpot: game?.jackpot,
     ticketGoal: game?.ticketGoal,
+    infinite: Boolean(game?.infinite),
     startOn: new Date(game?.startOn),
     endOn: new Date(game?.endOn),
     telegram: game?.socials?.telegram,
@@ -381,6 +383,15 @@ const UpdateGame = () => {
                   rows="5"
                 ></textarea>
               </div>
+
+              <CustomCheckbox
+                isChecked={formState.infinite}
+                label={"Run game indefinitely?"}
+                name={"infinite"}
+                onChange={(e) =>
+                  setFormState({ ...formState, infinite: e.target.checked })
+                }
+              />
             </div>
 
             <div

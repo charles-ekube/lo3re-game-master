@@ -24,7 +24,6 @@ const LotteryGameCard = ({ game, isDraft = false }) => {
   const { truncateText, formatMoney } = useTextTruncate();
   const [deleteGame, { isLoading: isDeleteGameLoading }] =
     useDeleteGameMutation();
-  console.log("isdraft", isDraft);
 
   const handleDeleteGame = async () => {
     await deleteGame(game?.id)
@@ -65,11 +64,11 @@ const LotteryGameCard = ({ game, isDraft = false }) => {
           style={{ backgroundImage: `url(${game?.coverUrl || BgImage})` }}
         >
           <div className="flexRow justifyBetween alignCenter">
-            <span className={lotteryStyles.timer} onClick={viewGame}>
+            <span className={lotteryStyles.timer}>
               {formatDuration(game?.endOn)}
             </span>
             <button
-              className="btn btn-ghost no-hover p0"
+              className={`btn btn-ghost no-hover p0 ${lotteryStyles.ellipseBtn}`}
               id="ellipse-btn"
               onClick={() => setShowOptions(true)}
             >
@@ -80,6 +79,10 @@ const LotteryGameCard = ({ game, isDraft = false }) => {
               />
             </button>
           </div>
+          <div
+            className={`${lotteryStyles.innerBoxOverlay}`}
+            onClick={viewGame}
+          ></div>
           {showOptions ? (
             <div className={`${lotteryStyles.optionsContainer}`}>
               <div className={`${lotteryStyles.delOpt}`} onClick={updateGame}>
@@ -102,7 +105,7 @@ const LotteryGameCard = ({ game, isDraft = false }) => {
           ) : (
             ""
           )}
-          <div onClick={viewGame}>
+          <div>
             <div className="flexRow justifyEnd alignCenter">
               <MdVerified
                 color="var(--primary)"

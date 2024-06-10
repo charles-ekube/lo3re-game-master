@@ -6,6 +6,7 @@ const CustomCheckbox = ({
   onChange,
   name,
   isDisabled = false,
+  isReadOnly = false,
 }) => {
   return (
     <>
@@ -16,6 +17,7 @@ const CustomCheckbox = ({
           checked={isChecked}
           onChange={onChange}
           disabled={isDisabled}
+          readOnly={isReadOnly}
         />
         <div className="cr-input"></div>
         {label && <span>{label}</span>}
