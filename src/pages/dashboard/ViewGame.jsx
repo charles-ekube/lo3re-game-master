@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import Camera from "../../assets/images/camera.png";
 import lotteryStyles from "../../assets/styles/lotteries.module.css";
 import CustomButtonII from "../../utils/CustomButtonII";
@@ -56,11 +56,23 @@ const ViewGame = () => {
     useFetchGameTicketsQuery();
   const [deleteGame, { isLoading: isDeleteGameLoading }] =
     useDeleteGameMutation();
-  const { data: leaderboard, isLoading: isLeaderboardLoading } =
-    useFetchGameLeaderBoardQuery(game?.id);
+  const {
+    data: leaderboard,
+    isSuccess: isLeaderBoardSuccess,
+    isLoading: isLeaderboardLoading,
+  } = useFetchGameLeaderBoardQuery(game?.id);
   const { data: user } = useFetchProfileQuery();
+  const [sortedLeaderboards, setSortedLeaderboards] = useState([]);
 
   console.log("ld", leaderboard);
+
+  useEffect(() => {
+    if (isLeaderBoardSuccess) {
+      const ld = leaderboard?.leaderboards;
+      ld?.sort((a, b) => a?.rank - b?.rank);
+      setSortedLeaderboards(ld);
+    }
+  }, [isLeaderBoardSuccess, leaderboard?.leaderboards]);
 
   const handleDeleteGame = async () => {
     await deleteGame(game?.id)
@@ -443,7 +455,7 @@ const ViewGame = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {leaderboard?.leaderboards?.slice(0, 5)?.map((val, idx) => {
+                    {sortedLeaderboards?.slice(0, 5)?.map((val, idx) => {
                       let date = DateTime.fromSeconds(
                         val?.ticket?.createdAt?._seconds
                       );
@@ -457,7 +469,7 @@ const ViewGame = () => {
                       return (
                         <tr
                           className={`${
-                            val?.profile?.userId === user?.id
+                            val?.profile?.userId === user?.uid
                               ? lotteryStyles.activeUser
                               : ""
                           }`}
@@ -502,7 +514,7 @@ const ViewGame = () => {
                 {!isLeaderboardLoading && !leaderboard?.leaderboards?.length ? (
                   <div
                     className="flexColumn justifyCenter alignCenter text-muted textCenter fs14"
-                    style={{ height: "120px" }}
+                    style={{ height: "120px", marginBlock: "40px" }}
                   >
                     Leaderboard is currently empty.
                   </div>
@@ -554,12 +566,11 @@ const ViewGame = () => {
         <LeaderBoardModal
           isOpen={isLeaderboardModalOpen}
           onClose={() => setIsLeaderboardModalOpen(false)}
-          items={leaderboard?.leaderboards}
+          items={sortedLeaderboards}
         />
       </section>
     </>
   );
 };
-
 
 export default ViewGame;

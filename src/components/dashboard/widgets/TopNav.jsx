@@ -86,9 +86,7 @@ const TopNav = () => {
               return dateB - dateA;
             });
           setNotifications(filteredTransactions);
-          console.log("notif", filteredTransactions);
-        } else {
-          console.log("no notif");
+          // console.log("notif", filteredTransactions);
         }
       },
       (error) => {

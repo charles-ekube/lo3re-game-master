@@ -58,7 +58,7 @@ const LeaderBoardModal = ({ isOpen, onClose, items }) => {
                   return (
                     <tr
                       className={`${
-                        val?.profile?.userId === user?.id
+                        val?.profile?.userId === user?.uid
                           ? lotteryStyles.activeUser
                           : ""
                       }`}
@@ -97,7 +97,7 @@ const LeaderBoardModal = ({ isOpen, onClose, items }) => {
             {!items?.length ? (
               <div
                 className="flexColumn justifyCenter alignCenter text-muted textCenter fs14"
-                style={{ height: "120px" }}
+                style={{ height: "120px", marginBlock: "40px" }}
               >
                 Leaderboard is currently empty.
               </div>
