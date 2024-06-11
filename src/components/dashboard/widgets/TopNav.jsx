@@ -1,16 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { CiBellOn, CiSearch } from "react-icons/ci";
-import Text from "../../../utils/CustomText";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleSidebar } from "../../../redux/features/generalSlice";
 import { FiMenu } from "react-icons/fi";
 import { FaTimes } from "react-icons/fa";
-import TransactionHistory from "../../../components/dashboard/wallet/TransactionHistory";
-import TicketPurchaseNotification from "./TicketPurchaseNotification";
+import {
+  onValue,
+  ref,
+  query,
+  orderByKey,
+  limitToLast,
+  // update,
+  // onChildAdded,
+  // endAt,
+} from "firebase/database";
+import { database } from "../../../firebase";
 import { useFetchProfileQuery } from "../../../redux/services/accountApi";
+import { toggleSidebar } from "../../../redux/features/generalSlice";
+import Text from "../../../utils/CustomText";
 import Avatar from "../../../utils/Avatar";
+import NotificationItem from "./NotificationItem";
+import useTextTruncate from "../../../hooks/useTextTruncate";
+import { showError } from "../../../utils/Alert";
 
 const TopNav = () => {
+  const [notifications, setNotifications] = useState([]);
+  const { truncateText } = useTextTruncate();
+  // const [totalUnRead, setTotalUnRead] = useState(0);
   const [isScreenWidth1150, setIsScreenWidth1150] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const showSidebar = useSelector((state) => state.general.showSidebar);
@@ -36,6 +51,54 @@ const TopNav = () => {
   useEffect(() => {
     window.dispatchEvent(new Event("resize"));
   }, []);
+
+  // fetch messages
+  useEffect(() => {
+    const notifRef = ref(database, `notifications/${user?.uid}/messages`);
+    const notifQuery = query(notifRef, orderByKey(), limitToLast(10)); // Limiting to last 10
+
+    const unsubscribe = onValue(
+      notifQuery,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const notificationData = snapshot.val();
+          const filteredTransactions = Object.keys(notificationData)
+            .map((key) => {
+              const { subject, body, topic, timestamp, message } =
+                notificationData[key] || {};
+              return {
+                id: key,
+                title: subject,
+                body,
+                message,
+                type: topic,
+                time: timestamp, // Convert time to Date object
+              };
+            })
+            .sort((a, b) => {
+              if (!a.time && !b.time) return 0;
+              if (!a.time) return 1;
+              if (!b.time) return -1;
+
+              const dateA = new Date(a.time);
+              const dateB = new Date(b.time);
+
+              return dateB - dateA;
+            });
+          setNotifications(filteredTransactions);
+          console.log("notif", filteredTransactions);
+        } else {
+          console.log("no notif");
+        }
+      },
+      (error) => {
+        console.error(error);
+        showError("Could not fetch notifications");
+      }
+    );
+
+    return () => unsubscribe();
+  }, [user]);
 
   return (
     <>
@@ -87,47 +150,20 @@ const TopNav = () => {
               />
             </div>
             <div className="content">
-              <TransactionHistory
-                txnId={"09232kjdsfbns"}
-                type={"deposit"}
-                amount={"30.00"}
-                currency={"NGN"}
-                date={"239837834"}
-                status={"success"}
-                method={"bank_transfer"}
-                disableModal={true}
-              />
-              <TicketPurchaseNotification
-                message={"Raynera sent a message"}
-                chatMsg={"I'll book another sessio..."}
-                date={239837834}
-                status={"3 mins ago"}
-              />
-              <TransactionHistory
-                txnId={"09232kjdsfbns"}
-                type={"deposit"}
-                amount={"30.00"}
-                currency={"NGN"}
-                date={"239837834"}
-                status={"failed"}
-                method={"bank_transfer"}
-                disableModal={true}
-              />
-              <TransactionHistory
-                txnId={"09232kjdsfbns"}
-                type={"withdrawal"}
-                amount={"30.00"}
-                currency={"NGN"}
-                date={"239837834"}
-                status={"success"}
-                method={"bank_transfer"}
-                disableModal={true}
-              />
-              <TicketPurchaseNotification
-                message={"Raynera bought a lottery ticket"}
-                date={239837834}
-                status={"3 mins ago"}
-              />
+              {!notifications?.length && (
+                <p
+                  className="textMuted textCenter"
+                  style={{ marginBlock: "30px" }}
+                >
+                  You have no new notification
+                </p>
+              )}
+              {notifications?.map((notification) => (
+                <NotificationItem
+                  title={truncateText(notification?.message, 35)}
+                  date={notification?.time}
+                />
+              ))}
             </div>
           </div>
           <div
