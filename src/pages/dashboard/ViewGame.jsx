@@ -189,7 +189,7 @@ const ViewGame = () => {
 
             <div style={{ marginBlock: "10px", marginBottom: "18px" }}>
               <CustomCheckbox
-                isChecked={true}
+                isChecked={game?.infinite}
                 label={"Run game indefinitely"}
                 name={"infinite"}
                 isReadOnly={true}

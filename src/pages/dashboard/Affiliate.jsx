@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CardSlider from "../../components/dashboard/overview/CardSlider";
 import Text from "../../utils/CustomText";
 import ContactCard from "../../components/dashboard/cards/ContactCard";
@@ -8,11 +8,32 @@ import useCopyToClipBoard from "../../hooks/useCopyToClipboard";
 import { LuCopy } from "react-icons/lu";
 import { AiOutlineCheck } from "react-icons/ai";
 import Modal from "../../utils/Modal";
+import { useFetchWalletBalanceQuery } from "../../redux/services/walletApi";
+import useTextTruncate from "../../hooks/useTextTruncate";
+import { useFetchReferralsQuery } from "../../redux/services/accountApi";
+import NameTagContainer from "../../utils/NameTagContainer";
 
 const Affiliate = () => {
   const navigate = useNavigate();
+  const [refWallet, setRefWallet] = useState(null);
+  const { formatMoney } = useTextTruncate();
   const [isRefModalOpen, setIsRefModalOpen] = useState(false);
   const { handleCopyClick, isCopied } = useCopyToClipBoard();
+  const { data: referrals } = useFetchReferralsQuery();
+  console.log(referrals);
+
+  const { data: walletBalance, isSuccess: isWalletBalanceSuccess } =
+    useFetchWalletBalanceQuery();
+
+  useEffect(() => {
+    if (isWalletBalanceSuccess) {
+      const refWallet = walletBalance?.filter(
+        (val) => val?.type?.toLowerCase() === "affiliate"
+      );
+
+      setRefWallet(refWallet[0]);
+    }
+  }, [isWalletBalanceSuccess, walletBalance]);
 
   const goBack = () => {
     navigate(-1);
@@ -50,11 +71,13 @@ const Affiliate = () => {
             </div>
             <div className="ref-box">
               <div className="stat">
-                <p className="figure">$20</p>
+                <p className="figure">{`$${formatMoney(
+                  refWallet?.balance || 0
+                )}`}</p>
                 <p className="text">Referral commissions</p>
               </div>
               <div className="stat">
-                <p className="figure">5</p>
+                <p className="figure">{referrals?.length}</p>
                 <p className="text">Friends referred</p>
               </div>
               <button
@@ -79,17 +102,31 @@ const Affiliate = () => {
         </aside>
 
         {/* modals */}
+
         <Modal
           title={"Friends referred"}
           isOpen={isRefModalOpen}
           onClose={() => setIsRefModalOpen(false)}
         >
-          <ol className="ref-list">
-            <li>Raynera</li>
-            <li>Raynera</li>
-            <li>Raynera</li>
-            <li>Raynera</li>
-          </ol>
+          <div className="follower-list">
+            {!referrals?.length ? (
+              <p
+                style={{ marginBlock: "50px" }}
+                className={"textMuted textCenter"}
+              >
+                You don't have any referrals yet
+              </p>
+            ) : (
+              ""
+            )}
+            {referrals?.map((value, idx) => (
+              <NameTagContainer
+                key={`refFs-${idx}`}
+                name={value?.username}
+                photo={value?.photoUrl}
+              />
+            ))}
+          </div>
         </Modal>
       </section>
     </>

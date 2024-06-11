@@ -15,6 +15,7 @@ import { CiSearch } from "react-icons/ci";
 // import Pagination from "../../utils/Pagination";
 import { useFetchWalletBalanceQuery } from "../../redux/services/walletApi";
 import useTextTruncate from "../../hooks/useTextTruncate";
+import NameTagContainer from "../../utils/NameTagContainer";
 
 const Settings = () => {
   const { data: user } = useFetchProfileQuery();
@@ -265,20 +266,6 @@ const Settings = () => {
         /> */}
       </Modal>
     </>
-  );
-};
-
-const NameTagContainer = ({ name, photo }) => {
-  return (
-    <div className="flexRow alignCenter" style={{ gap: "8px" }}>
-      <Avatar name={name} src={photo} />
-      <Text
-        className={"satoshi-text f14 capitalize"}
-        style={{ color: "rgba(16, 16, 16, 1)" }}
-      >
-        {name}
-      </Text>
-    </div>
   );
 };
 

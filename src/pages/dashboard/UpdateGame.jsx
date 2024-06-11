@@ -104,6 +104,7 @@ const UpdateGame = () => {
       ticketPrice: game?.ticketPrice,
       jackpot: game?.jackpot,
       ticketGoal: game?.ticketGoal,
+      infinite: Boolean(game?.infinite),
       startOn: new Date(game?.startOn),
       endOn: new Date(game?.endOn),
       telegram: game?.socials?.telegram,

@@ -54,7 +54,7 @@ const TopNav = () => {
 
   // fetch messages
   useEffect(() => {
-    const notifRef = ref(database, `notifications/${user?.uid}/messages`);
+    const notifRef = ref(database, `notifications/users/${user?.uid}/messages`);
     const notifQuery = query(notifRef, orderByKey(), limitToLast(10)); // Limiting to last 10
 
     const unsubscribe = onValue(
