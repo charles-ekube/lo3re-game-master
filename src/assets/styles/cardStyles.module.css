@@ -1,0 +1,131 @@
+.sliderCardContainer {
+  /* height: 221px; */
+  /* width: 100%; */
+  /* border-radius: 16px; */
+  /* box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.06); */
+  border-radius: 16px;
+  overflow: hidden;
+}
+.sliderCardContent {
+  background: #fff;
+  padding: 16px;
+  /* border-radius: 0 0 16px 16px; */
+}
+.sliderCardContainer > img {
+  /* border-radius: 16px 16px 0 0 !important; */
+  width: 100%;
+}
+
+.contactCard {
+  display: flex;
+  padding: 12px 24px 24px 24px;
+  align-items: center;
+  gap: 10px;
+  /* justify-content: space-between; */
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.06);
+  margin: 10px 0;
+}
+.contactCardIconContainer {
+  padding: 15px;
+  background: rgba(255, 214, 0, 1);
+  color: rgba(16, 16, 16, 1);
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* balance card */
+.balanceCard {
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0px 4px 16px 0px #0000000F;
+  padding: 16px 24px;
+  width: calc(50% - 10px);
+  box-sizing: border-box;
+  animation: walletCardAnime .5s ease-out;
+}
+
+.balanceCard .cardTitle {
+  font-size: 16px;
+  font-weight: 500;
+  margin-right: 10px;
+  color: #48494D;
+}
+
+.balanceCard .hideIcon {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.balanceCard .hideIcon.hide {
+  display: none;
+}
+
+.balanceCard .balance {
+  font-size: 27px;
+  font-weight: 700;
+  font-family: "satoshi", sans-serif;
+}
+
+.balanceCard .subtitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: #727272;
+}
+
+
+
+/* bank card */
+.bankCard {
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.06);
+  padding: 18px 24px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.bankCard .icon {
+  width: 44px;
+  height: 44px;
+}
+
+.bankCard .icon img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+}
+
+
+.bankCard .title {
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.bankCard .subtitle {
+  font-size: 14px;
+}
+
+
+/* media query */
+@media (max-width: 480px) {
+ .balanceCard {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+}
+
+/* keyframes */
+@keyframes walletCardAnime {
+  from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+  }
+}

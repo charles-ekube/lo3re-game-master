@@ -9,30 +9,27 @@ import './assets/styles/generalStyles.css';
 import './assets/styles/fontStyles.css';
 import './assets/styles/dashboardStyles.css';
 import './assets/styles/overviewStyles.css';
-import './assets/styles/cardStyles.css';
-import './assets/styles/carouselStyles.css';
+import "./assets/styles/walletStyles.css";
+// import './assets/styles/cardStyles.css';
+
+import "react-datepicker/dist/react-datepicker.css";
 
 import './assets/fonts/fonts.css';
 import { BrowserRouter } from 'react-router-dom';
-import { persistor, store } from './redux/Index';
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { store } from "./redux/store";
+import { Provider } from "react-redux";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // import 'react-step-progress/dist/index.css';
 
-
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <BrowserRouter>
-          <ToastContainer />
-          <App />
-        </BrowserRouter>
-      </PersistGate>
+      <BrowserRouter>
+        <ToastContainer />
+        <App />
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>
 );

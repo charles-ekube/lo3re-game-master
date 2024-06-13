@@ -1,15 +1,22 @@
 import React from "react";
 import Text from "../../../utils/CustomText";
-import Button from "../../../utils/CustomButton";
+import CustomButtonII from "../../../utils/CustomButtonII";
+import cardStyles from "../../../assets/styles/cardStyles.module.css";
 
 const SliderCard = ({ src, title, subTitle, btnText }) => {
   return (
-    <div className={"sliderCardContainer"}>
+    <div className={`${cardStyles.sliderCardContainer}`}>
       <img src={src} alt="sliderCardImage" />
-      <div className={"sliderCardContent"}>
-        <Text>{title}</Text>
-        <Text>{subTitle}</Text>
-        <Button text={btnText} />
+      <div className={`${cardStyles.sliderCardContent}`}>
+        <Text tag={"h3"}>{title}</Text>
+        <Text className={"my-1 fs-14"} tag={"p"}>
+          {subTitle}
+        </Text>
+        <CustomButtonII
+          variant={"light"}
+          text={btnText}
+          className="btnSm radius99"
+        />
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { RE_DIGIT } from "./Helpers";
 
 const OtpInput = ({ label, value, valueLength, onChange }) => {
@@ -53,7 +53,8 @@ const OtpInput = ({ label, value, valueLength, onChange }) => {
     const targetValueLength = targetValue.length;
 
     if (targetValueLength === 1) {
-      const newValue = value.substring(0, idx) + targetValue + value.substring(idx + 1);
+      const newValue =
+        value.substring(0, idx) + targetValue + value.substring(idx + 1);
 
       onChange(newValue);
 
@@ -113,7 +114,19 @@ const OtpInput = ({ label, value, valueLength, onChange }) => {
     <div className="otp-group">
       <label>{label}</label>
       {valueItems.map((digit, idx) => (
-        <input key={idx} type="text" inputMode="numeric" autoComplete="one-time-code" pattern="\d{1}" maxLength={valueLength} className="otp-input" value={digit} onChange={(e) => inputOnChange(e, idx)} onKeyDown={inputOnKeyDown} onFocus={inputOnFocus} />
+        <input
+          key={idx}
+          type="password"
+          inputMode="numeric"
+          autoComplete="one-time-code"
+          pattern="\d{1}"
+          maxLength={valueLength}
+          className="otp-input"
+          value={digit}
+          onChange={(e) => inputOnChange(e, idx)}
+          onKeyDown={inputOnKeyDown}
+          onFocus={inputOnFocus}
+        />
       ))}
     </div>
   );

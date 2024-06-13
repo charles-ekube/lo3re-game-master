@@ -144,6 +144,26 @@
   font-size: 4rem;
 }
 
+.fs12 {
+  font-size: 12px !important;
+}
+
+.fs14 {
+  font-size: 14px;
+}
+
+.fs16 {
+  font-size: 16px;
+}
+
+.fs17 {
+  font-size: 17px;
+}
+
+.fs18 {
+  font-size: 18px;
+}
+
 /* Text alignment */
 .textCenter {
   text-align: center;
@@ -169,9 +189,24 @@
 .underLine {
   text-decoration: underline;
 }
+
+
+/* Text color */
 .greyText {
   color: #b1b2b4;
 }
 .blackText {
   color: #181819;
+}
+
+.textSuccess {
+  color: var(--success);
+}
+
+.textDanger {
+  color: var(--danger);
+}
+
+.textWarning {
+  color: var(--warning);
 }

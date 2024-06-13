@@ -1,6 +1,4 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -11,31 +9,9 @@ code {
 
 ul,
 li,
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-ul,
-li,
 a {
   list-style: none;
   text-decoration: none;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: "AR One Sans", sans-serif;
 }
 
 .progress-step.completed .step-icon {
@@ -66,5 +42,3 @@ h6 {
   z-index: 20 !important;
 }
 /* swiper-pagination-bullets-dynamic swiper-pagination-bullets swiper-pagination-horizontal */
-
-@import url("https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400;500;600;700&display=swap");

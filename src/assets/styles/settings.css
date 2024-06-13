@@ -1,0 +1,391 @@
+.mainContainer > .content {
+    padding: 35px;
+}
+
+.avatarStatsContainer, .avatarProfileContainer {
+    border-bottom: 1px solid #E8E8E8;
+    padding-bottom: 25px;
+}
+
+.avatarStatsContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.userStats {
+    width: calc(100% - 140px);
+}
+
+.userStats > .stats {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px 32px;
+    background-color: var(--lightGrey);
+    border-radius: 100px;
+}
+
+.userStats > .userName {
+    font-size: 21px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.stats > div > h3 {
+    font-size: 17px;
+}
+
+.avatar {
+    width: 115px;
+    height: 115px;
+    background-color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.avatar p {
+    font-size: 42px;
+    font-weight: 500;
+    color: var(--black);
+}
+
+.settings {
+    margin-top: 30px;
+}
+
+.settings > p {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.settings .linkContainer {
+    font-size: 17;
+    padding: 15px 0;
+}
+
+.settings .link {
+    color: #000;
+    cursor: pointer;
+}
+
+.headerTitle {
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.settingHeader {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.settingHeader .arrow-back {
+    position: absolute;
+    top: -2px;
+    left: 0;
+    cursor: pointer;
+}
+
+.affiliateContent {
+    text-align: center;
+    width: 343px;
+    margin: auto;
+}
+
+.affiliateContent .sub-head {
+    font-size: 21px;
+    font-weight: 500;
+}
+
+.affiliateContent > p {
+    margin-top: 8px;
+    margin-bottom: 16px;
+    font-size: 17px;
+}
+
+.ref-code-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--lightGreyII);
+    border-radius: 8px;
+    padding: 10px 8px;
+    font-size: 14px;
+    color: #727272;
+}
+
+.ref-box {
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0px 5px 10px 0px #0000000F;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 36px;
+}
+
+.ref-box .stat {
+    background-color: #f3f3f3;
+    border: 1px solid #E8E8E8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px 25px;
+    border-radius: 100px;
+    width: max-content;
+}
+
+.ref-box .stat > .figure {
+    font-size: 27px;
+    font-weight: 700;
+    /* padding: 1px 12px; */
+    padding-right: 12px;
+    border-right: 2px solid #A6A6A6;
+}
+
+.ref-box .stat > .text {
+    font-size: 14px;
+    padding-left: 12px;
+}
+
+.ref-box > button {
+    border-radius: 8px;
+    padding-inline: 30px;
+    font-weight: 400;
+}
+
+.ref-list {
+    padding-left: 20px;
+}
+
+.ref-list li {
+    list-style: unset;
+    text-align: left;
+    font-size: 17px;
+    font-weight: 500;
+    padding: 16px 23px;
+    padding-left: 10px;
+    font-family: 'Satoshi', sans-serif;
+}
+
+.uploadBtn {
+    padding: 14px 16px;
+    border: 2px solid var(--secondary);
+    color: var(--secondary);
+    border-radius: 8px;
+    margin: 15px 0;
+    background-color: transparent;
+    margin-top: 15px;
+    font-weight: 500;
+}
+
+.uploadText {
+    font-size: 14px;
+}
+
+.profileForm {
+    margin-top: 30px;
+}
+
+.profileForm > .flexRow .inputContainer {
+    width: 50%;
+}
+
+.profileForm > .flexRow {
+    gap: 15px;
+}
+
+.follower-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.followerSearchContainer {
+    width: 100% !important;
+    margin-bottom: 16px;
+    gap: 8px;
+}
+
+
+
+/* 2FA */
+.tFaModal .tFaContent {
+    display: flex;
+    text-align: left;
+    justify-content: space-between;
+}
+
+.modalQRContainer {
+    width: 100px;
+    /* height: 100px; */
+}
+
+.modalQRContainer img {
+    width: 100%;
+    /* height: 100%; */
+    /* object-fit: contain; */
+}
+
+
+/* kyc */
+.kyc-level {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.kyc-level div {
+    display: flex;
+    gap: 50px;
+}
+
+.kyc-level div:nth-child(2) {
+    align-items: center;
+    gap: 10px;
+}
+
+.kyc-title {
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.kyc-type {
+    font-size: 17px;
+    color: #868686;
+}
+
+/* beneficiaries */
+.deleteTitle {
+    font-size: 27px;
+    font-weight: 700;
+}
+
+.deleteSubtitle {
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.deleteIllustration {
+    width: 60%;
+}
+
+.switchTabs {
+    width: 50%;
+    margin: auto;
+    background-color: var(--lightGrey);
+    border-radius: 30px;
+    display: flex;
+    gap: 8px;
+    justify-content: space-evenly;
+    overflow: hidden;
+    padding: 5px;
+    margin-bottom: 30px;
+    margin-top: -10px;
+}
+
+.switchTabs > .switchBtn {
+    padding: 8px;
+    border-radius: 30px;
+    border: none;
+}
+
+.switchTabs > .switchBtn:hover {
+    background-color: var(--lightGreyII);
+}
+
+.switchTabs > .switchBtn.active {
+    background-color: var(--secondary);
+    color: var(--white);
+}
+
+.switchTabs.twoCols > .switchBtn {
+    width: 50%;
+}
+
+.switchTabs.tab100 {
+    width: 100%;
+}
+
+.switchTabs.switchTabs.twoCols {
+    margin-bottom: 15px;
+}
+
+.switchTabs.bgWhite {
+    background-color: var(--lightGreyII);
+}
+
+@media screen and (max-width: 763px) {
+    .avatarStatsContainer {
+        flex-direction: column;
+    }
+
+    .userStats > .userName {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .userStats {
+        width: 100%;
+    }
+
+    .mainContainer > .content {
+        padding: 35px 15px;
+    }
+
+    .userStats > .stats {
+        padding: 16px 18px;
+    }
+    
+}
+
+
+@media screen and (max-width: 550px) {
+    .tFaContent {
+        flex-direction: column-reverse;
+    }
+
+    .modalQRContainer {
+        margin-bottom: 10px;
+    }
+
+    .deleteTitle {
+        font-size: 20px;
+    }
+
+    .deleteSubtitle {
+        font-size: 14px;
+    }
+
+    .switchTabs {
+        width: 80%;
+    }
+
+    .affiliateContent {
+        width: 90%;
+    }
+
+    .ref-box .stat {
+        padding: 16px 20px;
+    }
+
+    .ref-box .stat > .figure {
+        font-size: 20px;
+    }
+
+    
+    .kyc-level div:nth-child(1) {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .kyc-type {
+        font-size: 14px;
+    }
+
+    .kyc-level div:nth-child(2) {
+        gap: 5px;
+    }
+}
